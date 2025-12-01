@@ -52,7 +52,8 @@ const topProspectos = [
     tiempoEstimadoCierre: '3-4 semanas',
     riesgo: 'Medio',
     oportunidad: 'Muy Alta - Presupuesto aprobado para 2025',
-    asesorComercial: 'Ana Martínez'
+    asesorComercial: 'Ana Martínez',
+    fechaPropuesta: '2025-11-20'
   },
   {
     id: 3,
@@ -148,7 +149,8 @@ const topProspectos = [
     tiempoEstimadoCierre: '4-5 semanas',
     riesgo: 'Medio',
     oportunidad: 'Media - Proceso de aprobación interno lento',
-    asesorComercial: 'Ana Martínez'
+    asesorComercial: 'Ana Martínez',
+    fechaPropuesta: '2025-11-26'
   },
   {
     id: 7,
@@ -197,6 +199,114 @@ const topProspectos = [
     riesgo: 'Alto - Múltiples stakeholders',
     oportunidad: 'Muy Alta - Mayor oportunidad del pipeline',
     asesorComercial: 'Laura Fernández'
+  },
+  {
+    id: 9,
+    nombre: 'PepsiCo México',
+    industria: 'Bebidas',
+    ubicacion: 'Ciudad de México',
+    potencial: 'Muy Alto',
+    volumenEstimado: '180 ton/mes',
+    valorEstimado: 5400000,
+    probabilidad: 0,
+    etapa: 'Rechazada',
+    contacto: 'Diana Morales - Gerente de Compras',
+    ultimaActividad: 'Propuesta rechazada',
+    prioridad: 'Baja',
+    razon: 'Licitación para gestión integral de residuos',
+    levantamientoId: null,
+    propuestaId: null,
+    tieneLevantamiento: true,
+    tienePropuesta: true,
+    proximoPaso: 'Seguimiento en 6 meses',
+    tiempoEstimadoCierre: 'N/A',
+    riesgo: 'Alto',
+    oportunidad: 'Perdida - Licitación adjudicada a competencia',
+    asesorComercial: 'Carlos Mendoza',
+    motivoRechazo: 6,
+    motivoRechazoDetalle: 'No presentamos permisos ambientales a tiempo',
+    fechaRechazo: '2025-10-15'
+  },
+  {
+    id: 10,
+    nombre: 'Grupo Gigante',
+    industria: 'Retail',
+    ubicacion: 'Ciudad de México',
+    potencial: 'Alto',
+    volumenEstimado: '75 ton/mes',
+    valorEstimado: 2250000,
+    probabilidad: 0,
+    etapa: 'Rechazada',
+    contacto: 'Roberto Torres - Director de Operaciones',
+    ultimaActividad: 'Cliente decidió continuar con proveedor actual',
+    prioridad: 'Baja',
+    razon: 'Renovación de contrato de residuos',
+    levantamientoId: null,
+    propuestaId: null,
+    tieneLevantamiento: true,
+    tienePropuesta: true,
+    proximoPaso: 'N/A',
+    tiempoEstimadoCierre: 'N/A',
+    riesgo: 'Alto',
+    oportunidad: 'Perdida',
+    asesorComercial: 'Ana Martínez',
+    motivoRechazo: 1,
+    motivoRechazoDetalle: 'Nuestra propuesta fue 15% más cara que el proveedor actual',
+    fechaRechazo: '2025-09-28'
+  },
+  {
+    id: 11,
+    nombre: 'Hotel Fiesta Americana',
+    industria: 'Hotelería',
+    ubicacion: 'Cancún, Quintana Roo',
+    potencial: 'Medio',
+    volumenEstimado: '25 ton/mes',
+    valorEstimado: 750000,
+    probabilidad: 0,
+    etapa: 'Rechazada',
+    contacto: 'Sandra Pérez - Gerente General',
+    ultimaActividad: 'No cumplen requisito de recolección diaria',
+    prioridad: 'Baja',
+    razon: 'Programa de sustentabilidad hotelera',
+    levantamientoId: null,
+    propuestaId: null,
+    tieneLevantamiento: true,
+    tienePropuesta: true,
+    proximoPaso: 'N/A',
+    tiempoEstimadoCierre: 'N/A',
+    riesgo: 'Medio',
+    oportunidad: 'Perdida',
+    asesorComercial: 'Roberto Sánchez',
+    motivoRechazo: 4,
+    motivoRechazoDetalle: 'No tenemos capacidad de recolección diaria en Cancún',
+    fechaRechazo: '2025-10-05'
+  },
+  {
+    id: 12,
+    nombre: 'Restaurante Local Chapultepec',
+    industria: 'Restaurantes',
+    ubicacion: 'Ciudad de México',
+    potencial: 'Bajo',
+    volumenEstimado: '8 ton/mes',
+    valorEstimado: 240000,
+    probabilidad: 0,
+    etapa: 'Rechazada',
+    contacto: 'Mario Hernández - Propietario',
+    ultimaActividad: 'Volumen insuficiente para servicio',
+    prioridad: 'Baja',
+    razon: 'Gestión de residuos orgánicos',
+    levantamientoId: null,
+    propuestaId: null,
+    tieneLevantamiento: true,
+    tienePropuesta: false,
+    proximoPaso: 'N/A',
+    tiempoEstimadoCierre: 'N/A',
+    riesgo: 'Bajo',
+    oportunidad: 'Perdida - No viable',
+    asesorComercial: 'Patricia Morales',
+    motivoRechazo: 7,
+    motivoRechazoDetalle: 'Solo genera 8 ton/mes, por debajo del mínimo de viabilidad',
+    fechaRechazo: '2025-10-20'
   }
 ];
 
@@ -258,86 +368,120 @@ const pipelineData = [
   { etapa: 'Cierre', cantidad: 8, valor: 2400000, objetivo: 12 }
 ];
 
-// DATOS DEL EQUIPO CON PIPELINE, PRESUPUESTO Y KPIS
+// DATOS DEL EQUIPO REAL - INNOVATIVE GROUP
 const salesTeamData = [
-  { 
-    id: 1, 
-    name: 'Carlos Mendoza', 
-    role: 'Ejecutivo Senior',
-    // Pipeline
-    leads: 12,
-    levantamientos: 9,
-    propuestasEnviadas: 7,
-    cierres: 3,
-    tasaConversion: 25,
-    // Presupuesto
-    presupuestoMensual: 800000,
-    ventasReales: 920000,
-    cumplimientoPresupuesto: 115,
-    // KPIs
-    tiempoRespuesta: '2.3 hrs',
-    satisfaccionCliente: 4.8,
-    activitiesSemanal: 28,
-    eficienciaGlobal: 72,
-    avatar: '👨‍💼',
-    ultimaActividad: 'Propuesta enviada - Walmart Polanco'
-  },
-  { 
-    id: 2, 
-    name: 'Ana Ruiz', 
+  {
+    id: 1,
+    name: 'Carmen Rodríguez',
     role: 'Ejecutiva Senior',
-    leads: 14,
-    levantamientos: 11,
-    propuestasEnviadas: 9,
-    cierres: 4,
-    tasaConversion: 29,
-    presupuestoMensual: 850000,
-    ventasReales: 1100000,
-    cumplimientoPresupuesto: 129,
-    tiempoRespuesta: '1.8 hrs',
+    ubicacion: 'CDMX',
+    // Pipeline
+    leads: 44,
+    levantamientos: 3,
+    propuestasEnviadas: 12,
+    reuniones: 22,
+    cierres: 12,
+    tasaConversion: 27,
+    // Presupuesto
+    presupuestoMensual: 900000,
+    ventasReales: 1050000,
+    cumplimientoPresupuesto: 117,
+    // KPIs
+    tiempoRespuesta: '1.5 hrs',
     satisfaccionCliente: 4.9,
-    activitiesSemanal: 32,
-    eficienciaGlobal: 81,
+    activitiesSemanal: 35,
+    eficienciaGlobal: 85,
     avatar: '👩‍💼',
-    ultimaActividad: 'Levantamiento agendado - Soriana Interlomas'
+    ultimaActividad: 'Cierre confirmado - Cliente corporativo',
+    notas: 'La más fuerte del equipo - modelo a clonar'
   },
-  { 
-    id: 3, 
-    name: 'Roberto García', 
-    role: 'Ejecutivo',
-    leads: 10,
-    levantamientos: 7,
-    propuestasEnviadas: 5,
+  {
+    id: 2,
+    name: 'Armando Martínez',
+    role: 'Ejecutivo Senior',
+    ubicacion: 'Monterrey',
+    leads: 57,
+    levantamientos: 22,
+    propuestasEnviadas: 2,
+    reuniones: 37,
     cierres: 2,
-    tasaConversion: 20,
-    presupuestoMensual: 650000,
-    ventasReales: 580000,
-    cumplimientoPresupuesto: 89,
-    tiempoRespuesta: '3.1 hrs',
-    satisfaccionCliente: 4.5,
-    activitiesSemanal: 22,
-    eficienciaGlobal: 68,
+    tasaConversion: 3.5,
+    presupuestoMensual: 850000,
+    ventasReales: 420000,
+    cumplimientoPresupuesto: 49,
+    tiempoRespuesta: '4.2 hrs',
+    satisfaccionCliente: 4.2,
+    activitiesSemanal: 45,
+    eficienciaGlobal: 45,
     avatar: '👨‍💼',
-    ultimaActividad: 'Seguimiento - Chedraui Coyoacán'
+    ultimaActividad: 'Visita en frío - Zona industrial',
+    notas: 'Alto volumen, bajo cierre - único que hace knock knock'
   },
-  { 
-    id: 4, 
-    name: 'Patricia Morales', 
+  {
+    id: 3,
+    name: 'Cristina Silva',
     role: 'Ejecutiva',
-    leads: 9,
-    levantamientos: 5,
-    propuestasEnviadas: 3,
+    ubicacion: 'Guadalajara',
+    leads: 0,
+    levantamientos: 1,
+    propuestasEnviadas: 1,
+    reuniones: 3,
     cierres: 1,
-    tasaConversion: 11,
+    tasaConversion: 100,
     presupuestoMensual: 600000,
-    ventasReales: 540000,
-    cumplimientoPresupuesto: 90,
-    tiempoRespuesta: '2.8 hrs',
-    satisfaccionCliente: 4.6,
-    activitiesSemanal: 19,
-    eficienciaGlobal: 64,
+    ventasReales: 750000,
+    cumplimientoPresupuesto: 125,
+    tiempoRespuesta: '2.0 hrs',
+    satisfaccionCliente: 4.7,
+    activitiesSemanal: 15,
+    eficienciaGlobal: 70,
     avatar: '👩‍💼',
-    ultimaActividad: 'Propuesta en revisión - La Comer Santa Fe'
+    ultimaActividad: 'Seguimiento Paxa',
+    notas: 'Nueva pero trajo cuenta grande por contactos personales'
+  },
+  {
+    id: 4,
+    name: 'Laura Mesa',
+    role: 'Ejecutiva',
+    ubicacion: 'CDMX',
+    leads: 19,
+    levantamientos: 0,
+    propuestasEnviadas: 0,
+    reuniones: 4,
+    cierres: 0,
+    tasaConversion: 0,
+    presupuestoMensual: 550000,
+    ventasReales: 0,
+    cumplimientoPresupuesto: 0,
+    tiempoRespuesta: '5.5 hrs',
+    satisfaccionCliente: 4.0,
+    activitiesSemanal: 12,
+    eficienciaGlobal: 25,
+    avatar: '👩‍💼',
+    ultimaActividad: 'Prospección LinkedIn',
+    notas: 'Contactos personales, necesita coaching en cierre'
+  },
+  {
+    id: 5,
+    name: 'Laura Sobrino',
+    role: 'Ejecutiva',
+    ubicacion: 'CDMX',
+    leads: 5,
+    levantamientos: 0,
+    propuestasEnviadas: 0,
+    reuniones: 2,
+    cierres: 0,
+    tasaConversion: 0,
+    presupuestoMensual: 500000,
+    ventasReales: 0,
+    cumplimientoPresupuesto: 0,
+    tiempoRespuesta: '6.0 hrs',
+    satisfaccionCliente: 3.8,
+    activitiesSemanal: 8,
+    eficienciaGlobal: 20,
+    avatar: '👩‍💼',
+    ultimaActividad: 'Capacitación interna',
+    notas: 'Contactos personales, en desarrollo'
   }
 ];
 
@@ -970,6 +1114,188 @@ const COLORS_INNOVATIVE = {
 
 const COLORS_CHART = ['#1B5E20', '#2E7D32', '#388E3C', '#1B4965', '#5FA8D3'];
 
+// TIPOS Y CATEGORÍAS DE DOCUMENTOS
+const TIPOS_DOCUMENTO = [
+  'Permiso Ambiental',
+  'Licencia de Funcionamiento',
+  'Autorización de Transporte',
+  'Certificado ISO',
+  'Póliza de Seguro',
+  'Registro Ambiental',
+  'Manifiesto de Residuos',
+  'Otro'
+];
+
+const CATEGORIAS_DOCUMENTO = [
+  'Licencias',
+  'Permisos',
+  'Certificaciones',
+  'Seguros',
+  'Contratos',
+  'Otros'
+];
+
+// DATOS DE DOCUMENTOS
+const documentosIniciales = [
+  {
+    id: 1,
+    nombre: 'Licencia Ambiental CDMX',
+    tipo: 'Permiso Ambiental',
+    categoria: 'Licencias',
+    fechaEmision: '2024-01-15',
+    fechaVencimiento: '2025-01-15',
+    archivo: 'licencia_cdmx.pdf',
+    status: 'Por Vencer',
+    notas: 'Aplica para operaciones en CDMX - Renovar antes del 15/Ene'
+  },
+  {
+    id: 2,
+    nombre: 'Autorización Transporte Residuos Peligrosos',
+    tipo: 'Autorización de Transporte',
+    categoria: 'Permisos',
+    fechaEmision: '2023-06-20',
+    fechaVencimiento: '2026-06-20',
+    archivo: 'autorizacion_transporte.pdf',
+    status: 'Vigente',
+    notas: 'Válido para toda la República Mexicana'
+  },
+  {
+    id: 3,
+    nombre: 'Certificado ISO 14001:2015',
+    tipo: 'Certificado ISO',
+    categoria: 'Certificaciones',
+    fechaEmision: '2023-09-10',
+    fechaVencimiento: '2026-09-10',
+    archivo: 'iso_14001.pdf',
+    status: 'Vigente',
+    notas: 'Gestión Ambiental - Auditoría anual requerida'
+  },
+  {
+    id: 4,
+    nombre: 'Registro Ambiental Estatal EdoMex',
+    tipo: 'Registro Ambiental',
+    categoria: 'Permisos',
+    fechaEmision: '2024-03-01',
+    fechaVencimiento: '2025-03-01',
+    archivo: 'registro_edomex.pdf',
+    status: 'Vigente',
+    notas: 'Aplica para operaciones en Estado de México'
+  },
+  {
+    id: 5,
+    nombre: 'Póliza Responsabilidad Civil',
+    tipo: 'Póliza de Seguro',
+    categoria: 'Seguros',
+    fechaEmision: '2024-07-01',
+    fechaVencimiento: '2025-07-01',
+    archivo: 'poliza_rc.pdf',
+    status: 'Vigente',
+    notas: 'Cobertura: $10M MXN - Renovación automática'
+  },
+  {
+    id: 6,
+    nombre: 'Licencia Funcionamiento Planta Guadalajara',
+    tipo: 'Licencia de Funcionamiento',
+    categoria: 'Licencias',
+    fechaEmision: '2023-11-15',
+    fechaVencimiento: '2025-11-15',
+    archivo: 'licencia_gdl.pdf',
+    status: 'Vigente',
+    notas: 'Planta de reciclaje Guadalajara'
+  },
+  {
+    id: 7,
+    nombre: 'Permiso Ambiental Monterrey',
+    tipo: 'Permiso Ambiental',
+    categoria: 'Permisos',
+    fechaEmision: '2024-02-20',
+    fechaVencimiento: '2024-12-20',
+    archivo: 'permiso_mty.pdf',
+    status: 'Vencido',
+    notas: '¡URGENTE! Vencido - Iniciar renovación inmediatamente'
+  },
+  {
+    id: 8,
+    nombre: 'Certificado ISO 9001:2015',
+    tipo: 'Certificado ISO',
+    categoria: 'Certificaciones',
+    fechaEmision: '2023-08-05',
+    fechaVencimiento: '2026-08-05',
+    archivo: 'iso_9001.pdf',
+    status: 'Vigente',
+    notas: 'Gestión de Calidad - Próxima auditoría: Ago 2025'
+  },
+  {
+    id: 9,
+    nombre: 'Manifiesto Generación Residuos 2024',
+    tipo: 'Manifiesto de Residuos',
+    categoria: 'Permisos',
+    fechaEmision: '2024-01-01',
+    fechaVencimiento: '2024-12-31',
+    archivo: 'manifiesto_2024.pdf',
+    status: 'Por Vencer',
+    notas: 'Generar manifiesto 2025 en Diciembre'
+  },
+  {
+    id: 10,
+    nombre: 'Registro SEMARNAT Nacional',
+    tipo: 'Registro Ambiental',
+    categoria: 'Permisos',
+    fechaEmision: '2022-05-10',
+    fechaVencimiento: '2027-05-10',
+    archivo: 'registro_semarnat.pdf',
+    status: 'Vigente',
+    notas: 'Registro federal - Renovación cada 5 años'
+  }
+];
+
+// Función para calcular el status de un documento
+const calcularStatusDocumento = (fechaVencimiento) => {
+  if (!fechaVencimiento) return 'Sin Fecha';
+  const hoy = new Date();
+  const vencimiento = new Date(fechaVencimiento);
+  const diasRestantes = Math.floor((vencimiento - hoy) / (1000 * 60 * 60 * 24));
+
+  if (diasRestantes < 0) return 'Vencido';
+  if (diasRestantes <= 30) return 'Vencido';
+  if (diasRestantes <= 60) return 'Por Vencer';
+  return 'Vigente';
+};
+
+// CATÁLOGO DE MOTIVOS DE RECHAZO
+const MOTIVOS_RECHAZO = [
+  { id: 1, motivo: 'Precios no competitivos', categoria: 'Comercial' },
+  { id: 2, motivo: 'Tardanza en entregar propuesta', categoria: 'Proceso' },
+  { id: 3, motivo: 'No tienen destinos finales suficientes', categoria: 'Operativo' },
+  { id: 4, motivo: 'No pueden hacer recolecciones diarias', categoria: 'Operativo' },
+  { id: 5, motivo: 'Cliente se queda con proveedor actual', categoria: 'Competencia' },
+  { id: 6, motivo: 'Falta de permisos/documentos', categoria: 'Legal' },
+  { id: 7, motivo: 'Muy poco material (< 10 ton)', categoria: 'Viabilidad' },
+  { id: 8, motivo: 'Otro (especificar)', categoria: 'Otro' }
+];
+
+// FUNCIONES DE CÁLCULO DE DÍAS
+const calcularDiasSinRespuesta = (fechaEnvio) => {
+  if (!fechaEnvio) return 0;
+  const hoy = new Date();
+  const envio = new Date(fechaEnvio);
+  const diferencia = Math.floor((hoy - envio) / (1000 * 60 * 60 * 24));
+  return diferencia;
+};
+
+const calcularDiasHabiles = (fechaInicio) => {
+  if (!fechaInicio) return 0;
+  let dias = 0;
+  let fecha = new Date(fechaInicio);
+  const hoy = new Date();
+  while (fecha < hoy) {
+    const diaSemana = fecha.getDay();
+    if (diaSemana !== 0 && diaSemana !== 6) dias++;
+    fecha.setDate(fecha.getDate() + 1);
+  }
+  return dias;
+};
+
 const InnovativeDemo = () => {
   const [currentView, setCurrentView] = useState('welcome');
   const [selectedTeamMember, setSelectedTeamMember] = useState(null);
@@ -989,6 +1315,227 @@ const InnovativeDemo = () => {
   const [notifications] = useState(7);
   const [leadsConAsignacion, setLeadsConAsignacion] = useState(leadsData.map(lead => ({ ...lead, asignadoA: lead.asignadoA || null })));
   const [mostrarTodosLeads, setMostrarTodosLeads] = useState(false);
+  const [alertas, setAlertas] = useState([]);
+  const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
+  const [mostrarModalRechazo, setMostrarModalRechazo] = useState(false);
+  const [prospectoParaRechazar, setProspectoParaRechazar] = useState(null);
+  const [motivoRechazoSeleccionado, setMotivoRechazoSeleccionado] = useState('');
+  const [detalleRechazo, setDetalleRechazo] = useState('');
+  const [documentos, setDocumentos] = useState(documentosIniciales);
+  const [mostrarNuevoDocumento, setMostrarNuevoDocumento] = useState(false);
+  const [filtroDocumentos, setFiltroDocumentos] = useState({ tipo: '', categoria: '', status: '' });
+
+  // Calcular alertas automáticamente
+  useEffect(() => {
+    const nuevasAlertas = [];
+
+    // Propuestas sin seguimiento (> 5 días hábiles)
+    topProspectos.filter(p =>
+      p.etapa === 'Propuesta' &&
+      p.fechaPropuesta &&
+      calcularDiasHabiles(p.fechaPropuesta) >= 5
+    ).forEach(p => {
+      nuevasAlertas.push({
+        tipo: 'seguimiento_propuesta',
+        mensaje: `Propuesta a ${p.nombre} sin respuesta hace ${calcularDiasHabiles(p.fechaPropuesta)} días hábiles`,
+        prioridad: 'alta',
+        prospecto: p,
+        accion: 'Dar seguimiento'
+      });
+    });
+
+    // Levantamientos completados sin reporte
+    levantamientosActivos.filter(l =>
+      l.status === 'Completado' && !l.tieneReporte
+    ).forEach(l => {
+      nuevasAlertas.push({
+        tipo: 'levantamiento_sin_reporte',
+        mensaje: `Levantamiento de ${l.cliente} completado sin reporte`,
+        prioridad: 'media',
+        levantamiento: l,
+        accion: 'Generar reporte'
+      });
+    });
+
+    // Leads inactivos (> 14 días sin actividad)
+    leadsConAsignacion.filter(lead => {
+      const diasSinActividad = calcularDiasSinRespuesta(lead.fecha);
+      return diasSinActividad > 14;
+    }).forEach(lead => {
+      nuevasAlertas.push({
+        tipo: 'lead_inactivo',
+        mensaje: `Lead "${lead.empresa}" sin actividad hace ${calcularDiasSinRespuesta(lead.fecha)} días`,
+        prioridad: 'media',
+        lead: lead,
+        accion: 'Reactivar contacto'
+      });
+    });
+
+    // Documentos vencidos o por vencer (< 30 días)
+    documentos.filter(doc => {
+      const hoy = new Date();
+      const vencimiento = new Date(doc.fechaVencimiento);
+      const diasRestantes = Math.floor((vencimiento - hoy) / (1000 * 60 * 60 * 24));
+      return diasRestantes <= 30;
+    }).forEach(doc => {
+      const hoy = new Date();
+      const vencimiento = new Date(doc.fechaVencimiento);
+      const diasRestantes = Math.floor((vencimiento - hoy) / (1000 * 60 * 60 * 24));
+      const prioridad = diasRestantes < 0 ? 'alta' : 'media';
+      const estado = diasRestantes < 0 ? 'vencido' : `vence en ${diasRestantes} días`;
+
+      nuevasAlertas.push({
+        tipo: 'documento_vencimiento',
+        mensaje: `Documento "${doc.nombre}" ${estado}`,
+        prioridad: prioridad,
+        documento: doc,
+        accion: diasRestantes < 0 ? 'Renovar urgente' : 'Programar renovación'
+      });
+    });
+
+    setAlertas(nuevasAlertas);
+  }, [leadsConAsignacion, documentos]);
+
+  // Componente Panel de Notificaciones
+  const NotificationsPanel = ({ alertas, onClose, onAction }) => (
+    <div className="absolute right-0 top-12 w-96 bg-white rounded-lg shadow-lg border border-[#E9ECEF] z-50">
+      <div className="p-4 border-b border-[#E9ECEF] flex justify-between items-center">
+        <h3 className="font-semibold text-[#343A40]">Alertas ({alertas.length})</h3>
+        <button onClick={onClose}><X size={18} /></button>
+      </div>
+      <div className="max-h-96 overflow-y-auto">
+        {alertas.length === 0 ? (
+          <div className="p-8 text-center text-[#6C757D]">
+            <CheckSquare size={48} className="mx-auto mb-3 opacity-50" />
+            <p className="text-sm">No hay alertas pendientes</p>
+          </div>
+        ) : (
+          alertas.map((alerta, idx) => (
+            <div key={idx} className={`p-4 border-b border-[#E9ECEF] ${
+              alerta.prioridad === 'alta' ? 'bg-red-50' : 'bg-yellow-50'
+            }`}>
+              <div className="flex items-start gap-2">
+                <AlertCircle size={16} className={`mt-0.5 flex-shrink-0 ${
+                  alerta.prioridad === 'alta' ? 'text-red-600' : 'text-yellow-600'
+                }`} />
+                <div className="flex-1">
+                  <div className="text-sm font-medium text-[#343A40]">{alerta.mensaje}</div>
+                  <button
+                    onClick={() => onAction(alerta)}
+                    className="mt-2 text-xs text-[#1B5E20] font-medium hover:text-[#2E7D32]"
+                  >
+                    {alerta.accion} →
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+
+  // Modal de Motivo de Rechazo
+  const ModalMotivoRechazo = ({ prospecto, onClose, onSave }) => {
+    const [motivoSeleccionado, setMotivoSeleccionado] = useState('');
+    const [detalle, setDetalle] = useState('');
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      if (!motivoSeleccionado) {
+        alert('Debe seleccionar un motivo de rechazo');
+        return;
+      }
+      onSave({
+        motivoRechazo: parseInt(motivoSeleccionado),
+        motivoRechazoDetalle: detalle,
+        fechaRechazo: new Date().toISOString().split('T')[0]
+      });
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
+          <div className="p-6 border-b border-[#E9ECEF]">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-xl font-bold text-[#343A40]">Motivo de Rechazo</h3>
+                <p className="text-sm text-[#6C757D] mt-1">
+                  {prospecto?.nombre}
+                </p>
+              </div>
+              <button onClick={onClose} className="text-[#6C757D] hover:text-[#343A40]">
+                <X size={24} />
+              </button>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+            <div>
+              <label className="block text-sm font-semibold text-[#343A40] mb-2">
+                Motivo de Rechazo *
+              </label>
+              <select
+                value={motivoSeleccionado}
+                onChange={(e) => setMotivoSeleccionado(e.target.value)}
+                className="w-full px-4 py-3 border border-[#E9ECEF] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]"
+                required
+              >
+                <option value="">Seleccione un motivo...</option>
+                {MOTIVOS_RECHAZO.map(motivo => (
+                  <option key={motivo.id} value={motivo.id}>
+                    {motivo.motivo} ({motivo.categoria})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-[#343A40] mb-2">
+                Detalles adicionales
+              </label>
+              <textarea
+                value={detalle}
+                onChange={(e) => setDetalle(e.target.value)}
+                className="w-full px-4 py-3 border border-[#E9ECEF] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]"
+                rows={4}
+                placeholder="Proporcione información adicional sobre el rechazo..."
+              />
+            </div>
+
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="text-orange-600 flex-shrink-0 mt-0.5" size={20} />
+                <div className="text-sm text-orange-800">
+                  <p className="font-semibold mb-1">Información importante</p>
+                  <p>
+                    El registro del motivo de rechazo es obligatorio y ayudará a mejorar nuestros procesos comerciales.
+                    Valor estimado de esta propuesta: ${(prospecto?.valorEstimado || 0).toLocaleString('es-MX')}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4 border-t border-[#E9ECEF]">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-6 py-2.5 border border-[#E9ECEF] text-[#6C757D] rounded-lg hover:bg-[#F8F9FA] font-medium text-sm"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className="px-6 py-2.5 bg-[#1B5E20] text-white rounded-lg hover:bg-[#2E7D32] font-medium text-sm"
+              >
+                Guardar Motivo
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
 
   // Welcome Screen
   const WelcomeScreen = () => (
@@ -1071,6 +1618,7 @@ const InnovativeDemo = () => {
           { id: 'dashboard', icon: Home, label: 'Dashboard' },
           { id: 'pipeline', icon: TrendingUp, label: 'Pipeline Comercial' },
           { id: 'levantamientos', icon: ClipboardList, label: 'Levantamientos' },
+          { id: 'documentos', icon: FileText, label: 'Documentos' },
           { id: 'team', icon: Users, label: 'Centro de Control de KPIs' },
           { id: 'trazabilidad', icon: Recycle, label: 'Trazabilidad' }
         ].map(item => (
@@ -1110,14 +1658,36 @@ const InnovativeDemo = () => {
         {subtitle && <p className="text-[#6C757D] mt-1 text-sm font-medium">{subtitle}</p>}
       </div>
       <div className="flex items-center gap-4">
-        <button className="relative text-[#6C757D] hover:text-[#1B5E20]">
-          <Bell size={20} />
-          {notifications > 0 && (
-            <span className="absolute -top-1 -right-1 bg-[#1B5E20] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
-              {notifications}
-            </span>
+        <div className="relative">
+          <button
+            onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
+            className="relative text-[#6C757D] hover:text-[#1B5E20]"
+          >
+            <Bell size={20} />
+            {alertas.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-[#1B5E20] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                {alertas.length}
+              </span>
+            )}
+          </button>
+          {mostrarNotificaciones && (
+            <NotificationsPanel
+              alertas={alertas}
+              onClose={() => setMostrarNotificaciones(false)}
+              onAction={(alerta) => {
+                // Manejar acción según tipo de alerta
+                if (alerta.tipo === 'seguimiento_propuesta') {
+                  setSelectedProspecto(alerta.prospecto);
+                  setMostrarDetallesProspecto(true);
+                } else if (alerta.tipo === 'levantamiento_sin_reporte') {
+                  setSelectedLevantamientoDetalle(levantamientosDetallados.find(l => l.cliente === alerta.levantamiento.cliente));
+                  setCurrentView('levantamientos');
+                }
+                setMostrarNotificaciones(false);
+              }}
+            />
           )}
-        </button>
+        </div>
         <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-lg border border-[#E9ECEF] shadow-sm relative z-10">
           <div className="w-10 h-10 rounded-full bg-[#1B5E20] flex items-center justify-center text-sm font-semibold text-white">
             V
@@ -1335,7 +1905,134 @@ const InnovativeDemo = () => {
           })}
                 </div>
               </div>
-              
+
+      {/* SECCIÓN: ANÁLISIS DE RECHAZOS */}
+      <div className="mt-8">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <TrendingDown className="text-[#1B5E20]" size={24} />
+            <h2 className="text-xl font-semibold text-[#343A40]">Análisis de Rechazos</h2>
+            <span className="text-xs bg-red-50 text-red-600 px-3 py-1 rounded-md border border-red-200 font-medium">
+              {topProspectos.filter(p => p.etapa === 'Rechazada').length} propuestas rechazadas
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* KPIs de Rechazos */}
+          <div className="bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-6">
+            <h3 className="text-base font-semibold text-[#343A40] mb-4">Impacto Financiero</h3>
+            <div className="space-y-4">
+              <div>
+                <div className="text-sm text-[#6C757D] mb-1">Valor Total Perdido</div>
+                <div className="text-3xl font-bold text-red-600">
+                  ${(topProspectos.filter(p => p.etapa === 'Rechazada').reduce((sum, p) => sum + p.valorEstimado, 0) / 1000000).toFixed(1)}M
+                </div>
+              </div>
+              <div>
+                <div className="text-sm text-[#6C757D] mb-1">Propuestas Rechazadas</div>
+                <div className="text-2xl font-bold text-[#343A40]">
+                  {topProspectos.filter(p => p.etapa === 'Rechazada').length}
+                </div>
+              </div>
+              <div>
+                <div className="text-sm text-[#6C757D] mb-1">Con Motivo Documentado</div>
+                <div className="text-2xl font-bold text-[#1B5E20]">
+                  {topProspectos.filter(p => p.etapa === 'Rechazada' && p.motivoRechazo).length}/{topProspectos.filter(p => p.etapa === 'Rechazada').length}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Top Motivos de Rechazo */}
+          <div className="bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-6">
+            <h3 className="text-base font-semibold text-[#343A40] mb-4">Top 3 Motivos de Rechazo</h3>
+            <div className="space-y-3">
+              {(() => {
+                const rechazados = topProspectos.filter(p => p.etapa === 'Rechazada' && p.motivoRechazo);
+                const conteoMotivos = {};
+                rechazados.forEach(p => {
+                  const motivoId = p.motivoRechazo;
+                  if (!conteoMotivos[motivoId]) {
+                    conteoMotivos[motivoId] = { count: 0, valor: 0 };
+                  }
+                  conteoMotivos[motivoId].count++;
+                  conteoMotivos[motivoId].valor += p.valorEstimado;
+                });
+
+                const topMotivos = Object.entries(conteoMotivos)
+                  .map(([id, data]) => ({
+                    motivo: MOTIVOS_RECHAZO.find(m => m.id === parseInt(id))?.motivo || 'Desconocido',
+                    count: data.count,
+                    valor: data.valor
+                  }))
+                  .sort((a, b) => b.count - a.count)
+                  .slice(0, 3);
+
+                return topMotivos.map((item, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-3 bg-[#F8F9FA] rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                        idx === 0 ? 'bg-red-100 text-red-600' :
+                        idx === 1 ? 'bg-orange-100 text-orange-600' :
+                        'bg-yellow-100 text-yellow-600'
+                      }`}>
+                        {idx + 1}
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium text-[#343A40]">{item.motivo}</div>
+                        <div className="text-xs text-[#6C757D]">
+                          ${(item.valor / 1000000).toFixed(1)}M perdidos
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-lg font-bold text-[#343A40]">{item.count}</div>
+                  </div>
+                ));
+              })()}
+            </div>
+          </div>
+
+          {/* Distribución por Categoría */}
+          <div className="bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-6">
+            <h3 className="text-base font-semibold text-[#343A40] mb-4">Distribución por Categoría</h3>
+            <div className="space-y-3">
+              {(() => {
+                const rechazados = topProspectos.filter(p => p.etapa === 'Rechazada' && p.motivoRechazo);
+                const conteoCategorias = {};
+                rechazados.forEach(p => {
+                  const motivo = MOTIVOS_RECHAZO.find(m => m.id === p.motivoRechazo);
+                  const categoria = motivo?.categoria || 'Otro';
+                  conteoCategorias[categoria] = (conteoCategorias[categoria] || 0) + 1;
+                });
+
+                const total = Object.values(conteoCategorias).reduce((sum, val) => sum + val, 0);
+
+                return Object.entries(conteoCategorias)
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([categoria, count]) => {
+                    const porcentaje = total > 0 ? (count / total * 100) : 0;
+                    return (
+                      <div key={categoria}>
+                        <div className="flex items-center justify-between text-sm mb-1">
+                          <span className="font-medium text-[#343A40]">{categoria}</span>
+                          <span className="text-[#6C757D]">{count} ({porcentaje.toFixed(0)}%)</span>
+                        </div>
+                        <div className="w-full bg-[#F8F9FA] rounded-full h-2">
+                          <div
+                            className="bg-[#1B5E20] h-2 rounded-full"
+                            style={{ width: `${porcentaje}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  });
+              })()}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* SECCIÓN: GESTIÓN DE LEADS */}
       <div className="mt-8">
         <div className="flex items-center justify-between mb-6">
@@ -2509,6 +3206,215 @@ const InnovativeDemo = () => {
   );
   };
 
+  // VISTA: REPOSITORIO DE DOCUMENTOS
+  const DocumentosView = () => {
+    const getColorStatus = (status) => {
+      if (status === 'Vigente') return 'bg-green-100 text-green-700 border-green-200';
+      if (status === 'Por Vencer') return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+      return 'bg-red-100 text-red-700 border-red-200';
+    };
+
+    const getIconStatus = (status) => {
+      if (status === 'Vigente') return <CheckSquare size={16} className="text-green-600" />;
+      if (status === 'Por Vencer') return <AlertCircle size={16} className="text-yellow-600" />;
+      return <AlertCircle size={16} className="text-red-600" />;
+    };
+
+    const documentosFiltrados = documentos.filter(doc => {
+      if (filtroDocumentos.tipo && doc.tipo !== filtroDocumentos.tipo) return false;
+      if (filtroDocumentos.categoria && doc.categoria !== filtroDocumentos.categoria) return false;
+      if (filtroDocumentos.status && doc.status !== filtroDocumentos.status) return false;
+      return true;
+    });
+
+    return (
+      <div className="p-8 bg-[#F8F9FA] min-h-screen">
+        <Header title="Repositorio de Documentos" subtitle="Gestión centralizada de permisos, licencias y certificaciones" />
+
+        {/* KPIs DE DOCUMENTOS */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
+          <div className="bg-white rounded-lg p-6 border border-[#E9ECEF] shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-sm font-semibold text-[#6C757D]">Total Documentos</div>
+              <FileText className="text-[#1B5E20]" size={24} />
+            </div>
+            <div className="text-3xl font-bold text-[#343A40]">{documentos.length}</div>
+          </div>
+
+          <div className="bg-green-50 rounded-lg p-6 border border-green-200 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-sm font-semibold text-green-700">Vigentes</div>
+              <CheckSquare className="text-green-600" size={24} />
+            </div>
+            <div className="text-3xl font-bold text-green-700">
+              {documentos.filter(d => d.status === 'Vigente').length}
+            </div>
+          </div>
+
+          <div className="bg-yellow-50 rounded-lg p-6 border border-yellow-200 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-sm font-semibold text-yellow-700">Por Vencer</div>
+              <AlertCircle className="text-yellow-600" size={24} />
+            </div>
+            <div className="text-3xl font-bold text-yellow-700">
+              {documentos.filter(d => d.status === 'Por Vencer').length}
+            </div>
+          </div>
+
+          <div className="bg-red-50 rounded-lg p-6 border border-red-200 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-sm font-semibold text-red-700">Vencidos</div>
+              <AlertCircle className="text-red-600" size={24} />
+            </div>
+            <div className="text-3xl font-bold text-red-700">
+              {documentos.filter(d => d.status === 'Vencido').length}
+            </div>
+          </div>
+        </div>
+
+        {/* FILTROS Y ACCIONES */}
+        <div className="mt-8 bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-6">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-4 flex-wrap">
+              <select
+                value={filtroDocumentos.tipo}
+                onChange={(e) => setFiltroDocumentos({ ...filtroDocumentos, tipo: e.target.value })}
+                className="px-4 py-2 border border-[#E9ECEF] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]"
+              >
+                <option value="">Todos los tipos</option>
+                {TIPOS_DOCUMENTO.map(tipo => (
+                  <option key={tipo} value={tipo}>{tipo}</option>
+                ))}
+              </select>
+
+              <select
+                value={filtroDocumentos.categoria}
+                onChange={(e) => setFiltroDocumentos({ ...filtroDocumentos, categoria: e.target.value })}
+                className="px-4 py-2 border border-[#E9ECEF] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]"
+              >
+                <option value="">Todas las categorías</option>
+                {CATEGORIAS_DOCUMENTO.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+
+              <select
+                value={filtroDocumentos.status}
+                onChange={(e) => setFiltroDocumentos({ ...filtroDocumentos, status: e.target.value })}
+                className="px-4 py-2 border border-[#E9ECEF] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]"
+              >
+                <option value="">Todos los estados</option>
+                <option value="Vigente">Vigente</option>
+                <option value="Por Vencer">Por Vencer</option>
+                <option value="Vencido">Vencido</option>
+              </select>
+
+              {(filtroDocumentos.tipo || filtroDocumentos.categoria || filtroDocumentos.status) && (
+                <button
+                  onClick={() => setFiltroDocumentos({ tipo: '', categoria: '', status: '' })}
+                  className="text-sm text-[#6C757D] hover:text-[#1B5E20] flex items-center gap-1"
+                >
+                  <RotateCcw size={14} />
+                  Limpiar filtros
+                </button>
+              )}
+            </div>
+
+            <button
+              onClick={() => setMostrarNuevoDocumento(true)}
+              className="bg-[#1B5E20] hover:bg-[#2E7D32] text-white px-6 py-2 rounded-lg font-medium text-sm flex items-center gap-2"
+            >
+              <FileText size={18} />
+              Nuevo Documento
+            </button>
+          </div>
+        </div>
+
+        {/* GRID DE DOCUMENTOS */}
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {documentosFiltrados.map(doc => {
+            const hoy = new Date();
+            const vencimiento = new Date(doc.fechaVencimiento);
+            const diasRestantes = Math.floor((vencimiento - hoy) / (1000 * 60 * 60 * 24));
+
+            return (
+              <div key={doc.id} className="bg-white rounded-lg border border-[#E9ECEF] shadow-sm hover:shadow-md transition-all">
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <h3 className="text-base font-bold text-[#343A40] mb-2">{doc.nombre}</h3>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs bg-[#F8F9FA] text-[#6C757D] px-2 py-1 rounded border border-[#E9ECEF]">
+                          {doc.tipo}
+                        </span>
+                        <span className="text-xs bg-[#F8F9FA] text-[#6C757D] px-2 py-1 rounded border border-[#E9ECEF]">
+                          {doc.categoria}
+                        </span>
+                      </div>
+                    </div>
+                    <div className={`px-3 py-1 rounded-full border text-xs font-semibold ${getColorStatus(doc.status)}`}>
+                      {doc.status}
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#6C757D]">Emisión:</span>
+                      <span className="font-medium text-[#343A40]">
+                        {new Date(doc.fechaEmision).toLocaleDateString('es-MX')}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#6C757D]">Vencimiento:</span>
+                      <span className="font-medium text-[#343A40]">
+                        {new Date(doc.fechaVencimiento).toLocaleDateString('es-MX')}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#6C757D]">Días restantes:</span>
+                      <span className={`font-bold ${
+                        diasRestantes < 0 ? 'text-red-600' :
+                        diasRestantes <= 30 ? 'text-yellow-600' :
+                        'text-green-600'
+                      }`}>
+                        {diasRestantes < 0 ? `Vencido hace ${Math.abs(diasRestantes)} días` : `${diasRestantes} días`}
+                      </span>
+                    </div>
+                  </div>
+
+                  {doc.notas && (
+                    <div className="mt-4 p-3 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
+                      <div className="text-xs text-[#6C757D] font-medium mb-1">Notas:</div>
+                      <div className="text-xs text-[#343A40]">{doc.notas}</div>
+                    </div>
+                  )}
+
+                  <div className="mt-4 flex items-center gap-2">
+                    <button className="flex-1 bg-[#F8F9FA] hover:bg-[#E9ECEF] text-[#343A40] px-4 py-2 rounded-lg font-medium text-sm flex items-center justify-center gap-2">
+                      <Eye size={16} />
+                      Ver
+                    </button>
+                    <button className="flex-1 bg-[#1B5E20] hover:bg-[#2E7D32] text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center justify-center gap-2">
+                      <Download size={16} />
+                      Descargar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {documentosFiltrados.length === 0 && (
+          <div className="mt-8 bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-12 text-center">
+            <FileText size={48} className="mx-auto mb-4 text-[#6C757D] opacity-50" />
+            <p className="text-[#6C757D]">No se encontraron documentos con los filtros seleccionados</p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   // VISTA: REPORTES AUTOMÁTICOS A CLIENTES
   const ReportesAutomaticosView = () => (
     <div className="p-8 bg-[#F8F9FA] min-h-screen">
@@ -3552,6 +4458,7 @@ const InnovativeDemo = () => {
             {currentView === 'dashboard' && <DashboardView />}
             {currentView === 'pipeline' && <PipelineComercialView />}
             {currentView === 'levantamientos' && <LevantamientosView />}
+            {currentView === 'documentos' && <DocumentosView />}
             {currentView === 'team' && <TeamControlView />}
             {currentView === 'reportes' && <ReportesAutomaticosView />}
             {currentView === 'trazabilidad' && <TrazabilidadView />}
@@ -4650,9 +5557,40 @@ const InnovativeDemo = () => {
                       <label className="block text-xs text-[#6C757D] font-medium mb-1">Días por Semana</label>
                       <input type="number" min="1" max="7" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="7" />
                     </div>
-                    <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Volumen Mensual Estimado</label>
-                      <input type="text" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Ej: 35 ton/mes" />
+                    <div className="col-span-2">
+                      <label className="block text-xs text-[#6C757D] font-medium mb-1">
+                        Volumen Mensual Estimado (ton) *
+                      </label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        id="volumenEstimado"
+                        className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]"
+                        placeholder="Ingrese el volumen en toneladas"
+                        required
+                        onInput={(e) => {
+                          const valor = parseFloat(e.target.value);
+                          const advertencia = document.getElementById('advertenciaViabilidad');
+                          if (valor && valor < 10) {
+                            advertencia.classList.remove('hidden');
+                          } else {
+                            advertencia.classList.add('hidden');
+                          }
+                        }}
+                      />
+                      <div id="advertenciaViabilidad" className="mt-2 p-3 bg-orange-50 border border-orange-200 rounded-md hidden">
+                        <div className="flex items-center gap-2 text-orange-700 text-xs">
+                          <AlertCircle size={14} className="flex-shrink-0" />
+                          <span className="font-medium">
+                            Volumen por debajo del mínimo de viabilidad (10 ton/mes)
+                          </span>
+                        </div>
+                        <p className="text-xs text-orange-600 mt-1 ml-5">
+                          Según el procedimiento IME-COM-PRO-001, el criterio de viabilidad
+                          es mínimo 10 toneladas de cartón o equivalente por mes. Se puede continuar
+                          con el registro pero se marcará como "Baja viabilidad".
+                        </p>
+                      </div>
                     </div>
                     <div>
                       <label className="block text-xs text-[#6C757D] font-medium mb-1">Horarios Preferidos de Recolección</label>
@@ -5218,6 +6156,28 @@ const InnovativeDemo = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* MODAL DE MOTIVO DE RECHAZO */}
+      {mostrarModalRechazo && prospectoParaRechazar && (
+        <ModalMotivoRechazo
+          prospecto={prospectoParaRechazar}
+          onClose={() => {
+            setMostrarModalRechazo(false);
+            setProspectoParaRechazar(null);
+            setMotivoRechazoSeleccionado('');
+            setDetalleRechazo('');
+          }}
+          onSave={(datosRechazo) => {
+            // En una aplicación real, aquí se actualizaría el estado del prospecto
+            console.log('Datos de rechazo guardados:', datosRechazo);
+            alert(`Motivo de rechazo registrado exitosamente para ${prospectoParaRechazar.nombre}`);
+            setMostrarModalRechazo(false);
+            setProspectoParaRechazar(null);
+            setMotivoRechazoSeleccionado('');
+            setDetalleRechazo('');
+          }}
+        />
       )}
     </>
   );
