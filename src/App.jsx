@@ -1257,7 +1257,7 @@ const calcularStatusDocumento = (fechaVencimiento) => {
   const diasRestantes = Math.floor((vencimiento - hoy) / (1000 * 60 * 60 * 24));
 
   if (diasRestantes < 0) return 'Vencido';
-  if (diasRestantes <= 30) return 'Vencido';
+  if (diasRestantes <= 30) return 'Por Vencer';
   if (diasRestantes <= 60) return 'Por Vencer';
   return 'Vigente';
 };
