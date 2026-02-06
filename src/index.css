@@ -10,4 +10,26 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  background-color: #faf7f2;
+}
+
+/* Navbar blur effect */
+.navbar-blur {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Modern card with subtle shadow */
+.card-modern {
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-modern:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+}
+
+/* Transition utility */
+.transition-modern {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }

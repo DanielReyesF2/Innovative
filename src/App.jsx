@@ -3709,7 +3709,7 @@ const generarDatosSankeyCliente = (cliente, datosTrazabilidadCliente) => {
     ...puntosOrigen,
     { id: 'Orgánicos', nodeColor: '#22c55e' },
     { id: 'Reciclables', nodeColor: '#3b82f6' },
-    { id: 'Reuso', nodeColor: '#1B4965' },
+    { id: 'Reuso', nodeColor: '#008080' },
     { id: 'Inorgánicos', nodeColor: '#6b7280' },
     { 
       id: destinoCompostaId,
@@ -3889,18 +3889,18 @@ const presupuestoEvolution = [
 ];
 
 const COLORS_INNOVATIVE = {
-  primary: '#1B5E20',      // Verde vibrante principal
-  secondary: '#2E7D32',    // Verde vibrante secundario
-  accent: '#388E3C',      // Verde claro para acentos
-  blue: '#1B4965',         // Azul corporativo
+  primary: '#00a8a8',      // Verde vibrante principal
+  secondary: '#008080',    // Verde vibrante secundario
+  accent: '#00b3b3',      // Verde claro para acentos
+  blue: '#008080',         // Azul corporativo
   lightBlue: '#5FA8D3',
-  gray: '#F8F9FA',         // Gris muy claro para fondos
-  darkGray: '#343A40',      // Gris oscuro para texto
-  borderGray: '#E9ECEF',    // Gris para bordes sutiles
-  textGray: '#6C757D'       // Gris para texto secundario
+  gray: '#f3f4f6',         // Gris muy claro para fondos
+  darkGray: '#1c2c4a',      // Gris oscuro para texto
+  borderGray: '#e5e7eb',    // Gris para bordes sutiles
+  textGray: '#6b7280'       // Gris para texto secundario
 };
 
-const COLORS_CHART = ['#1B5E20', '#2E7D32', '#388E3C', '#1B4965', '#5FA8D3'];
+const COLORS_CHART = ['#00a8a8', '#0D47A1', '#008080', '#F57C00', '#2E7D32'];
 
 // TIPOS Y CATEGORÍAS DE DOCUMENTOS
 const TIPOS_DOCUMENTO = [
@@ -4186,20 +4186,20 @@ const InnovativeDemo = () => {
 
   // Componente Panel de Notificaciones
   const NotificationsPanel = ({ alertas, onClose, onAction }) => (
-    <div className="absolute right-0 top-12 w-96 bg-white rounded-lg shadow-lg border border-[#E9ECEF] z-50">
-      <div className="p-4 border-b border-[#E9ECEF] flex justify-between items-center">
-        <h3 className="font-semibold text-[#343A40]">Alertas ({alertas.length})</h3>
+    <div className="absolute right-0 top-12 w-96 bg-white rounded-lg shadow-lg border border-[#e5e7eb] z-50">
+      <div className="p-4 border-b border-[#e5e7eb] flex justify-between items-center">
+        <h3 className="font-semibold text-[#1c2c4a]">Alertas ({alertas.length})</h3>
         <button onClick={onClose}><X size={18} /></button>
       </div>
       <div className="max-h-96 overflow-y-auto">
         {alertas.length === 0 ? (
-          <div className="p-8 text-center text-[#6C757D]">
+          <div className="p-8 text-center text-[#6b7280]">
             <CheckSquare size={48} className="mx-auto mb-3 opacity-50" />
             <p className="text-sm">No hay alertas pendientes</p>
           </div>
         ) : (
           alertas.map((alerta, idx) => (
-            <div key={idx} className={`p-4 border-b border-[#E9ECEF] ${
+            <div key={idx} className={`p-4 border-b border-[#e5e7eb] ${
               alerta.prioridad === 'alta' ? 'bg-red-50' : 'bg-yellow-50'
             }`}>
               <div className="flex items-start gap-2">
@@ -4207,10 +4207,10 @@ const InnovativeDemo = () => {
                   alerta.prioridad === 'alta' ? 'text-red-600' : 'text-yellow-600'
                 }`} />
                 <div className="flex-1">
-                  <div className="text-sm font-medium text-[#343A40]">{alerta.mensaje}</div>
+                  <div className="text-sm font-medium text-[#1c2c4a]">{alerta.mensaje}</div>
                   <button
                     onClick={() => onAction(alerta)}
-                    className="mt-2 text-xs text-[#1B5E20] font-medium hover:text-[#2E7D32]"
+                    className="mt-2 text-xs text-[#00a8a8] font-medium hover:text-[#008080]"
                   >
                     {alerta.accion} →
                   </button>
@@ -4244,15 +4244,15 @@ const InnovativeDemo = () => {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
-          <div className="p-6 border-b border-[#E9ECEF]">
+          <div className="p-6 border-b border-[#e5e7eb]">
             <div className="flex justify-between items-center">
               <div>
-                <h3 className="text-xl font-bold text-[#343A40]">Motivo de Rechazo</h3>
-                <p className="text-sm text-[#6C757D] mt-1">
+                <h3 className="text-xl font-bold text-[#1c2c4a]">Motivo de Rechazo</h3>
+                <p className="text-sm text-[#6b7280] mt-1">
                   {prospecto?.empresa}
                 </p>
               </div>
-              <button onClick={onClose} className="text-[#6C757D] hover:text-[#343A40]">
+              <button onClick={onClose} className="text-[#6b7280] hover:text-[#1c2c4a]">
                 <X size={24} />
               </button>
             </div>
@@ -4260,13 +4260,13 @@ const InnovativeDemo = () => {
 
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-[#343A40] mb-2">
+              <label className="block text-sm font-semibold text-[#1c2c4a] mb-2">
                 Motivo de Rechazo *
               </label>
               <select
                 value={motivoSeleccionado}
                 onChange={(e) => setMotivoSeleccionado(e.target.value)}
-                className="w-full px-4 py-3 border border-[#E9ECEF] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]"
+                className="w-full px-4 py-3 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]"
                 required
               >
                 <option value="">Seleccione un motivo...</option>
@@ -4279,13 +4279,13 @@ const InnovativeDemo = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-[#343A40] mb-2">
+              <label className="block text-sm font-semibold text-[#1c2c4a] mb-2">
                 Detalles adicionales
               </label>
               <textarea
                 value={detalle}
                 onChange={(e) => setDetalle(e.target.value)}
-                className="w-full px-4 py-3 border border-[#E9ECEF] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]"
+                className="w-full px-4 py-3 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]"
                 rows={4}
                 placeholder="Proporcione información adicional sobre el rechazo..."
               />
@@ -4304,17 +4304,17 @@ const InnovativeDemo = () => {
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t border-[#E9ECEF]">
+            <div className="flex justify-end gap-3 pt-4 border-t border-[#e5e7eb]">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-6 py-2.5 border border-[#E9ECEF] text-[#6C757D] rounded-lg hover:bg-[#F8F9FA] font-medium text-sm"
+                className="px-6 py-2.5 border border-[#e5e7eb] text-[#6b7280] rounded-lg hover:bg-[#f3f4f6] font-medium text-sm"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="px-6 py-2.5 bg-[#1B5E20] text-white rounded-lg hover:bg-[#2E7D32] font-medium text-sm"
+                className="px-6 py-2.5 bg-[#00a8a8] text-white rounded-lg hover:bg-[#008080] font-medium text-sm"
               >
                 Guardar Motivo
               </button>
@@ -4333,52 +4333,52 @@ const InnovativeDemo = () => {
           <div className="flex items-center justify-center gap-6 mb-6">
             <div className="text-5xl">♻️</div>
             <div>
-              <h1 className="text-6xl font-bold text-[#1B5E20] mb-3 tracking-tight">
+              <h1 className="text-6xl font-bold text-[#00a8a8] mb-3 tracking-tight">
                 INNOVATIVE GROUP
               </h1>
-              <div className="text-xl text-[#6C757D] font-medium tracking-wide">
+              <div className="text-xl text-[#6b7280] font-medium tracking-wide">
                 × ECONOVA TECH SOLUTIONS
               </div>
             </div>
           </div>
         </div>
         
-        <div className="bg-white rounded-lg p-16 mb-12 border border-[#E9ECEF] shadow-sm">
-          <h2 className="text-3xl font-semibold text-[#343A40] mb-6 leading-tight">
+        <div className="bg-white rounded-lg p-16 mb-12 border border-[#e5e7eb] shadow-sm">
+          <h2 className="text-3xl font-semibold text-[#1c2c4a] mb-6 leading-tight">
             Sistema Integral de Gestión Comercial
           </h2>
-          <p className="text-lg text-[#6C757D] mb-12 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-lg text-[#6b7280] mb-12 leading-relaxed max-w-2xl mx-auto">
             Control total de levantamientos, propuestas, pipeline, presupuesto, KPIs 
             y reportes de trazabilidad entregados para clientes.
           </p>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-            <div className="bg-[#F8F9FA] rounded-lg p-8 border border-[#E9ECEF]">
+            <div className="bg-[#f3f4f6] rounded-lg p-8 border border-[#e5e7eb]">
               <div className="text-4xl mb-4">📋</div>
-              <div className="text-sm font-semibold text-[#343A40]">Levantamientos</div>
-              <div className="text-xs text-[#6C757D] mt-1">& Propuestas</div>
+              <div className="text-sm font-semibold text-[#1c2c4a]">Levantamientos</div>
+              <div className="text-xs text-[#6b7280] mt-1">& Propuestas</div>
             </div>
-            <div className="bg-[#F8F9FA] rounded-lg p-8 border border-[#E9ECEF]">
+            <div className="bg-[#f3f4f6] rounded-lg p-8 border border-[#e5e7eb]">
               <div className="text-4xl mb-4">📊</div>
-              <div className="text-sm font-semibold text-[#343A40]">Pipeline</div>
-              <div className="text-xs text-[#6C757D] mt-1">Embudo comercial</div>
+              <div className="text-sm font-semibold text-[#1c2c4a]">Pipeline</div>
+              <div className="text-xs text-[#6b7280] mt-1">Embudo comercial</div>
             </div>
-            <div className="bg-[#F8F9FA] rounded-lg p-8 border border-[#E9ECEF]">
+            <div className="bg-[#f3f4f6] rounded-lg p-8 border border-[#e5e7eb]">
               <div className="text-4xl mb-4">💰</div>
-              <div className="text-sm font-semibold text-[#343A40]">Presupuesto</div>
-              <div className="text-xs text-[#6C757D] mt-1">vs Real</div>
+              <div className="text-sm font-semibold text-[#1c2c4a]">Presupuesto</div>
+              <div className="text-xs text-[#6b7280] mt-1">vs Real</div>
             </div>
-            <div className="bg-[#F8F9FA] rounded-lg p-8 border border-[#E9ECEF]">
+            <div className="bg-[#f3f4f6] rounded-lg p-8 border border-[#e5e7eb]">
               <div className="text-4xl mb-4">📧</div>
-              <div className="text-sm font-semibold text-[#343A40]">Reportes Auto</div>
-              <div className="text-xs text-[#6C757D] mt-1">Mensuales</div>
+              <div className="text-sm font-semibold text-[#1c2c4a]">Reportes Auto</div>
+              <div className="text-xs text-[#6b7280] mt-1">Mensuales</div>
             </div>
           </div>
         </div>
         
         <button
           onClick={() => setCurrentView('dashboard')}
-          className="bg-[#1B5E20] hover:bg-[#2E7D32] text-white px-12 py-4 rounded-md text-lg font-semibold transition-all shadow-sm"
+          className="bg-[#00a8a8] hover:bg-[#008080] text-white px-12 py-4 rounded-md text-lg font-semibold transition-all shadow-sm"
         >
           Acceder al Sistema
         </button>
@@ -4386,74 +4386,120 @@ const InnovativeDemo = () => {
     </div>
   );
 
-  // Sidebar
+  // Sidebar - Estilo Notion/kpis-orsega
+  const menuSections = [
+    {
+      label: 'PRINCIPAL',
+      items: [
+        { id: 'dashboard', icon: Home, label: 'Dashboard' },
+        { id: 'pipeline', icon: TrendingUp, label: 'Ventas' },
+        { id: 'levantamientos', icon: ClipboardList, label: 'Levantamientos' },
+      ]
+    },
+    {
+      label: 'EJECUTIVO',
+      items: [
+        { id: 'team', icon: Users, label: 'Centro de Control' },
+      ]
+    },
+    {
+      label: 'SISTEMA',
+      items: [
+        { id: 'documentos', icon: FileText, label: 'Documentos' },
+        { id: 'trazabilidad', icon: Recycle, label: 'Trazabilidad' },
+        { id: 'admin', icon: Settings, label: 'Administración' },
+      ]
+    }
+  ];
+
   const Sidebar = () => (
-    <div className={`bg-white h-screen transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-20'} flex flex-col border-r border-[#E9ECEF] shadow-sm relative overflow-hidden`}>
-      <div className="p-6 border-b border-[#E9ECEF] flex items-center justify-between relative z-10">
+    <div className={`bg-white h-screen transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-20'} flex flex-col border-r border-[#e5e7eb] relative overflow-hidden`}>
+      {/* Logo */}
+      <div className="px-5 py-4 flex items-center justify-between">
         {sidebarOpen && (
           <div>
-            <h2 className="text-[#1B5E20] text-xl font-bold tracking-tight">INNOVATIVE</h2>
-            <p className="text-xs text-[#6C757D] mt-1 font-medium">Gestión Comercial</p>
+            <h2 className="text-[#1c2c4a] text-lg font-bold tracking-tight">INNOVATIVE</h2>
+            <p className="text-[11px] text-[#6b7280] mt-0.5 font-medium">Gestión Comercial</p>
           </div>
         )}
-        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-[#6C757D] hover:text-[#1B5E20] transition-colors p-1 rounded-md hover:bg-[#F8F9FA]">
-          {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-[#6b7280] hover:text-[#1c2c4a] transition-colors p-1.5 rounded-md hover:bg-[#f3f4f6]">
+          {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
       </div>
-      
-      <nav className="flex-1 p-4 relative z-10">
-        {[
-          { id: 'dashboard', icon: Home, label: 'Dashboard' },
-          { id: 'pipeline', icon: TrendingUp, label: 'Pipeline Comercial' },
-          { id: 'levantamientos', icon: ClipboardList, label: 'Levantamientos' },
-          { id: 'documentos', icon: FileText, label: 'Documentos' },
-          { id: 'team', icon: Users, label: 'Centro de Control de KPIs' },
-          { id: 'trazabilidad', icon: Recycle, label: 'Trazabilidad' }
-        ].map(item => (
-          <button
-            key={item.id}
-            onClick={() => {
-              setCurrentView(item.id);
-              setSelectedClient(null);
-              setSelectedTeamMember(null);
-            }}
-            className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-3 rounded-lg mb-2 transition-all font-medium text-sm ${
-              currentView === item.id 
-                ? 'bg-[#1B5E20] text-white' 
-                : 'text-[#6C757D] hover:bg-[#F8F9FA] hover:text-[#1B5E20]'
-            }`}
-          >
-            <item.icon size={20} className="flex-shrink-0" />
-            {sidebarOpen && <span className="flex-1 text-left">{item.label}</span>}
-          </button>
+
+      {/* Search bar */}
+      {sidebarOpen && (
+        <div className="px-4 pb-3">
+          <div className="flex items-center gap-2 px-3 py-2 bg-[#f3f4f6]/50 border border-[#e5e7eb]/50 rounded-md text-[#6b7280] text-sm cursor-pointer hover:border-[#e5e7eb] transition-colors">
+            <Search size={14} />
+            <span className="text-[13px]">Buscar...</span>
+            <kbd className="ml-auto text-[10px] bg-white px-1.5 py-0.5 rounded border border-[#e5e7eb] font-mono">⌘K</kbd>
+          </div>
+        </div>
+      )}
+
+      {/* Navigation */}
+      <nav className="flex-1 px-3 overflow-y-auto">
+        {menuSections.map((section, sIdx) => (
+          <div key={sIdx}>
+            {sidebarOpen && (
+              <div className="text-[11px] uppercase tracking-wider font-semibold text-[#6b7280]/60 px-3 py-2 mt-3 first:mt-1">
+                {section.label}
+              </div>
+            )}
+            {!sidebarOpen && sIdx > 0 && (
+              <div className="mx-3 my-2 border-t border-[#e5e7eb]" />
+            )}
+            {section.items.map(item => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  if (item.id !== 'admin') {
+                    setCurrentView(item.id);
+                    setSelectedClient(null);
+                    setSelectedTeamMember(null);
+                  }
+                }}
+                className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-3' : 'justify-center'} px-3 py-2 rounded-md mb-0.5 transition-all text-sm ${
+                  currentView === item.id
+                    ? 'bg-[#00a8a8]/10 text-[#00a8a8] font-semibold'
+                    : 'text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#1c2c4a] font-medium'
+                }`}
+              >
+                <item.icon size={18} className="flex-shrink-0" />
+                {sidebarOpen && <span className="flex-1 text-left">{item.label}</span>}
+              </button>
+            ))}
+          </div>
         ))}
       </nav>
-      
-      <div className="p-4 border-t border-[#E9ECEF] relative z-10">
-        <button className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-3' : 'justify-center'} p-3 text-[#6C757D] hover:bg-[#F8F9FA] hover:text-[#1B5E20] rounded-lg text-sm font-medium transition-all`}>
-          <LogOut size={20} className="flex-shrink-0" />
-          {sidebarOpen && <span className="flex-1 text-left">Salir</span>}
+
+      {/* Logout */}
+      <div className="px-3 py-3 border-t border-[#e5e7eb]">
+        <button className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-3' : 'justify-center'} px-3 py-2 text-[#6b7280] hover:bg-red-500/10 hover:text-red-600 rounded-md text-sm font-medium transition-all`}>
+          <LogOut size={18} className="flex-shrink-0" />
+          {sidebarOpen && <span className="flex-1 text-left">Cerrar sesión</span>}
         </button>
       </div>
     </div>
   );
 
-  // Header
+  // Header - Sticky con blur estilo kpis-orsega
   const Header = ({ title, subtitle }) => (
-    <div className="bg-white border-b border-[#E9ECEF] px-8 py-6 flex justify-between items-center relative">
-      <div className="relative z-10">
-        <h1 className="text-2xl font-bold text-[#343A40] tracking-tight">{title}</h1>
-        {subtitle && <p className="text-[#6C757D] mt-1 text-sm font-medium">{subtitle}</p>}
+    <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-[#e5e7eb] px-6 py-3 flex justify-between items-center">
+      <div>
+        <h1 className="text-lg font-semibold text-[#1c2c4a]">{title}</h1>
+        {subtitle && <p className="text-[#6b7280] text-xs">{subtitle}</p>}
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <div className="relative">
           <button
             onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
-            className="relative text-[#6C757D] hover:text-[#1B5E20]"
+            className="relative text-[#6b7280] hover:text-[#00a8a8] p-2 rounded-md hover:bg-[#f3f4f6] transition-colors"
           >
-            <Bell size={20} />
+            <Bell size={18} />
             {alertas.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#1B5E20] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+              <span className="absolute top-1 right-1 bg-[#00a8a8] text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-semibold">
                 {alertas.length}
               </span>
             )}
@@ -4463,7 +4509,6 @@ const InnovativeDemo = () => {
               alertas={alertas}
               onClose={() => setMostrarNotificaciones(false)}
               onAction={(alerta) => {
-                // Manejar acción según tipo de alerta
                 if (alerta.tipo === 'seguimiento_propuesta') {
                   setSelectedProspecto(alerta.prospecto);
                   setMostrarDetallesProspecto(true);
@@ -4476,14 +4521,11 @@ const InnovativeDemo = () => {
             />
           )}
         </div>
-        <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-lg border border-[#E9ECEF] shadow-sm relative z-10">
-          <div className="w-10 h-10 rounded-full bg-[#1B5E20] flex items-center justify-center text-sm font-semibold text-white">
-            V
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-full bg-[#00a8a8] flex items-center justify-center text-xs font-semibold text-white">
+            E
           </div>
-          <div className="text-sm">
-            <div className="font-semibold text-[#343A40]">Vero</div>
-            <div className="text-xs text-[#6C757D]">Directora Comercial</div>
-          </div>
+          <span className="text-sm font-medium text-[#1c2c4a] hidden sm:inline">Econova</span>
         </div>
       </div>
     </div>
@@ -4491,45 +4533,65 @@ const InnovativeDemo = () => {
 
   // DASHBOARD PRINCIPAL
   const DashboardView = () => (
-    <div className="p-8 bg-[#F8F9FA] min-h-screen">
+    <div className="p-8 bg-[#faf7f2] min-h-screen">
       <Header title="Dashboard Ejecutivo" subtitle="Control integral - Actualizado: 11 Nov 2025, 17:45 hrs" />
       
-      {/* MÉTRICAS PRINCIPALES - DISEÑO CREATIVO */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        <div className="bg-[#1B5E20] rounded-lg p-6 text-white shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-              <div className="text-sm font-medium opacity-90">Presupuesto Mensual</div>
-              <DollarSign className="opacity-80" size={24} />
+      {/* MÉTRICAS PRINCIPALES - Estilo kpis-orsega con accent bar */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
+        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-[#00a8a8]"></div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm text-[#6b7280] mb-1">Presupuesto Mensual</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">$3.3M</div>
+              <div className="text-xs text-[#6b7280] mt-1">Cumplimiento: 107%</div>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-[#00a8a8]/10 flex items-center justify-center">
+              <DollarSign className="text-[#00a8a8]" size={20} />
+            </div>
           </div>
-          <div className="text-4xl font-bold mb-2">$3.3M</div>
-          <div className="text-sm font-medium opacity-90">Cumplimiento: 107%</div>
         </div>
-        
-        <div className="bg-[#0D47A1] rounded-lg p-6 text-white shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-              <div className="text-sm font-medium opacity-90">Levantamientos Activos</div>
-              <ClipboardList className="opacity-80" size={24} />
+
+        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D47A1]"></div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm text-[#6b7280] mb-1">Levantamientos Activos</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">32</div>
+              <div className="text-xs text-[#6b7280] mt-1">↑ 18% vs mes anterior</div>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-[#0D47A1]/10 flex items-center justify-center">
+              <ClipboardList className="text-[#0D47A1]" size={20} />
+            </div>
           </div>
-          <div className="text-4xl font-bold mb-2">32</div>
-          <div className="text-sm font-medium opacity-90">↑ 18% vs mes anterior</div>
         </div>
-        
-        <div className="bg-[#2E7D32] rounded-lg p-6 text-white shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-              <div className="text-sm font-medium opacity-90">Propuestas Enviadas</div>
-              <FileText className="opacity-80" size={24} />
+
+        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-[#2E7D32]"></div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm text-[#6b7280] mb-1">Propuestas Enviadas</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">24</div>
+              <div className="text-xs text-[#6b7280] mt-1">Tasa conversión: 33%</div>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-[#2E7D32]/10 flex items-center justify-center">
+              <FileText className="text-[#2E7D32]" size={20} />
+            </div>
           </div>
-          <div className="text-4xl font-bold mb-2">24</div>
-          <div className="text-sm font-medium opacity-90">Tasa conversión: 33%</div>
         </div>
-        
-        <div className="bg-[#388E3C] rounded-lg p-6 text-white shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-              <div className="text-sm font-medium opacity-90">Reportes de Trazabilidad</div>
-              <Send className="opacity-80" size={24} />
+
+        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-[#F57C00]"></div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm text-[#6b7280] mb-1">Reportes de Trazabilidad</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">28</div>
+              <div className="text-xs text-[#6b7280] mt-1">Próximos: 1 Dic</div>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-[#F57C00]/10 flex items-center justify-center">
+              <Send className="text-[#F57C00]" size={20} />
+            </div>
           </div>
-          <div className="text-4xl font-bold mb-2">28</div>
-          <div className="text-sm font-medium opacity-90">Próximos: 1 Dic</div>
         </div>
       </div>
 
@@ -4537,41 +4599,42 @@ const InnovativeDemo = () => {
       <div className="mt-8">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <Target className="text-[#1B5E20]" size={24} />
-            <h2 className="text-xl font-semibold text-[#343A40]">Top Prospectos</h2>
-            <span className="text-xs bg-[#F8F9FA] text-[#6C757D] px-3 py-1 rounded-md border border-[#E9ECEF] font-medium">
+            <Target className="text-[#00a8a8]" size={24} />
+            <h2 className="text-xl font-semibold text-[#1c2c4a]">Top Prospectos</h2>
+            <span className="text-xs bg-[#f3f4f6] text-[#6b7280] px-3 py-1 rounded-md border border-[#e5e7eb] font-medium">
               {topProspectos.length} empresas prioritarias
             </span>
           </div>
         </div>
         
         {/* RESUMEN VISUAL DE PROSPECTOS */}
-        <div className="bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-6 mb-6">
-          <h3 className="text-base font-semibold text-[#343A40] mb-4">Resumen de Prospectos</h3>
+        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6 mb-6">
+          <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Resumen de Prospectos</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-[#1B5E20] rounded-lg text-white">
-              <div className="text-2xl font-bold mb-1">
+            <div className="text-center p-4 bg-white rounded-lg border border-[#00a8a8]/30 relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#00a8a8]"></div>
+              <div className="text-2xl font-bold text-[#00a8a8] mb-1">
                 ${(topProspectos.reduce((sum, p) => sum + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(1)}M
               </div>
-              <div className="text-xs opacity-90">Valor Total Potencial</div>
+              <div className="text-xs text-[#6b7280]">Valor Total Potencial</div>
             </div>
-            <div className="text-center p-4 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
-              <div className="text-2xl font-bold text-[#343A40] mb-1">
+            <div className="text-center p-4 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+              <div className="text-2xl font-bold text-[#1c2c4a] mb-1">
                 {topProspectos.filter(p => p.status === 'Reunión agendada').length}
               </div>
-              <div className="text-xs text-[#6C757D]">En Negociación</div>
+              <div className="text-xs text-[#6b7280]">En Negociación</div>
             </div>
-            <div className="text-center p-4 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
-              <div className="text-2xl font-bold text-[#343A40] mb-1">
+            <div className="text-center p-4 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+              <div className="text-2xl font-bold text-[#1c2c4a] mb-1">
                 {Math.round(topProspectos.filter(p => p.propuesta?.ventaTotal).length / topProspectos.length * 100)}%
               </div>
-              <div className="text-xs text-[#6C757D]">Probabilidad Promedio</div>
+              <div className="text-xs text-[#6b7280]">Probabilidad Promedio</div>
             </div>
-            <div className="text-center p-4 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
-              <div className="text-2xl font-bold text-[#343A40] mb-1">
+            <div className="text-center p-4 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+              <div className="text-2xl font-bold text-[#1c2c4a] mb-1">
                 {topProspectos.filter(p => p.status === 'Propuesta enviada' || p.status === 'Levantamiento').length}
               </div>
-              <div className="text-xs text-[#6C757D]">Alta Prioridad</div>
+              <div className="text-xs text-[#6b7280]">Alta Prioridad</div>
             </div>
           </div>
         </div>
@@ -4579,7 +4642,7 @@ const InnovativeDemo = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {topProspectos.slice(0, 4).map(prospecto => {
             const getColorRiesgo = (riesgo) => {
-              if (riesgo === 'Bajo' || riesgo === 'Muy Bajo') return 'text-[#1B5E20]';
+              if (riesgo === 'Bajo' || riesgo === 'Muy Bajo') return 'text-[#00a8a8]';
               if (riesgo === 'Medio') return 'text-orange-600';
               return 'text-red-600';
             };
@@ -4587,17 +4650,17 @@ const InnovativeDemo = () => {
             return (
               <div 
                 key={prospecto.id}
-                className="bg-white rounded-lg border border-[#E9ECEF] shadow-sm hover:shadow-md transition-all"
+                className="bg-white rounded-lg border border-[#e5e7eb] shadow-sm hover:shadow-md transition-all"
               >
                 {/* HEADER */}
-                <div className="p-5 border-b border-[#E9ECEF]">
+                <div className="p-5 border-b border-[#e5e7eb]">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-[#343A40] mb-1">{prospecto.empresa}</h3>
-                      <p className="text-sm text-[#6C757D]">{prospecto.industria}</p>
+                      <h3 className="text-lg font-semibold text-[#1c2c4a] mb-1">{prospecto.empresa}</h3>
+                      <p className="text-sm text-[#6b7280]">{prospecto.industria}</p>
                   </div>
                 </div>
-                  <div className="flex items-center gap-2 text-sm text-[#6C757D]">
+                  <div className="flex items-center gap-2 text-sm text-[#6b7280]">
                     <Users size={14} />
                     <span className="font-medium">Ejecutivo:</span>
                     <span>{prospecto.ejecutivo}</span>
@@ -4608,19 +4671,19 @@ const InnovativeDemo = () => {
                 <div className="p-5 space-y-4">
                   {/* PRÓXIMO PASO */}
                   <div>
-                    <div className="text-xs text-[#6C757D] font-medium mb-1">Comentarios</div>
-                    <div className="text-sm font-semibold text-[#343A40]">{(prospecto.comentarios || "Pendiente")}</div>
+                    <div className="text-xs text-[#6b7280] font-medium mb-1">Comentarios</div>
+                    <div className="text-sm font-semibold text-[#1c2c4a]">{(prospecto.comentarios || "Pendiente")}</div>
                   </div>
                   
                   {/* MÉTRICAS RÁPIDAS */}
                   <div className="grid grid-cols-2 gap-3">
                   <div>
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">Status</div>
-                      <div className="text-sm font-semibold text-[#343A40]">{prospecto.status}</div>
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Status</div>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{prospecto.status}</div>
                   </div>
                   <div>
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">Nivel</div>
-                      <div className={`text-sm font-semibold ${prospecto.status === 'Propuesta enviada' ? 'text-[#0D47A1]' : prospecto.status === 'Levantamiento' ? 'text-orange-600' : 'text-[#1B5E20]'}`}>
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Nivel</div>
+                      <div className={`text-sm font-semibold ${prospecto.status === 'Propuesta enviada' ? 'text-[#0D47A1]' : prospecto.status === 'Levantamiento' ? 'text-orange-600' : 'text-[#00a8a8]'}`}>
                         {prospecto.status}
                   </div>
                     </div>
@@ -4628,18 +4691,18 @@ const InnovativeDemo = () => {
                   
                   {/* OPORTUNIDAD */}
                   <div>
-                    <div className="text-xs text-[#6C757D] font-medium mb-1">Servicios</div>
-                    <div className="text-sm text-[#343A40]">{(prospecto.servicios || []).map(s => SERVICIOS_INNOVATIVE.find(si => si.id === s)?.nombre || s).join(", ") || "Sin servicios"}</div>
+                    <div className="text-xs text-[#6b7280] font-medium mb-1">Servicios</div>
+                    <div className="text-sm text-[#1c2c4a]">{(prospecto.servicios || []).map(s => SERVICIOS_INNOVATIVE.find(si => si.id === s)?.nombre || s).join(", ") || "Sin servicios"}</div>
                   </div>
                   
                   {/* MÉTRICAS FINANCIERAS */}
-                  <div className="grid grid-cols-2 gap-3 pt-3 border-t border-[#E9ECEF]">
-                    <div className="bg-[#F8F9FA] rounded-lg p-3 border border-[#E9ECEF]">
-                      <div className="text-xs text-[#6C757D] mb-1">Volumen</div>
-                      <div className="text-sm font-semibold text-[#343A40]">{prospecto.volumenEstimado}</div>
+                  <div className="grid grid-cols-2 gap-3 pt-3 border-t border-[#e5e7eb]">
+                    <div className="bg-[#f3f4f6] rounded-lg p-3 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] mb-1">Volumen</div>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{prospecto.volumenEstimado}</div>
                 </div>
-                    <div className="bg-[#F8F9FA] rounded-lg p-3 border border-[#E9ECEF]">
-                      <div className="text-xs text-[#6C757D] mb-1">Valor</div>
+                    <div className="bg-[#f3f4f6] rounded-lg p-3 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] mb-1">Valor</div>
                       <div className="text-sm font-semibold text-[#0D47A1]">
                         ${((prospecto.propuesta?.ventaTotal || prospecto.facturacionEstimada || 0) / 1000000).toFixed(1)}M
                       </div>
@@ -4647,7 +4710,7 @@ const InnovativeDemo = () => {
               </div>
               
                   {/* BOTONES DE ACCIÓN */}
-                  <div className="flex gap-2 pt-3 border-t border-[#E9ECEF]">
+                  <div className="flex gap-2 pt-3 border-t border-[#e5e7eb]">
                     {(prospecto.status === 'Levantamiento' || prospecto.status === 'Propuesta enviada' || prospecto.status === 'Inicio de operación') && (
                       <button
                         onClick={() => {
@@ -4657,7 +4720,7 @@ const InnovativeDemo = () => {
                             setMostrarLevantamiento(true);
                           }
                         }}
-                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#F8F9FA] hover:bg-[#E9ECEF] text-[#343A40] rounded-md text-xs font-medium transition-all border border-[#E9ECEF]"
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#f3f4f6] hover:bg-[#e5e7eb] text-[#1c2c4a] rounded-md text-xs font-medium transition-all border border-[#e5e7eb]"
                       >
                         <Eye size={14} />
                         Levantamiento
@@ -4669,7 +4732,7 @@ const InnovativeDemo = () => {
                           setSelectedProspecto(prospecto);
                           setMostrarPropuesta(true);
                         }}
-                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#0D47A1] hover:bg-[#0052A3] text-white rounded-md text-xs font-medium transition-all"
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#0D47A1] hover:bg-[#0D47A1] text-white rounded-md text-xs font-medium transition-all"
                       >
                         <FileText size={14} />
                         Propuesta
@@ -4678,12 +4741,12 @@ const InnovativeDemo = () => {
                 </div>
                   
                   {/* INFO ADICIONAL */}
-                  <div className="pt-3 border-t border-[#E9ECEF] space-y-2">
-                    <div className="flex items-center gap-2 text-xs text-[#6C757D]">
+                  <div className="pt-3 border-t border-[#e5e7eb] space-y-2">
+                    <div className="flex items-center gap-2 text-xs text-[#6b7280]">
                       <MapPin size={12} />
                       <span>{prospecto.ciudad}</span>
                     </div>
-                    <div className="text-xs text-[#6C757D]">
+                    <div className="text-xs text-[#6b7280]">
                       <span className="font-medium">Contacto:</span> {prospecto.contacto?.nombre ? `${prospecto.contacto.nombre} - ${prospecto.contacto.puesto || ""}` : "Sin contacto"}
                   </div>
                     </div>
@@ -4698,8 +4761,8 @@ const InnovativeDemo = () => {
       <div className="mt-8">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <TrendingDown className="text-[#1B5E20]" size={24} />
-            <h2 className="text-xl font-semibold text-[#343A40]">Análisis de Rechazos</h2>
+            <TrendingDown className="text-[#00a8a8]" size={24} />
+            <h2 className="text-xl font-semibold text-[#1c2c4a]">Análisis de Rechazos</h2>
             <span className="text-xs bg-red-50 text-red-600 px-3 py-1 rounded-md border border-red-200 font-medium">
               {topProspectos.filter(p => p.status === 'Propuesta Rechazada').length} propuestas rechazadas
             </span>
@@ -4708,24 +4771,24 @@ const InnovativeDemo = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* KPIs de Rechazos */}
-          <div className="bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-6">
-            <h3 className="text-base font-semibold text-[#343A40] mb-4">Impacto Financiero</h3>
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Impacto Financiero</h3>
             <div className="space-y-4">
               <div>
-                <div className="text-sm text-[#6C757D] mb-1">Valor Total Perdido</div>
+                <div className="text-sm text-[#6b7280] mb-1">Valor Total Perdido</div>
                 <div className="text-3xl font-bold text-red-600">
                   ${(topProspectos.filter(p => p.status === 'Propuesta Rechazada').reduce((sum, p) => sum + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(1)}M
                 </div>
               </div>
               <div>
-                <div className="text-sm text-[#6C757D] mb-1">Propuestas Rechazadas</div>
-                <div className="text-2xl font-bold text-[#343A40]">
+                <div className="text-sm text-[#6b7280] mb-1">Propuestas Rechazadas</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">
                   {topProspectos.filter(p => p.status === 'Propuesta Rechazada').length}
                 </div>
               </div>
               <div>
-                <div className="text-sm text-[#6C757D] mb-1">Con Motivo Documentado</div>
-                <div className="text-2xl font-bold text-[#1B5E20]">
+                <div className="text-sm text-[#6b7280] mb-1">Con Motivo Documentado</div>
+                <div className="text-2xl font-bold text-[#00a8a8]">
                   {topProspectos.filter(p => p.status === 'Propuesta Rechazada' && p.motivoRechazo).length}/{topProspectos.filter(p => p.status === 'Propuesta Rechazada').length}
                 </div>
               </div>
@@ -4733,8 +4796,8 @@ const InnovativeDemo = () => {
           </div>
 
           {/* Top Motivos de Rechazo */}
-          <div className="bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-6">
-            <h3 className="text-base font-semibold text-[#343A40] mb-4">Top 3 Motivos de Rechazo</h3>
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Top 3 Motivos de Rechazo</h3>
             <div className="space-y-3">
               {(() => {
                 const rechazados = topProspectos.filter(p => p.status === 'Propuesta Rechazada' && p.motivoRechazo);
@@ -4758,7 +4821,7 @@ const InnovativeDemo = () => {
                   .slice(0, 3);
 
                 return topMotivos.map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-3 bg-[#F8F9FA] rounded-lg">
+                  <div key={idx} className="flex items-center justify-between p-3 bg-[#f3f4f6] rounded-lg">
                     <div className="flex items-center gap-2">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
                         idx === 0 ? 'bg-red-100 text-red-600' :
@@ -4768,13 +4831,13 @@ const InnovativeDemo = () => {
                         {idx + 1}
                       </div>
                       <div>
-                        <div className="text-sm font-medium text-[#343A40]">{item.motivo}</div>
-                        <div className="text-xs text-[#6C757D]">
+                        <div className="text-sm font-medium text-[#1c2c4a]">{item.motivo}</div>
+                        <div className="text-xs text-[#6b7280]">
                           ${(item.valor / 1000000).toFixed(1)}M perdidos
                         </div>
                       </div>
                     </div>
-                    <div className="text-lg font-bold text-[#343A40]">{item.count}</div>
+                    <div className="text-lg font-bold text-[#1c2c4a]">{item.count}</div>
                   </div>
                 ));
               })()}
@@ -4782,8 +4845,8 @@ const InnovativeDemo = () => {
           </div>
 
           {/* Distribución por Categoría */}
-          <div className="bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-6">
-            <h3 className="text-base font-semibold text-[#343A40] mb-4">Distribución por Categoría</h3>
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Distribución por Categoría</h3>
             <div className="space-y-3">
               {(() => {
                 const rechazados = topProspectos.filter(p => p.status === 'Propuesta Rechazada' && p.motivoRechazo);
@@ -4803,12 +4866,12 @@ const InnovativeDemo = () => {
                     return (
                       <div key={categoria}>
                         <div className="flex items-center justify-between text-sm mb-1">
-                          <span className="font-medium text-[#343A40]">{categoria}</span>
-                          <span className="text-[#6C757D]">{count} ({porcentaje.toFixed(0)}%)</span>
+                          <span className="font-medium text-[#1c2c4a]">{categoria}</span>
+                          <span className="text-[#6b7280]">{count} ({porcentaje.toFixed(0)}%)</span>
                         </div>
-                        <div className="w-full bg-[#F8F9FA] rounded-full h-2">
+                        <div className="w-full bg-[#f3f4f6] rounded-full h-2">
                           <div
-                            className="bg-[#1B5E20] h-2 rounded-full"
+                            className="bg-[#00a8a8] h-2 rounded-full"
                             style={{ width: `${porcentaje}%` }}
                           />
                         </div>
@@ -4825,24 +4888,24 @@ const InnovativeDemo = () => {
       <div className="mt-8">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <Users className="text-[#1B5E20]" size={24} />
-            <h2 className="text-xl font-semibold text-[#343A40]">Gestión de Leads</h2>
-            <span className="text-xs bg-[#F8F9FA] text-[#6C757D] px-3 py-1 rounded-md border border-[#E9ECEF] font-medium">
+            <Users className="text-[#00a8a8]" size={24} />
+            <h2 className="text-xl font-semibold text-[#1c2c4a]">Gestión de Leads</h2>
+            <span className="text-xs bg-[#f3f4f6] text-[#6b7280] px-3 py-1 rounded-md border border-[#e5e7eb] font-medium">
               {leadsConAsignacion.length} leads activos
             </span>
                 </div>
                 </div>
 
-        <div className="bg-white rounded-lg border border-[#E9ECEF] shadow-sm overflow-hidden">
-          <div className="p-6 border-b border-[#E9ECEF]">
+        <div className="bg-white rounded-lg border border-[#e5e7eb] shadow-sm overflow-hidden">
+          <div className="p-6 border-b border-[#e5e7eb]">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-semibold text-[#343A40]">Tabla de Leads</h3>
+              <h3 className="text-base font-semibold text-[#1c2c4a]">Tabla de Leads</h3>
               <div className="flex items-center gap-4 text-sm">
-                <div className="text-[#6C757D]">
-                  <span className="font-semibold text-[#343A40]">{leadsConAsignacion.filter(l => l.asignadoA).length}</span> asignados
+                <div className="text-[#6b7280]">
+                  <span className="font-semibold text-[#1c2c4a]">{leadsConAsignacion.filter(l => l.asignadoA).length}</span> asignados
                 </div>
-                <div className="text-[#6C757D]">
-                  <span className="font-semibold text-[#343A40]">{leadsConAsignacion.filter(l => !l.asignadoA).length}</span> sin asignar
+                <div className="text-[#6b7280]">
+                  <span className="font-semibold text-[#1c2c4a]">{leadsConAsignacion.filter(l => !l.asignadoA).length}</span> sin asignar
               </div>
               </div>
             </div>
@@ -4850,16 +4913,16 @@ const InnovativeDemo = () => {
           
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-[#F8F9FA] border-b border-[#E9ECEF]">
+              <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6C757D]">#</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6C757D]">Empresa</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6C757D]">Contacto</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6C757D]">Industria</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6C757D]">Origen</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6C757D]">Fecha</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold text-[#6C757D]">Valor</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6C757D]">Asignado a</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">#</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Empresa</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Contacto</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Industria</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Origen</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Fecha</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-[#6b7280]">Valor</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Asignado a</th>
                 </tr>
               </thead>
               <tbody>
@@ -4867,11 +4930,11 @@ const InnovativeDemo = () => {
                   const ejecutivoAsignado = lead.asignadoA ? salesTeamData.find(e => e.id === lead.asignadoA) : null;
                   
                   return (
-                    <tr key={lead.id} className="border-b border-[#E9ECEF] hover:bg-[#F8F9FA] transition-colors">
-                      <td className="px-4 py-3 text-sm text-[#6C757D]">{index + 1}</td>
-                      <td className="px-4 py-3 text-sm font-semibold text-[#343A40]">{lead.empresa}</td>
-                      <td className="px-4 py-3 text-sm text-[#6C757D]">{lead.contacto}</td>
-                      <td className="px-4 py-3 text-sm text-[#6C757D]">{lead.industria}</td>
+                    <tr key={lead.id} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6] transition-colors">
+                      <td className="px-4 py-3 text-sm text-[#6b7280]">{index + 1}</td>
+                      <td className="px-4 py-3 text-sm font-semibold text-[#1c2c4a]">{lead.empresa}</td>
+                      <td className="px-4 py-3 text-sm text-[#6b7280]">{lead.contacto}</td>
+                      <td className="px-4 py-3 text-sm text-[#6b7280]">{lead.industria}</td>
                       <td className="px-4 py-3">
                         <span className={`text-xs px-2 py-1 rounded ${
                           lead.origen === 'Referido' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
@@ -4882,7 +4945,7 @@ const InnovativeDemo = () => {
                           {lead.origen}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-sm text-[#6C757D]">{lead.fecha}</td>
+                      <td className="px-4 py-3 text-sm text-[#6b7280]">{lead.fecha}</td>
                       <td className="px-4 py-3 text-sm font-semibold text-[#0D47A1] text-right">
                         ${(lead.valor / 1000).toFixed(0)}K
                       </td>
@@ -4895,7 +4958,7 @@ const InnovativeDemo = () => {
                               prev.map(l => l.id === lead.id ? { ...l, asignadoA: nuevoAsignado } : l)
                             );
                           }}
-                          className="text-xs px-2 py-1.5 border border-[#E9ECEF] rounded-md focus:outline-none focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent bg-white"
+                          className="text-xs px-2 py-1.5 border border-[#e5e7eb] rounded-md focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <option value="">Sin asignar</option>
@@ -4915,10 +4978,10 @@ const InnovativeDemo = () => {
           
           {/* BOTÓN VER MÁS / VER MENOS */}
           {leadsConAsignacion.length > 10 && (
-            <div className="p-4 border-t border-[#E9ECEF] bg-[#F8F9FA] flex justify-center">
+            <div className="p-4 border-t border-[#e5e7eb] bg-[#f3f4f6] flex justify-center">
               <button
                 onClick={() => setMostrarTodosLeads(!mostrarTodosLeads)}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#1B5E20] hover:text-[#2E7D32] transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#00a8a8] hover:text-[#008080] transition-colors"
               >
                 {mostrarTodosLeads ? (
                   <>
@@ -4940,23 +5003,23 @@ const InnovativeDemo = () => {
       {/* SECCIÓN: EQUIPO CON PIPELINE, PRESUPUESTO Y KPIS */}
       <div className="mt-8">
         <div className="flex items-center gap-3 mb-6">
-          <Users className="text-[#1B5E20]" size={24} />
-          <h2 className="text-xl font-semibold text-[#343A40]">Control del Equipo</h2>
-          <span className="text-xs bg-[#F8F9FA] text-[#6C757D] px-3 py-1 rounded-md border border-[#E9ECEF] font-medium">Pipeline • Presupuesto • KPIs</span>
+          <Users className="text-[#00a8a8]" size={24} />
+          <h2 className="text-xl font-semibold text-[#1c2c4a]">Control del Equipo</h2>
+          <span className="text-xs bg-[#f3f4f6] text-[#6b7280] px-3 py-1 rounded-md border border-[#e5e7eb] font-medium">Pipeline • Presupuesto • KPIs</span>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {salesTeamData.map(member => {
             const getEficienciaColor = (eficiencia) => {
-              if (eficiencia >= 75) return 'bg-[#1B5E20]';
-              if (eficiencia >= 65) return 'bg-[#2E7D32]';
-              return 'bg-[#388E3C]';
+              if (eficiencia >= 75) return 'bg-[#00a8a8]';
+              if (eficiencia >= 65) return 'bg-[#008080]';
+              return 'bg-[#00b3b3]';
             };
             
             return (
             <div 
               key={member.id} 
-                className="bg-white rounded-xl border border-[#E9ECEF] shadow-sm hover:shadow-lg transition-all cursor-pointer overflow-hidden group"
+                className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm hover:shadow-lg transition-all cursor-pointer overflow-hidden group"
               onClick={() => setSelectedTeamMember(member)}
             >
                 {/* HEADER CON GRADIENTE SUTIL */}
@@ -4986,51 +5049,51 @@ const InnovativeDemo = () => {
                 <div className="p-5">
                   {/* PIPELINE VISUAL - EMBUDO MINI */}
                   <div className="mb-5">
-                    <div className="text-xs text-[#6C757D] font-medium mb-3 flex items-center gap-2">
+                    <div className="text-xs text-[#6b7280] font-medium mb-3 flex items-center gap-2">
                   <TrendingUp size={14} />
                       Pipeline
                 </div>
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-[#6C757D]">Leads</span>
-                        <span className="font-semibold text-[#343A40]">{member.leads}</span>
+                        <span className="text-[#6b7280]">Leads</span>
+                        <span className="font-semibold text-[#1c2c4a]">{member.leads}</span>
                   </div>
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-[#6C757D]">Levant.</span>
-                        <span className="font-semibold text-[#343A40]">{member.levantamientos}</span>
+                        <span className="text-[#6b7280]">Levant.</span>
+                        <span className="font-semibold text-[#1c2c4a]">{member.levantamientos}</span>
                   </div>
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-[#6C757D]">Propuestas</span>
-                        <span className="font-semibold text-[#343A40]">{member.propuestasEnviadas}</span>
+                        <span className="text-[#6b7280]">Propuestas</span>
+                        <span className="font-semibold text-[#1c2c4a]">{member.propuestasEnviadas}</span>
                   </div>
-                      <div className="flex items-center justify-between pt-2 border-t border-[#E9ECEF] text-sm">
-                        <span className="font-medium text-[#343A40]">Cierres</span>
+                      <div className="flex items-center justify-between pt-2 border-t border-[#e5e7eb] text-sm">
+                        <span className="font-medium text-[#1c2c4a]">Cierres</span>
                         <span className="font-bold text-[#0D47A1] text-base">{member.cierres}</span>
                   </div>
                 </div>
-                    <div className="mt-3 pt-3 border-t border-[#E9ECEF] text-center">
-                      <span className="text-xs text-[#6C757D]">Conversión </span>
+                    <div className="mt-3 pt-3 border-t border-[#e5e7eb] text-center">
+                      <span className="text-xs text-[#6b7280]">Conversión </span>
                       <span className="text-xs font-bold text-[#0D47A1]">{member.tasaConversion}%</span>
         </div>
       </div>
 
                   {/* PRESUPUESTO VISUAL */}
                   <div className="mb-4">
-                    <div className="text-xs text-[#6C757D] font-medium mb-2 flex items-center gap-2">
+                    <div className="text-xs text-[#6b7280] font-medium mb-2 flex items-center gap-2">
                       <DollarSign size={12} />
                       Presupuesto
                 </div>
                     <div className="flex items-end justify-between mb-2">
                   <div>
-                        <div className="text-xs text-[#6C757D]">Real</div>
-                        <div className="text-lg font-bold text-[#343A40]">${(member.ventasReales / 1000).toFixed(0)}k</div>
+                        <div className="text-xs text-[#6b7280]">Real</div>
+                        <div className="text-lg font-bold text-[#1c2c4a]">${(member.ventasReales / 1000).toFixed(0)}k</div>
                     </div>
                       <div className="text-right">
-                        <div className="text-xs text-[#6C757D]">Meta</div>
-                        <div className="text-base font-semibold text-[#6C757D]">${(member.presupuestoMensual / 1000).toFixed(0)}k</div>
+                        <div className="text-xs text-[#6b7280]">Meta</div>
+                        <div className="text-base font-semibold text-[#6b7280]">${(member.presupuestoMensual / 1000).toFixed(0)}k</div>
                   </div>
                     </div>
-                    <div className="relative w-full bg-[#E9ECEF] rounded-full h-3 overflow-hidden">
+                    <div className="relative w-full bg-[#e5e7eb] rounded-full h-3 overflow-hidden">
                       <div 
                         className={`h-full rounded-full transition-all ${
                           member.cumplimientoPresupuesto >= 100 
@@ -5047,9 +5110,9 @@ const InnovativeDemo = () => {
         </div>
         
                   {/* INDICADOR DE ESTADO */}
-                  <div className="pt-4 border-t border-[#E9ECEF]">
+                  <div className="pt-4 border-t border-[#e5e7eb]">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-[#6C757D]">Estado</span>
+                      <span className="text-xs text-[#6b7280]">Estado</span>
                       <span className={`text-xs font-semibold px-2 py-1 rounded ${
                         member.cumplimientoPresupuesto >= 100 
                           ? 'bg-green-50 text-green-700 border border-green-200' 
@@ -5073,20 +5136,20 @@ const InnovativeDemo = () => {
       {/* PRESUPUESTO VS REAL - EVOLUCIÓN */}
       <div className="mt-8">
         <div className="flex items-center gap-3 mb-6">
-          <DollarSign className="text-[#1B5E20]" size={24} />
-          <h2 className="text-xl font-semibold text-[#343A40]">Presupuesto vs Real</h2>
+          <DollarSign className="text-[#00a8a8]" size={24} />
+          <h2 className="text-xl font-semibold text-[#1c2c4a]">Presupuesto vs Real</h2>
         </div>
         
-        <div className="bg-white rounded-lg p-8 border border-[#E9ECEF] shadow-sm">
+        <div className="bg-white rounded-lg p-8 border border-[#e5e7eb] shadow-sm">
           <ResponsiveContainer width="100%" height={350}>
             <LineChart data={presupuestoEvolution}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E9ECEF" />
-              <XAxis dataKey="mes" stroke="#6C757D" />
-              <YAxis stroke="#6C757D" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis dataKey="mes" stroke="#6b7280" />
+              <YAxis stroke="#6b7280" />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="presupuesto" stroke="#6C757D" strokeWidth={2} name="Presupuesto" strokeDasharray="5 5" />
-              <Line type="monotone" dataKey="real" stroke="#1B5E20" strokeWidth={3} name="Ventas Reales" />
+              <Line type="monotone" dataKey="presupuesto" stroke="#6b7280" strokeWidth={2} name="Presupuesto" strokeDasharray="5 5" />
+              <Line type="monotone" dataKey="real" stroke="#00a8a8" strokeWidth={3} name="Ventas Reales" />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -5096,12 +5159,12 @@ const InnovativeDemo = () => {
 
   // VISTA: PIPELINE COMERCIAL
   const PipelineComercialView = () => (
-    <div className="p-8 bg-[#F8F9FA] min-h-screen">
+    <div className="p-8 bg-[#faf7f2] min-h-screen">
       <Header title="Pipeline Comercial" subtitle="Embudo de ventas y seguimiento de oportunidades" />
       
       {/* COMPARACIÓN OBJETIVO VS REAL */}
-      <div className="mt-8 bg-white rounded-lg p-6 border border-[#E9ECEF] shadow-sm">
-        <h3 className="text-base font-semibold text-[#343A40] mb-4">Progreso Mensual: Objetivo vs Real</h3>
+      <div className="mt-8 bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
+        <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Progreso Mensual: Objetivo vs Real</h3>
         
         <div className="space-y-4">
           {pipelineData.map((item, index) => {
@@ -5112,15 +5175,15 @@ const InnovativeDemo = () => {
               <div key={index} className="space-y-2">
                   <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-semibold text-[#343A40] min-w-[140px]">{item.etapa}</span>
+                    <span className="text-sm font-semibold text-[#1c2c4a] min-w-[140px]">{item.etapa}</span>
                     <div className="flex items-center gap-4 text-xs">
-                      <span className="text-[#6C757D]">
+                      <span className="text-[#6b7280]">
                         Real: <button
                           type="button"
                           className={`font-semibold border-0 bg-transparent p-0 ${
                             item.etapa === 'Lead nuevo' ? 'text-[#0D47A1] cursor-pointer hover:underline' : 
                             item.etapa === 'Levantamiento' ? 'text-[#0D47A1] cursor-pointer hover:underline' : 
-                            'text-[#343A40] cursor-default'
+                            'text-[#1c2c4a] cursor-default'
                           }`}
                           onClick={(e) => {
                             e.preventDefault();
@@ -5135,9 +5198,9 @@ const InnovativeDemo = () => {
                           {item.cantidad}
                         </button>
                       </span>
-                      <span className="text-[#6C757D]">/</span>
-                      <span className="text-[#6C757D]">
-                        Objetivo: <span className="font-semibold text-[#343A40]">{item.objetivo}</span>
+                      <span className="text-[#6b7280]">/</span>
+                      <span className="text-[#6b7280]">
+                        Objetivo: <span className="font-semibold text-[#1c2c4a]">{item.objetivo}</span>
                       </span>
                     </div>
                   </div>
@@ -5146,7 +5209,7 @@ const InnovativeDemo = () => {
                   </div>
                 </div>
                 
-                <div className="relative w-full bg-[#E9ECEF] rounded-full h-6 overflow-hidden">
+                <div className="relative w-full bg-[#e5e7eb] rounded-full h-6 overflow-hidden">
                   {/* Calcular escala: usar el máximo entre objetivo y cantidad para la escala */}
                   {(() => {
                     const maxValue = Math.max(item.objetivo, item.cantidad);
@@ -5190,9 +5253,9 @@ const InnovativeDemo = () => {
                           className="absolute top-0 h-full flex items-center pointer-events-none"
                           style={{ left: `${porcentajeObjetivo}%` }}
                         >
-                          <div className="w-0.5 h-full bg-[#6C757D] opacity-70"></div>
+                          <div className="w-0.5 h-full bg-[#6b7280] opacity-70"></div>
                           <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                            <div className="text-xs text-[#6C757D] font-medium bg-white px-2 py-0.5 rounded border border-[#E9ECEF] shadow-sm">
+                            <div className="text-xs text-[#6b7280] font-medium bg-white px-2 py-0.5 rounded border border-[#e5e7eb] shadow-sm">
                               Objetivo: {item.objetivo}
                             </div>
                           </div>
@@ -5207,15 +5270,15 @@ const InnovativeDemo = () => {
         </div>
         
         {/* RESUMEN GENERAL */}
-        <div className="mt-8 pt-6 border-t border-[#E9ECEF] grid grid-cols-3 gap-4">
-          <div className="text-center p-4 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
-            <div className="text-xs text-[#6C757D] mb-1">Total Objetivo</div>
-            <div className="text-2xl font-bold text-[#343A40]">
+        <div className="mt-8 pt-6 border-t border-[#e5e7eb] grid grid-cols-3 gap-4">
+          <div className="text-center p-4 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+            <div className="text-xs text-[#6b7280] mb-1">Total Objetivo</div>
+            <div className="text-2xl font-bold text-[#1c2c4a]">
               {pipelineData.reduce((sum, item) => sum + item.objetivo, 0)}
             </div>
           </div>
-          <div className="text-center p-4 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
-            <div className="text-xs text-[#6C757D] mb-1">Total Real</div>
+          <div className="text-center p-4 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+            <div className="text-xs text-[#6b7280] mb-1">Total Real</div>
             <div className="text-2xl font-bold text-[#0D47A1]">
               {pipelineData.reduce((sum, item) => sum + item.cantidad, 0)}
             </div>
@@ -5230,8 +5293,8 @@ const InnovativeDemo = () => {
       </div>
       
       {/* EMBUDO VISUAL CREATIVO */}
-      <div className="mt-8 bg-white rounded-lg p-6 border border-[#E9ECEF] shadow-sm">
-        <h3 className="text-base font-semibold text-[#343A40] mb-4">Embudo Comercial</h3>
+      <div className="mt-8 bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
+        <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Embudo Comercial</h3>
         
         {/* EMBUDO VISUAL */}
         <div className="flex flex-col items-center gap-1.5 mb-4">
@@ -5244,7 +5307,7 @@ const InnovativeDemo = () => {
             return (
               <div key={index} className="relative w-full flex items-center justify-center">
                 <div 
-                  className="relative bg-[#1B5E20] rounded-md p-3 text-white transition-all"
+                  className="relative bg-[#00a8a8] rounded-md p-3 text-white transition-all"
                   style={{ width: `${width}%` }}
                 >
                     <div className="flex items-center justify-between">
@@ -5281,7 +5344,7 @@ const InnovativeDemo = () => {
                 </div>
                 {index < pipelineData.length - 1 && (
                   <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
-                    <ChevronDown size={16} className="text-[#E9ECEF]" />
+                    <ChevronDown size={16} className="text-[#e5e7eb]" />
                   </div>
                 )}
               </div>
@@ -5290,18 +5353,18 @@ const InnovativeDemo = () => {
       </div>
 
         {/* MÉTRICAS RESUMEN */}
-        <div className="grid grid-cols-5 gap-3 pt-4 border-t border-[#E9ECEF]">
+        <div className="grid grid-cols-5 gap-3 pt-4 border-t border-[#e5e7eb]">
           {pipelineData.map((item, index) => {
             const prevItem = index > 0 ? pipelineData[index - 1] : null;
             const tasaConversion = prevItem ? ((item.cantidad / prevItem.cantidad) * 100).toFixed(1) : '100.0';
             
             return (
               <div key={index} className="text-center">
-                <div className="text-xs text-[#6C757D] font-medium mb-2">{item.etapa}</div>
+                <div className="text-xs text-[#6b7280] font-medium mb-2">{item.etapa}</div>
                 <button
                   type="button"
                   className={`text-2xl font-bold mb-1 border-0 bg-transparent p-0 ${
-                    item.etapa === 'Lead nuevo' || item.etapa === 'Levantamiento' ? 'cursor-pointer hover:underline text-[#0D47A1]' : 'text-[#343A40] cursor-default'
+                    item.etapa === 'Lead nuevo' || item.etapa === 'Levantamiento' ? 'cursor-pointer hover:underline text-[#0D47A1]' : 'text-[#1c2c4a] cursor-default'
                   }`}
                   onClick={(e) => {
                     e.preventDefault();
@@ -5315,11 +5378,11 @@ const InnovativeDemo = () => {
                 >
                   {item.cantidad}
                 </button>
-                <div className="text-xs text-[#1B5E20] font-medium mb-2">
+                <div className="text-xs text-[#00a8a8] font-medium mb-2">
                   ${(item.valor / 1000000).toFixed(1)}M
                 </div>
                 {index > 0 && (
-                  <div className="text-xs text-[#6C757D] pt-2 border-t border-[#E9ECEF]">
+                  <div className="text-xs text-[#6b7280] pt-2 border-t border-[#e5e7eb]">
                     {tasaConversion}% conv.
                   </div>
                 )}
@@ -5330,19 +5393,19 @@ const InnovativeDemo = () => {
       </div>
         
       {/* TABLA DETALLADA */}
-      <div className="mt-8 bg-white rounded-lg border border-[#E9ECEF] shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-[#E9ECEF]">
-          <h3 className="text-lg font-semibold text-[#343A40]">Desglose por Etapa</h3>
+      <div className="mt-8 bg-white rounded-lg border border-[#e5e7eb] shadow-sm overflow-hidden">
+        <div className="p-6 border-b border-[#e5e7eb]">
+          <h3 className="text-lg font-semibold text-[#1c2c4a]">Desglose por Etapa</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-[#F8F9FA] border-b border-[#E9ECEF]">
+            <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Etapa</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-[#343A40]">Cantidad</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-[#343A40]">Valor Total</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-[#343A40]">Valor Promedio</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-[#343A40]">Tasa Conversión</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Etapa</th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-[#1c2c4a]">Cantidad</th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-[#1c2c4a]">Valor Total</th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-[#1c2c4a]">Valor Promedio</th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-[#1c2c4a]">Tasa Conversión</th>
               </tr>
             </thead>
             <tbody>
@@ -5350,17 +5413,17 @@ const InnovativeDemo = () => {
                 const prevItem = index > 0 ? pipelineData[index - 1] : null;
                 const tasaConversion = prevItem ? ((item.cantidad / prevItem.cantidad) * 100).toFixed(1) : '100.0';
                 return (
-                  <tr key={index} className="border-b border-[#E9ECEF] hover:bg-[#F8F9FA]">
-                    <td className="px-6 py-4 text-sm font-semibold text-[#343A40]">{item.etapa}</td>
-                    <td className="px-6 py-4 text-sm text-center font-medium text-[#343A40]">{item.cantidad}</td>
-                    <td className="px-6 py-4 text-sm text-center font-semibold text-[#1B5E20]">
+                  <tr key={index} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6]">
+                    <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">{item.etapa}</td>
+                    <td className="px-6 py-4 text-sm text-center font-medium text-[#1c2c4a]">{item.cantidad}</td>
+                    <td className="px-6 py-4 text-sm text-center font-semibold text-[#00a8a8]">
                   ${(item.valor / 1000000).toFixed(1)}M
                     </td>
-                    <td className="px-6 py-4 text-sm text-center text-[#6C757D]">
+                    <td className="px-6 py-4 text-sm text-center text-[#6b7280]">
                       ${(item.valor / item.cantidad / 1000).toFixed(0)}k
                     </td>
                     <td className="px-6 py-4 text-sm text-center">
-                      <span className="px-3 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                      <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
                         {tasaConversion}%
                       </span>
                     </td>
@@ -5376,21 +5439,21 @@ const InnovativeDemo = () => {
 
   // VISTA: CENTRO DE CONTROL DE KPIS
   const TeamControlView = () => (
-    <div className="p-8 bg-[#F8F9FA] min-h-screen">
+    <div className="p-8 bg-[#faf7f2] min-h-screen">
       <Header title="Centro de Control de KPIs" subtitle="Métricas de desempeño por colaborador" />
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
         {salesTeamData.map(member => {
           const getEficienciaColor = (eficiencia) => {
-            if (eficiencia >= 75) return 'bg-[#1B5E20]';
-            if (eficiencia >= 65) return 'bg-[#2E7D32]';
-            return 'bg-[#388E3C]';
+            if (eficiencia >= 75) return 'bg-[#00a8a8]';
+            if (eficiencia >= 65) return 'bg-[#008080]';
+            return 'bg-[#00b3b3]';
           };
           
           return (
             <div 
               key={member.id} 
-              className="bg-white rounded-xl border border-[#E9ECEF] shadow-sm hover:shadow-lg transition-all cursor-pointer overflow-hidden group"
+              className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm hover:shadow-lg transition-all cursor-pointer overflow-hidden group"
               onClick={() => setSelectedTeamMember(member)}
             >
               {/* HEADER CON GRADIENTE SUTIL */}
@@ -5418,51 +5481,51 @@ const InnovativeDemo = () => {
               <div className="p-5">
                 {/* PIPELINE VISUAL - EMBUDO MINI */}
                 <div className="mb-5">
-                  <div className="text-xs text-[#6C757D] font-medium mb-3 flex items-center gap-2">
+                  <div className="text-xs text-[#6b7280] font-medium mb-3 flex items-center gap-2">
                     <TrendingUp size={14} />
                     Pipeline
                   </div>
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-[#6C757D]">Leads</span>
-                      <span className="font-semibold text-[#343A40]">{member.leads}</span>
+                      <span className="text-[#6b7280]">Leads</span>
+                      <span className="font-semibold text-[#1c2c4a]">{member.leads}</span>
                     </div>
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-[#6C757D]">Levant.</span>
-                      <span className="font-semibold text-[#343A40]">{member.levantamientos}</span>
+                      <span className="text-[#6b7280]">Levant.</span>
+                      <span className="font-semibold text-[#1c2c4a]">{member.levantamientos}</span>
                     </div>
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-[#6C757D]">Propuestas</span>
-                      <span className="font-semibold text-[#343A40]">{member.propuestasEnviadas}</span>
+                      <span className="text-[#6b7280]">Propuestas</span>
+                      <span className="font-semibold text-[#1c2c4a]">{member.propuestasEnviadas}</span>
                     </div>
-                    <div className="flex items-center justify-between pt-2 border-t border-[#E9ECEF] text-sm">
-                      <span className="font-medium text-[#343A40]">Cierres</span>
+                    <div className="flex items-center justify-between pt-2 border-t border-[#e5e7eb] text-sm">
+                      <span className="font-medium text-[#1c2c4a]">Cierres</span>
                       <span className="font-bold text-[#0D47A1] text-base">{member.cierres}</span>
                     </div>
                   </div>
-                  <div className="mt-3 pt-3 border-t border-[#E9ECEF] text-center">
-                    <span className="text-xs text-[#6C757D]">Conversión </span>
+                  <div className="mt-3 pt-3 border-t border-[#e5e7eb] text-center">
+                    <span className="text-xs text-[#6b7280]">Conversión </span>
                     <span className="text-xs font-bold text-[#0D47A1]">{member.tasaConversion}%</span>
                   </div>
                 </div>
                 
                 {/* PRESUPUESTO VISUAL */}
                 <div className="mb-4">
-                  <div className="text-xs text-[#6C757D] font-medium mb-2 flex items-center gap-2">
+                  <div className="text-xs text-[#6b7280] font-medium mb-2 flex items-center gap-2">
                     <DollarSign size={12} />
                     Presupuesto
                   </div>
                   <div className="flex items-end justify-between mb-2">
                     <div>
-                      <div className="text-xs text-[#6C757D]">Real</div>
-                      <div className="text-lg font-bold text-[#343A40]">${(member.ventasReales / 1000).toFixed(0)}k</div>
+                      <div className="text-xs text-[#6b7280]">Real</div>
+                      <div className="text-lg font-bold text-[#1c2c4a]">${(member.ventasReales / 1000).toFixed(0)}k</div>
                     </div>
                     <div className="text-right">
-                      <div className="text-xs text-[#6C757D]">Meta</div>
-                      <div className="text-base font-semibold text-[#6C757D]">${(member.presupuestoMensual / 1000).toFixed(0)}k</div>
+                      <div className="text-xs text-[#6b7280]">Meta</div>
+                      <div className="text-base font-semibold text-[#6b7280]">${(member.presupuestoMensual / 1000).toFixed(0)}k</div>
                     </div>
                   </div>
-                  <div className="relative w-full bg-[#E9ECEF] rounded-full h-3 overflow-hidden">
+                  <div className="relative w-full bg-[#e5e7eb] rounded-full h-3 overflow-hidden">
                     <div 
                       className={`h-full rounded-full transition-all ${
                         member.cumplimientoPresupuesto >= 100 
@@ -5479,9 +5542,9 @@ const InnovativeDemo = () => {
                 </div>
                 
                 {/* INDICADOR DE ESTADO */}
-                <div className="pt-4 border-t border-[#E9ECEF]">
+                <div className="pt-4 border-t border-[#e5e7eb]">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-[#6C757D]">Estado</span>
+                    <span className="text-xs text-[#6b7280]">Estado</span>
                     <span className={`text-xs font-semibold px-2 py-1 rounded ${
                       member.cumplimientoPresupuesto >= 100 
                         ? 'bg-green-50 text-green-700 border border-green-200' 
@@ -5605,37 +5668,37 @@ const InnovativeDemo = () => {
     ].filter(Boolean).length;
 
     const renderTable = (items, showReporte = false) => (
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-[#E9ECEF]">
+      <div className="bg-white rounded-lg card-modern overflow-hidden border border-[#e5e7eb]">
         <table className="w-full">
-          <thead className="bg-[#F8F9FA] border-b border-[#E9ECEF]">
+          <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
             <tr>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Cliente</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Ejecutivo</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Fecha</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Status</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Cliente</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Ejecutivo</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Fecha</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Status</th>
               {showReporte && (
-                <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Reporte</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Reporte</th>
               )}
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Volumen Est.</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Valor Est.</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Acción</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Volumen Est.</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Valor Est.</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Acción</th>
             </tr>
           </thead>
           <tbody>
             {items.length === 0 ? (
               <tr>
-                <td colSpan={showReporte ? 8 : 7} className="px-6 py-8 text-center text-[#6C757D]">
+                <td colSpan={showReporte ? 8 : 7} className="px-6 py-8 text-center text-[#6b7280]">
                   No hay registros en esta categoría
                 </td>
               </tr>
             ) : (
               items.map(item => (
-                <tr key={item.id} className="border-b border-[#E9ECEF] hover:bg-[#F8F9FA]">
-                  <td className="px-6 py-4 text-sm font-semibold text-[#343A40]">{item.cliente}</td>
-                  <td className="px-6 py-4 text-sm text-[#6C757D]">{item.ejecutivo}</td>
-                  <td className="px-6 py-4 text-sm font-medium text-[#343A40]">{item.fecha}</td>
+                <tr key={item.id} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6]">
+                  <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">{item.cliente}</td>
+                  <td className="px-6 py-4 text-sm text-[#6b7280]">{item.ejecutivo}</td>
+                  <td className="px-6 py-4 text-sm font-medium text-[#1c2c4a]">{item.fecha}</td>
                   <td className="px-6 py-4 text-sm">
-                    <span className={`px-3 py-1 rounded-md text-xs font-medium ${
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                       item.status === 'Completado' ? 'bg-green-50 text-green-700 border border-green-200' :
                       item.status === 'Enviada' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
                       item.status === 'En revisión' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
@@ -5648,24 +5711,24 @@ const InnovativeDemo = () => {
                   {showReporte && (
                     <td className="px-6 py-4 text-sm">
                       {item.tieneReporte ? (
-                        <span className="px-3 py-1 rounded-md text-xs font-medium bg-green-50 text-green-700 border border-green-200">
+                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">
                           ✓ Generado
                         </span>
                       ) : (
-                        <span className="px-3 py-1 rounded-md text-xs font-medium bg-orange-50 text-orange-700 border border-orange-200">
+                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-orange-50 text-orange-700 border border-orange-200">
                           Pendiente
                         </span>
                       )}
                     </td>
                   )}
-                  <td className="px-6 py-4 text-sm font-semibold text-[#1B5E20]">{item.volumenEstimado}</td>
-                  <td className="px-6 py-4 text-sm font-semibold text-[#343A40]">
+                  <td className="px-6 py-4 text-sm font-semibold text-[#00a8a8]">{item.volumenEstimado}</td>
+                  <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">
                     ${(item.valorEstimado / 1000).toFixed(0)}k
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <button 
                       onClick={() => setSelectedLevantamiento(item)}
-                      className="text-[#1B5E20] hover:text-[#2E7D32] font-medium flex items-center gap-1 text-sm"
+                      className="text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1 text-sm"
                     >
                       Ver <ChevronRight size={14} />
             </button>
@@ -5679,46 +5742,46 @@ const InnovativeDemo = () => {
     );
 
     return (
-      <div className="p-8 bg-[#F8F9FA] min-h-screen">
+      <div className="p-8 bg-[#faf7f2] min-h-screen">
         <Header title="Levantamientos y Propuestas" subtitle="Generación y seguimiento de oportunidades comerciales" />
         
         {/* MÉTRICAS RESUMEN */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
-          <div className="bg-white rounded-lg p-6 border border-[#E9ECEF] shadow-sm">
+          <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
             <div className="flex justify-between items-start mb-4">
-              <div className="text-sm text-[#6C757D] font-medium">Total Levantamientos</div>
-              <ClipboardList className="text-[#1B5E20]" size={20} />
+              <div className="text-sm text-[#6b7280] font-medium">Total Levantamientos</div>
+              <ClipboardList className="text-[#00a8a8]" size={20} />
             </div>
-            <div className="text-3xl font-semibold text-[#343A40] mb-2">{totalLevantamientos}</div>
-            <div className="text-sm text-[#6C757D] font-medium">Activos</div>
+            <div className="text-3xl font-semibold text-[#1c2c4a] mb-2">{totalLevantamientos}</div>
+            <div className="text-sm text-[#6b7280] font-medium">Activos</div>
           </div>
           
-          <div className="bg-white rounded-lg p-6 border border-[#E9ECEF] shadow-sm">
+          <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
             <div className="flex justify-between items-start mb-4">
-              <div className="text-sm text-[#6C757D] font-medium">Total Propuestas</div>
-              <FileText className="text-[#1B5E20]" size={20} />
+              <div className="text-sm text-[#6b7280] font-medium">Total Propuestas</div>
+              <FileText className="text-[#00a8a8]" size={20} />
             </div>
-            <div className="text-3xl font-semibold text-[#343A40] mb-2">{totalPropuestas}</div>
-            <div className="text-sm text-[#6C757D] font-medium">En seguimiento</div>
+            <div className="text-3xl font-semibold text-[#1c2c4a] mb-2">{totalPropuestas}</div>
+            <div className="text-sm text-[#6b7280] font-medium">En seguimiento</div>
           </div>
           
-          <div className="bg-white rounded-lg p-6 border border-[#E9ECEF] shadow-sm">
+          <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
             <div className="flex justify-between items-start mb-4">
-              <div className="text-sm text-[#6C757D] font-medium">Valor Total Estimado</div>
-              <DollarSign className="text-[#1B5E20]" size={20} />
+              <div className="text-sm text-[#6b7280] font-medium">Valor Total Estimado</div>
+              <DollarSign className="text-[#00a8a8]" size={20} />
             </div>
-            <div className="text-3xl font-semibold text-[#343A40] mb-2">
+            <div className="text-3xl font-semibold text-[#1c2c4a] mb-2">
               ${(totalValor / 1000000).toFixed(1)}M
             </div>
-            <div className="text-sm text-[#6C757D] font-medium">Oportunidades</div>
+            <div className="text-sm text-[#6b7280] font-medium">Oportunidades</div>
           </div>
           
-          <div className="bg-white rounded-lg p-6 border border-[#E9ECEF] shadow-sm">
+          <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
             <div className="flex justify-between items-start mb-4">
-              <div className="text-sm text-[#6C757D] font-medium">Sin Reporte</div>
+              <div className="text-sm text-[#6b7280] font-medium">Sin Reporte</div>
               <AlertCircle className="text-orange-500" size={20} />
             </div>
-            <div className="text-3xl font-semibold text-[#343A40] mb-2">{completadosSinReporte.length}</div>
+            <div className="text-3xl font-semibold text-[#1c2c4a] mb-2">{completadosSinReporte.length}</div>
             <div className="text-sm text-orange-600 font-medium">Requieren atención</div>
           </div>
         </div>
@@ -5728,16 +5791,16 @@ const InnovativeDemo = () => {
           <div className="flex gap-3">
             <button 
               onClick={() => setMostrarFiltros(!mostrarFiltros)}
-              className={`flex items-center gap-2 px-4 py-2 border border-[#E9ECEF] rounded-md hover:bg-white font-medium text-sm transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 border border-[#e5e7eb] rounded-md hover:bg-white font-medium text-sm transition-all ${
                 mostrarFiltros || filtrosActivos > 0
-                  ? 'bg-[#1B5E20] text-white border-[#1B5E20] hover:bg-[#2E7D32]'
-                  : 'text-[#6C757D] hover:text-[#1B5E20]'
+                  ? 'bg-[#00a8a8] text-white border-[#00a8a8] hover:bg-[#008080]'
+                  : 'text-[#6b7280] hover:text-[#00a8a8]'
               }`}
             >
               <Filter size={16} />
               Filtrar
               {filtrosActivos > 0 && (
-                <span className="bg-white text-[#1B5E20] text-xs font-bold px-2 py-0.5 rounded-full">
+                <span className="bg-white text-[#00a8a8] text-xs font-bold px-2 py-0.5 rounded-full">
                   {filtrosActivos}
                 </span>
               )}
@@ -5745,7 +5808,7 @@ const InnovativeDemo = () => {
           </div>
           <button 
             onClick={() => setMostrarNuevoLevantamiento(true)}
-            className="bg-[#1B5E20] hover:bg-[#1e4a37] text-white px-6 py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center gap-2 transition-all"
+            className="bg-[#00a8a8] hover:bg-[#1e4a37] text-white px-6 py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center gap-2 transition-all"
           >
             <ClipboardList size={18} />
             Nuevo Levantamiento
@@ -5754,20 +5817,20 @@ const InnovativeDemo = () => {
         
         {/* PANEL DE FILTROS */}
         {mostrarFiltros && (
-          <div className="mb-6 bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-6">
+          <div className="mb-6 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Filter className="text-[#1B5E20]" size={20} />
-                <h3 className="text-lg font-semibold text-[#343A40]">Filtros de Búsqueda</h3>
+                <Filter className="text-[#00a8a8]" size={20} />
+                <h3 className="text-lg font-semibold text-[#1c2c4a]">Filtros de Búsqueda</h3>
                 {filtrosActivos > 0 && (
-                  <span className="text-xs bg-[#1B5E20] text-white px-2 py-1 rounded-md font-medium">
+                  <span className="text-xs bg-[#00a8a8] text-white px-2 py-1 rounded-md font-medium">
                     {filtrosActivos} activo{filtrosActivos !== 1 ? 's' : ''}
                   </span>
                 )}
               </div>
               <button
                 onClick={limpiarFiltros}
-                className="text-sm text-[#6C757D] hover:text-[#1B5E20] font-medium flex items-center gap-1"
+                className="text-sm text-[#6b7280] hover:text-[#00a8a8] font-medium flex items-center gap-1"
               >
                 <RotateCcw size={14} />
                 Limpiar filtros
@@ -5777,11 +5840,11 @@ const InnovativeDemo = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               {/* Filtro por Tipo */}
               <div>
-                <label className="block text-xs font-medium text-[#6C757D] mb-2">Tipo</label>
+                <label className="block text-xs font-medium text-[#6b7280] mb-2">Tipo</label>
                 <select
                   value={filtroTipo}
                   onChange={(e) => setFiltroTipo(e.target.value)}
-                  className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent bg-white"
+                  className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
                 >
                   <option value="Todos">Todos</option>
                   <option value="Levantamiento">Levantamiento</option>
@@ -5791,11 +5854,11 @@ const InnovativeDemo = () => {
 
               {/* Filtro por Status */}
               <div>
-                <label className="block text-xs font-medium text-[#6C757D] mb-2">Estado</label>
+                <label className="block text-xs font-medium text-[#6b7280] mb-2">Estado</label>
                 <select
                   value={filtroStatus}
                   onChange={(e) => setFiltroStatus(e.target.value)}
-                  className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent bg-white"
+                  className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
                 >
                   <option value="Todos">Todos</option>
                   {estadosUnicos.map(estado => (
@@ -5806,11 +5869,11 @@ const InnovativeDemo = () => {
 
               {/* Filtro por Ejecutivo */}
               <div>
-                <label className="block text-xs font-medium text-[#6C757D] mb-2">Ejecutivo</label>
+                <label className="block text-xs font-medium text-[#6b7280] mb-2">Ejecutivo</label>
                 <select
                   value={filtroEjecutivo}
                   onChange={(e) => setFiltroEjecutivo(e.target.value)}
-                  className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent bg-white"
+                  className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
                 >
                   <option value="Todos">Todos</option>
                   {ejecutivosUnicos.map(ejecutivo => (
@@ -5821,26 +5884,26 @@ const InnovativeDemo = () => {
 
               {/* Filtro por Cliente (búsqueda) */}
               <div>
-                <label className="block text-xs font-medium text-[#6C757D] mb-2">Cliente</label>
+                <label className="block text-xs font-medium text-[#6b7280] mb-2">Cliente</label>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6C757D]" size={16} />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6b7280]" size={16} />
                   <input
                     type="text"
                     value={filtroCliente}
                     onChange={(e) => setFiltroCliente(e.target.value)}
                     placeholder="Buscar cliente..."
-                    className="w-full pl-10 pr-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent bg-white"
+                    className="w-full pl-10 pr-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
                   />
                 </div>
               </div>
 
               {/* Filtro por Reporte */}
               <div>
-                <label className="block text-xs font-medium text-[#6C757D] mb-2">Reporte</label>
+                <label className="block text-xs font-medium text-[#6b7280] mb-2">Reporte</label>
                 <select
                   value={filtroReporte}
                   onChange={(e) => setFiltroReporte(e.target.value)}
-                  className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent bg-white"
+                  className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
                 >
                   <option value="Todos">Todos</option>
                   <option value="Con Reporte">Con Reporte</option>
@@ -5855,9 +5918,9 @@ const InnovativeDemo = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <Calendar className="text-[#1B5E20]" size={24} />
-              <h2 className="text-xl font-semibold text-[#343A40]">Levantamientos Esta Semana</h2>
-              <span className="px-3 py-1 bg-[#1B5E20] text-white text-xs font-medium rounded-md">
+              <Calendar className="text-[#00a8a8]" size={24} />
+              <h2 className="text-xl font-semibold text-[#1c2c4a]">Levantamientos Esta Semana</h2>
+              <span className="px-3 py-1 bg-[#00a8a8] text-white text-xs font-medium rounded-md">
                 {levantamientosEstaSemana.length}
               </span>
             </div>
@@ -5869,9 +5932,9 @@ const InnovativeDemo = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <Calendar className="text-[#1B5E20]" size={24} />
-              <h2 className="text-xl font-semibold text-[#343A40]">Levantamientos Este Mes</h2>
-              <span className="px-3 py-1 bg-[#2E7D32] text-white text-xs font-medium rounded-md">
+              <Calendar className="text-[#00a8a8]" size={24} />
+              <h2 className="text-xl font-semibold text-[#1c2c4a]">Levantamientos Este Mes</h2>
+              <span className="px-3 py-1 bg-[#008080] text-white text-xs font-medium rounded-md">
                 {levantamientosEsteMes.length}
               </span>
             </div>
@@ -5884,7 +5947,7 @@ const InnovativeDemo = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <AlertCircle className="text-orange-500" size={24} />
-              <h2 className="text-xl font-semibold text-[#343A40]">Completados Sin Reporte</h2>
+              <h2 className="text-xl font-semibold text-[#1c2c4a]">Completados Sin Reporte</h2>
               <span className="px-3 py-1 bg-orange-500 text-white text-xs font-medium rounded-md">
                 {completadosSinReporte.length}
               </span>
@@ -5897,40 +5960,40 @@ const InnovativeDemo = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <Eye className="text-[#1B5E20]" size={24} />
-              <h2 className="text-xl font-semibold text-[#343A40]">Vista Total - Todos los Registros</h2>
-              <span className="px-3 py-1 bg-[#F8F9FA] text-[#6C757D] text-xs font-medium rounded-md border border-[#E9ECEF]">
+              <Eye className="text-[#00a8a8]" size={24} />
+              <h2 className="text-xl font-semibold text-[#1c2c4a]">Vista Total - Todos los Registros</h2>
+              <span className="px-3 py-1 bg-[#f3f4f6] text-[#6b7280] text-xs font-medium rounded-md border border-[#e5e7eb]">
                 {levantamientosFiltrados.length} registro{levantamientosFiltrados.length !== 1 ? 's' : ''}
               </span>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-[#E9ECEF]">
+          <div className="bg-white rounded-lg card-modern overflow-hidden border border-[#e5e7eb]">
           <table className="w-full">
-              <thead className="bg-[#F8F9FA] border-b border-[#E9ECEF]">
+              <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Cliente</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Tipo</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Ejecutivo</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Fecha</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Volumen Est.</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Valor Est.</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#343A40]">Acción</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Cliente</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Tipo</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Ejecutivo</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Fecha</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Status</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Volumen Est.</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Valor Est.</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Acción</th>
               </tr>
             </thead>
             <tbody>
               {levantamientosFiltrados.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-6 py-8 text-center text-[#6C757D]">
+                  <td colSpan={8} className="px-6 py-8 text-center text-[#6b7280]">
                     No se encontraron registros con los filtros aplicados
                   </td>
                 </tr>
               ) : (
                 levantamientosFiltrados.map(item => (
-                  <tr key={item.id} className="border-b border-[#E9ECEF] hover:bg-[#F8F9FA]">
-                    <td className="px-6 py-4 text-sm font-semibold text-[#343A40]">{item.cliente}</td>
+                  <tr key={item.id} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6]">
+                    <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">{item.cliente}</td>
                   <td className="px-6 py-4 text-sm">
-                      <span className={`px-3 py-1 rounded-md text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                       item.tipo === 'Levantamiento' 
                           ? 'bg-blue-50 text-blue-700 border border-blue-200' 
                           : 'bg-purple-50 text-purple-700 border border-purple-200'
@@ -5938,10 +6001,10 @@ const InnovativeDemo = () => {
                       {item.tipo}
                     </span>
                   </td>
-                    <td className="px-6 py-4 text-sm text-[#6C757D]">{item.ejecutivo}</td>
-                    <td className="px-6 py-4 text-sm font-medium text-[#343A40]">{item.fecha}</td>
+                    <td className="px-6 py-4 text-sm text-[#6b7280]">{item.ejecutivo}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-[#1c2c4a]">{item.fecha}</td>
                   <td className="px-6 py-4 text-sm">
-                      <span className={`px-3 py-1 rounded-md text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                         item.status === 'Completado' ? 'bg-green-50 text-green-700 border border-green-200' :
                         item.status === 'Enviada' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
                         item.status === 'En revisión' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
@@ -5951,14 +6014,14 @@ const InnovativeDemo = () => {
                       {item.status}
                     </span>
                   </td>
-                    <td className="px-6 py-4 text-sm font-semibold text-[#1B5E20]">{item.volumenEstimado}</td>
-                    <td className="px-6 py-4 text-sm font-semibold text-[#343A40]">
+                    <td className="px-6 py-4 text-sm font-semibold text-[#00a8a8]">{item.volumenEstimado}</td>
+                    <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">
                     ${(item.valorEstimado / 1000).toFixed(0)}k
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <button 
                       onClick={() => setSelectedLevantamiento(item)}
-                        className="text-[#1B5E20] hover:text-[#2E7D32] font-medium flex items-center gap-1 text-sm"
+                        className="text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1 text-sm"
                     >
                         Ver <ChevronRight size={14} />
                     </button>
@@ -5972,20 +6035,20 @@ const InnovativeDemo = () => {
         </div>
         
         {/* SIGUIENTE PASO REQUERIDO */}
-        <div className="bg-white border border-[#E9ECEF] rounded-lg p-6 shadow-sm">
+        <div className="bg-white border border-[#e5e7eb] rounded-lg p-6 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
-            <AlertCircle size={20} className="text-[#1B5E20]" />
-            <h3 className="text-lg font-semibold text-[#343A40]">Siguiente Paso Requerido</h3>
+            <AlertCircle size={20} className="text-[#00a8a8]" />
+            <h3 className="text-lg font-semibold text-[#1c2c4a]">Siguiente Paso Requerido</h3>
           </div>
           <div className="space-y-2">
             {levantamientosFiltrados.filter(l => l.siguientePaso).map(item => (
-              <div key={item.id} className="flex items-center justify-between bg-[#F8F9FA] p-4 rounded-md border border-[#E9ECEF]">
+              <div key={item.id} className="flex items-center justify-between bg-[#f3f4f6] p-4 rounded-md border border-[#e5e7eb]">
                 <div>
-                  <span className="font-semibold text-[#343A40]">{item.cliente}</span>
-                  <span className="text-[#6C757D] mx-2">→</span>
-                  <span className="text-sm text-[#6C757D]">{item.siguientePaso}</span>
+                  <span className="font-semibold text-[#1c2c4a]">{item.cliente}</span>
+                  <span className="text-[#6b7280] mx-2">→</span>
+                  <span className="text-sm text-[#6b7280]">{item.siguientePaso}</span>
                 </div>
-                <span className="text-xs font-medium text-[#6C757D]">{item.ejecutivo}</span>
+                <span className="text-xs font-medium text-[#6b7280]">{item.ejecutivo}</span>
               </div>
             ))}
         </div>
@@ -6016,17 +6079,17 @@ const InnovativeDemo = () => {
     });
 
     return (
-      <div className="p-8 bg-[#F8F9FA] min-h-screen">
+      <div className="p-8 bg-[#faf7f2] min-h-screen">
         <Header title="Repositorio de Documentos" subtitle="Gestión centralizada de permisos, licencias y certificaciones" />
 
         {/* KPIs DE DOCUMENTOS */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
-          <div className="bg-white rounded-lg p-6 border border-[#E9ECEF] shadow-sm">
+          <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <div className="text-sm font-semibold text-[#6C757D]">Total Documentos</div>
-              <FileText className="text-[#1B5E20]" size={24} />
+              <div className="text-sm font-semibold text-[#6b7280]">Total Documentos</div>
+              <FileText className="text-[#00a8a8]" size={24} />
             </div>
-            <div className="text-3xl font-bold text-[#343A40]">{documentos.length}</div>
+            <div className="text-3xl font-bold text-[#1c2c4a]">{documentos.length}</div>
           </div>
 
           <div className="bg-green-50 rounded-lg p-6 border border-green-200 shadow-sm">
@@ -6061,13 +6124,13 @@ const InnovativeDemo = () => {
         </div>
 
         {/* FILTROS Y ACCIONES */}
-        <div className="mt-8 bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-6">
+        <div className="mt-8 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4 flex-wrap">
               <select
                 value={filtroDocumentos.tipo}
                 onChange={(e) => setFiltroDocumentos({ ...filtroDocumentos, tipo: e.target.value })}
-                className="px-4 py-2 border border-[#E9ECEF] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]"
+                className="px-4 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]"
               >
                 <option value="">Todos los tipos</option>
                 {TIPOS_DOCUMENTO.map(tipo => (
@@ -6078,7 +6141,7 @@ const InnovativeDemo = () => {
               <select
                 value={filtroDocumentos.categoria}
                 onChange={(e) => setFiltroDocumentos({ ...filtroDocumentos, categoria: e.target.value })}
-                className="px-4 py-2 border border-[#E9ECEF] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]"
+                className="px-4 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]"
               >
                 <option value="">Todas las categorías</option>
                 {CATEGORIAS_DOCUMENTO.map(cat => (
@@ -6089,7 +6152,7 @@ const InnovativeDemo = () => {
               <select
                 value={filtroDocumentos.status}
                 onChange={(e) => setFiltroDocumentos({ ...filtroDocumentos, status: e.target.value })}
-                className="px-4 py-2 border border-[#E9ECEF] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]"
+                className="px-4 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]"
               >
                 <option value="">Todos los estados</option>
                 <option value="Vigente">Vigente</option>
@@ -6100,7 +6163,7 @@ const InnovativeDemo = () => {
               {(filtroDocumentos.tipo || filtroDocumentos.categoria || filtroDocumentos.status) && (
                 <button
                   onClick={() => setFiltroDocumentos({ tipo: '', categoria: '', status: '' })}
-                  className="text-sm text-[#6C757D] hover:text-[#1B5E20] flex items-center gap-1"
+                  className="text-sm text-[#6b7280] hover:text-[#00a8a8] flex items-center gap-1"
                 >
                   <RotateCcw size={14} />
                   Limpiar filtros
@@ -6110,7 +6173,7 @@ const InnovativeDemo = () => {
 
             <button
               onClick={() => setMostrarNuevoDocumento(true)}
-              className="bg-[#1B5E20] hover:bg-[#2E7D32] text-white px-6 py-2 rounded-lg font-medium text-sm flex items-center gap-2"
+              className="bg-[#00a8a8] hover:bg-[#008080] text-white px-6 py-2 rounded-lg font-medium text-sm flex items-center gap-2"
             >
               <FileText size={18} />
               Nuevo Documento
@@ -6126,16 +6189,16 @@ const InnovativeDemo = () => {
             const diasRestantes = Math.floor((vencimiento - hoy) / (1000 * 60 * 60 * 24));
 
             return (
-              <div key={doc.id} className="bg-white rounded-lg border border-[#E9ECEF] shadow-sm hover:shadow-md transition-all">
+              <div key={doc.id} className="bg-white rounded-lg border border-[#e5e7eb] shadow-sm hover:shadow-md transition-all">
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <h3 className="text-base font-bold text-[#343A40] mb-2">{doc.nombre}</h3>
+                      <h3 className="text-base font-bold text-[#1c2c4a] mb-2">{doc.nombre}</h3>
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs bg-[#F8F9FA] text-[#6C757D] px-2 py-1 rounded border border-[#E9ECEF]">
+                        <span className="text-xs bg-[#f3f4f6] text-[#6b7280] px-2 py-1 rounded border border-[#e5e7eb]">
                           {doc.tipo}
                         </span>
-                        <span className="text-xs bg-[#F8F9FA] text-[#6C757D] px-2 py-1 rounded border border-[#E9ECEF]">
+                        <span className="text-xs bg-[#f3f4f6] text-[#6b7280] px-2 py-1 rounded border border-[#e5e7eb]">
                           {doc.categoria}
                         </span>
                       </div>
@@ -6147,19 +6210,19 @@ const InnovativeDemo = () => {
 
                   <div className="space-y-3 text-sm">
                     <div className="flex items-center justify-between">
-                      <span className="text-[#6C757D]">Emisión:</span>
-                      <span className="font-medium text-[#343A40]">
+                      <span className="text-[#6b7280]">Emisión:</span>
+                      <span className="font-medium text-[#1c2c4a]">
                         {new Date(doc.fechaEmision).toLocaleDateString('es-MX')}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[#6C757D]">Vencimiento:</span>
-                      <span className="font-medium text-[#343A40]">
+                      <span className="text-[#6b7280]">Vencimiento:</span>
+                      <span className="font-medium text-[#1c2c4a]">
                         {new Date(doc.fechaVencimiento).toLocaleDateString('es-MX')}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[#6C757D]">Días restantes:</span>
+                      <span className="text-[#6b7280]">Días restantes:</span>
                       <span className={`font-bold ${
                         diasRestantes < 0 ? 'text-red-600' :
                         diasRestantes <= 30 ? 'text-yellow-600' :
@@ -6171,18 +6234,18 @@ const InnovativeDemo = () => {
                   </div>
 
                   {doc.notas && (
-                    <div className="mt-4 p-3 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">Notas:</div>
-                      <div className="text-xs text-[#343A40]">{doc.notas}</div>
+                    <div className="mt-4 p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Notas:</div>
+                      <div className="text-xs text-[#1c2c4a]">{doc.notas}</div>
                     </div>
                   )}
 
                   <div className="mt-4 flex items-center gap-2">
-                    <button className="flex-1 bg-[#F8F9FA] hover:bg-[#E9ECEF] text-[#343A40] px-4 py-2 rounded-lg font-medium text-sm flex items-center justify-center gap-2">
+                    <button className="flex-1 bg-[#f3f4f6] hover:bg-[#e5e7eb] text-[#1c2c4a] px-4 py-2 rounded-lg font-medium text-sm flex items-center justify-center gap-2">
                       <Eye size={16} />
                       Ver
                     </button>
-                    <button className="flex-1 bg-[#1B5E20] hover:bg-[#2E7D32] text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center justify-center gap-2">
+                    <button className="flex-1 bg-[#00a8a8] hover:bg-[#008080] text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center justify-center gap-2">
                       <Download size={16} />
                       Descargar
                     </button>
@@ -6194,9 +6257,9 @@ const InnovativeDemo = () => {
         </div>
 
         {documentosFiltrados.length === 0 && (
-          <div className="mt-8 bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-12 text-center">
-            <FileText size={48} className="mx-auto mb-4 text-[#6C757D] opacity-50" />
-            <p className="text-[#6C757D]">No se encontraron documentos con los filtros seleccionados</p>
+          <div className="mt-8 bg-white rounded-lg border border-[#e5e7eb] shadow-sm p-12 text-center">
+            <FileText size={48} className="mx-auto mb-4 text-[#6b7280] opacity-50" />
+            <p className="text-[#6b7280]">No se encontraron documentos con los filtros seleccionados</p>
           </div>
         )}
       </div>
@@ -6205,55 +6268,55 @@ const InnovativeDemo = () => {
 
   // VISTA: REPORTES AUTOMÁTICOS A CLIENTES
   const ReportesAutomaticosView = () => (
-    <div className="p-8 bg-[#F8F9FA] min-h-screen">
+    <div className="p-8 bg-[#faf7f2] min-h-screen">
       <Header title="Reportes de Trazabilidad entregados" subtitle="Envío automático y conciliación de RME y servicios" />
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-        <div className="bg-white rounded-lg p-6 border border-[#E9ECEF] shadow-sm">
+        <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
           <div className="flex items-center gap-3 mb-4">
-            <CheckSquare className="text-[#1B5E20]" size={24} />
+            <CheckSquare className="text-[#00a8a8]" size={24} />
             <div>
-              <div className="text-2xl font-semibold text-[#343A40]">28</div>
-              <div className="text-sm font-medium text-[#6C757D]">Reportes Enviados</div>
+              <div className="text-2xl font-semibold text-[#1c2c4a]">28</div>
+              <div className="text-sm font-medium text-[#6b7280]">Reportes Enviados</div>
             </div>
           </div>
-          <div className="text-xs text-[#6C757D] font-medium">Noviembre 2025</div>
+          <div className="text-xs text-[#6b7280] font-medium">Noviembre 2025</div>
         </div>
         
-        <div className="bg-white rounded-lg p-6 border border-[#E9ECEF] shadow-sm">
+        <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
           <div className="flex items-center gap-3 mb-4">
-            <AlertCircle className="text-[#1B5E20]" size={24} />
+            <AlertCircle className="text-[#00a8a8]" size={24} />
             <div>
-              <div className="text-2xl font-semibold text-[#343A40]">3</div>
-              <div className="text-sm font-medium text-[#6C757D]">Pendientes</div>
+              <div className="text-2xl font-semibold text-[#1c2c4a]">3</div>
+              <div className="text-sm font-medium text-[#6b7280]">Pendientes</div>
             </div>
           </div>
-          <div className="text-xs text-[#6C757D] font-medium">Programados: 1 Dic</div>
+          <div className="text-xs text-[#6b7280] font-medium">Programados: 1 Dic</div>
         </div>
         
-        <div className="bg-white rounded-lg p-6 border border-[#E9ECEF] shadow-sm">
+        <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
           <div className="flex items-center gap-3 mb-4">
-            <Eye className="text-[#1B5E20]" size={24} />
+            <Eye className="text-[#00a8a8]" size={24} />
             <div>
-              <div className="text-2xl font-semibold text-[#343A40]">87%</div>
-              <div className="text-sm font-medium text-[#6C757D]">Tasa Apertura</div>
+              <div className="text-2xl font-semibold text-[#1c2c4a]">87%</div>
+              <div className="text-sm font-medium text-[#6b7280]">Tasa Apertura</div>
             </div>
           </div>
-          <div className="text-xs text-[#6C757D] font-medium">Promedio mensual</div>
+          <div className="text-xs text-[#6b7280] font-medium">Promedio mensual</div>
         </div>
       </div>
       
       <div className="mt-8">
         <div className="flex items-center gap-3 mb-6">
-          <Send className="text-[#1B5E20]" size={24} />
-          <h2 className="text-xl font-semibold text-[#343A40]">Clientes con Reportes de Trazabilidad entregados</h2>
+          <Send className="text-[#00a8a8]" size={24} />
+          <h2 className="text-xl font-semibold text-[#1c2c4a]">Clientes con Reportes de Trazabilidad entregados</h2>
         </div>
         
         <div className="space-y-4">
           {clientesConReportes.map(client => (
             <div 
               key={client.id}
-              className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all border border-[#E9ECEF] cursor-pointer"
+              className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all border border-[#e5e7eb] cursor-pointer"
               onClick={() => setSelectedClient(client)}
             >
               <div className="flex items-start justify-between">
@@ -6261,11 +6324,11 @@ const InnovativeDemo = () => {
                   <div className="flex items-center gap-4 mb-4">
                     <div className="text-4xl">{client.logo}</div>
                     <div>
-                      <h3 className="text-xl font-semibold text-[#343A40]">{client.name}</h3>
-                      <p className="text-sm text-[#6C757D] font-medium">{client.sucursales} sucursales • {client.contacto}</p>
+                      <h3 className="text-xl font-semibold text-[#1c2c4a]">{client.name}</h3>
+                      <p className="text-sm text-[#6b7280] font-medium">{client.sucursales} sucursales • {client.contacto}</p>
                     </div>
                     <div className="ml-auto">
-                      <span className={`px-3 py-1 rounded-md text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                         client.statusReporte === 'Enviado' 
                           ? 'bg-green-50 text-green-700 border border-green-200' 
                           : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
@@ -6276,31 +6339,31 @@ const InnovativeDemo = () => {
                   </div>
                   
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                    <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">RME Gestionado</div>
-                      <div className="text-xl font-semibold text-[#343A40]">{client.rmeGestionado} t</div>
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">RME Gestionado</div>
+                      <div className="text-xl font-semibold text-[#1c2c4a]">{client.rmeGestionado} t</div>
                     </div>
-                    <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">Valorización</div>
-                      <div className="text-xl font-semibold text-[#343A40]">{client.valoracionLograda}%</div>
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Valorización</div>
+                      <div className="text-xl font-semibold text-[#1c2c4a]">{client.valoracionLograda}%</div>
                     </div>
-                    <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">Ingresos Mes</div>
-                      <div className="text-xl font-semibold text-[#343A40]">
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Ingresos Mes</div>
+                      <div className="text-xl font-semibold text-[#1c2c4a]">
                         ${(client.ingresosMes / 1000).toFixed(0)}k
                       </div>
                     </div>
-                    <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">Próximo Reporte</div>
-                      <div className="text-base font-semibold text-[#343A40]">{client.proximoReporte}</div>
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Próximo Reporte</div>
+                      <div className="text-base font-semibold text-[#1c2c4a]">{client.proximoReporte}</div>
                     </div>
                   </div>
                   
-                  <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                    <div className="text-xs text-[#6C757D] font-medium mb-2">Servicios Contratados:</div>
+                  <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                    <div className="text-xs text-[#6b7280] font-medium mb-2">Servicios Contratados:</div>
                     <div className="flex flex-wrap gap-2">
                       {client.serviciosContratados.map((servicio, idx) => (
-                        <span key={idx} className="px-3 py-1 bg-white border border-[#E9ECEF] rounded-md text-xs font-medium text-[#343A40]">
+                        <span key={idx} className="px-3 py-1 bg-white border border-[#e5e7eb] rounded-md text-xs font-medium text-[#1c2c4a]">
                           {servicio}
                         </span>
                       ))}
@@ -6308,15 +6371,15 @@ const InnovativeDemo = () => {
                   </div>
                   
                   <div className="flex gap-3 mt-4">
-                    <button className="flex-1 bg-[#1B5E20] hover:bg-[#1e4a37] text-white py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center justify-center gap-2">
+                    <button className="flex-1 bg-[#00a8a8] hover:bg-[#1e4a37] text-white py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center justify-center gap-2">
                       <Eye size={16} />
                       Ver Reporte
                     </button>
-                    <button className="flex-1 bg-[#2E7D32] hover:bg-[#40916C] text-white py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center justify-center gap-2">
+                    <button className="flex-1 bg-[#008080] hover:bg-[#40916C] text-white py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center justify-center gap-2">
                       <Send size={16} />
                       Enviar Ahora
                     </button>
-                    <button className="flex-1 border border-[#1B5E20] text-[#1B5E20] py-2 rounded-md font-medium text-sm hover:bg-[#F8F9FA] flex items-center justify-center gap-2">
+                    <button className="flex-1 border border-[#00a8a8] text-[#00a8a8] py-2 rounded-md font-medium text-sm hover:bg-[#f3f4f6] flex items-center justify-center gap-2">
                       <Download size={16} />
                       Descargar PDF
                     </button>
@@ -6328,30 +6391,30 @@ const InnovativeDemo = () => {
         </div>
       </div>
       
-      <div className="mt-8 bg-white border border-[#E9ECEF] rounded-lg p-8 shadow-sm">
-        <h3 className="text-xl font-semibold text-[#343A40] mb-6 flex items-center gap-3">
+      <div className="mt-8 bg-white border border-[#e5e7eb] rounded-lg p-8 shadow-sm">
+        <h3 className="text-xl font-semibold text-[#1c2c4a] mb-6 flex items-center gap-3">
           <CheckSquare size={24} />
           Conciliación Automática de Servicios y RME
         </h3>
-        <p className="text-[#6C757D] mb-6 text-sm leading-relaxed">
+        <p className="text-[#6b7280] mb-6 text-sm leading-relaxed">
           Cada reporte mensual incluye automáticamente la conciliación de Residuos de Manejo Especial (RME) gestionados 
           vs servicios contratados, facilitando la validación y facturación mensual.
         </p>
         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-[#F8F9FA] rounded-lg p-6 text-center border border-[#E9ECEF]">
+          <div className="bg-[#f3f4f6] rounded-lg p-6 text-center border border-[#e5e7eb]">
             <div className="text-3xl mb-2">📋</div>
-            <div className="text-xl font-semibold text-[#343A40]">100%</div>
-            <div className="text-xs text-[#6C757D] font-medium mt-1">Automatizado</div>
+            <div className="text-xl font-semibold text-[#1c2c4a]">100%</div>
+            <div className="text-xs text-[#6b7280] font-medium mt-1">Automatizado</div>
           </div>
-          <div className="bg-[#F8F9FA] rounded-lg p-6 text-center border border-[#E9ECEF]">
+          <div className="bg-[#f3f4f6] rounded-lg p-6 text-center border border-[#e5e7eb]">
             <div className="text-3xl mb-2">⏱️</div>
-            <div className="text-xl font-semibold text-[#343A40]">15 min</div>
-            <div className="text-xs text-[#6C757D] font-medium mt-1">Tiempo ahorrado</div>
+            <div className="text-xl font-semibold text-[#1c2c4a]">15 min</div>
+            <div className="text-xs text-[#6b7280] font-medium mt-1">Tiempo ahorrado</div>
           </div>
-          <div className="bg-[#F8F9FA] rounded-lg p-6 text-center border border-[#E9ECEF]">
+          <div className="bg-[#f3f4f6] rounded-lg p-6 text-center border border-[#e5e7eb]">
             <div className="text-3xl mb-2">✅</div>
-            <div className="text-xl font-semibold text-[#343A40]">0</div>
-            <div className="text-xs text-[#6C757D] font-medium mt-1">Errores manuales</div>
+            <div className="text-xl font-semibold text-[#1c2c4a]">0</div>
+            <div className="text-xs text-[#6b7280] font-medium mt-1">Errores manuales</div>
           </div>
         </div>
       </div>
@@ -6471,18 +6534,18 @@ const InnovativeDemo = () => {
     ];
 
     return (
-      <div className="p-8 bg-[#F8F9FA] min-h-screen">
+      <div className="p-8 bg-[#faf7f2] min-h-screen">
         <Header title="Trazabilidad de Residuos" subtitle="Seguimiento y gestión de residuos por destino final" />
         
         {/* BARRA SUPERIOR: CLIENTE Y ACCIONES */}
-        <div className="mt-8 bg-white rounded-lg p-5 border border-[#E9ECEF] shadow-sm">
+        <div className="mt-8 bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4 flex-1 min-w-[300px]">
-              <label className="text-sm font-medium text-[#343A40] whitespace-nowrap">Cliente:</label>
+              <label className="text-sm font-medium text-[#1c2c4a] whitespace-nowrap">Cliente:</label>
               <select
                 value={clienteSeleccionado || ''}
                 onChange={(e) => setClienteSeleccionado(parseInt(e.target.value))}
-                className="px-4 py-2 border border-[#E9ECEF] rounded-md text-sm font-medium text-[#343A40] focus:outline-none focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent flex-1 max-w-[300px]"
+                className="px-4 py-2 border border-[#e5e7eb] rounded-md text-sm font-medium text-[#1c2c4a] focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent flex-1 max-w-[300px]"
               >
                 <option value="">Vista General</option>
                 {clientesConReportes.map(cliente => (
@@ -6492,7 +6555,7 @@ const InnovativeDemo = () => {
                 ))}
               </select>
               {clienteActual && (
-                <div className="flex items-center gap-2 text-sm text-[#6C757D]">
+                <div className="flex items-center gap-2 text-sm text-[#6b7280]">
                   <span className="text-xl">{clienteActual.logo}</span>
                   <span>{clienteActual.contacto}</span>
                 </div>
@@ -6505,7 +6568,7 @@ const InnovativeDemo = () => {
                   setClienteSeleccionadoVista(clienteSeleccionado);
                   setVistaCliente(true);
                 }}
-                className="bg-[#0D47A1] hover:bg-[#0052A3] text-white px-4 py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center gap-2 transition-all"
+                className="bg-[#0D47A1] hover:bg-[#0D47A1] text-white px-4 py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center gap-2 transition-all"
                 title="Ver como Cliente"
               >
                 <Eye size={16} />
@@ -6516,7 +6579,7 @@ const InnovativeDemo = () => {
               <div className="relative dropdown-reportes">
                 <button
                   onClick={() => setMostrarDropdownReportes(!mostrarDropdownReportes)}
-                  className="bg-[#1B5E20] hover:bg-[#2E7D32] text-white px-4 py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center gap-2 transition-all"
+                  className="bg-[#00a8a8] hover:bg-[#008080] text-white px-4 py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center gap-2 transition-all"
                   title="Descargar Reportes por Certificación"
                 >
                   <FileText size={16} />
@@ -6526,39 +6589,39 @@ const InnovativeDemo = () => {
                 
                 {/* DROPDOWN MENU */}
                 {mostrarDropdownReportes && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-[#E9ECEF] z-50 overflow-hidden">
-                    <div className="p-3 border-b border-[#E9ECEF] bg-[#F8F9FA]">
-                      <h3 className="text-sm font-semibold text-[#343A40]">Reportes por Certificación</h3>
-                      <p className="text-xs text-[#6C757D] mt-1">Seleccione una certificación y formato</p>
+                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-[#e5e7eb] z-50 overflow-hidden">
+                    <div className="p-3 border-b border-[#e5e7eb] bg-[#f3f4f6]">
+                      <h3 className="text-sm font-semibold text-[#1c2c4a]">Reportes por Certificación</h3>
+                      <p className="text-xs text-[#6b7280] mt-1">Seleccione una certificación y formato</p>
                     </div>
                     {clienteActual && clienteActual.requisitosReporte && clienteActual.requisitosReporte.length > 0 ? (
                       <div className="max-h-96 overflow-y-auto">
                         {clienteActual.requisitosReporte.map((certificacion, idx) => (
-                          <div key={idx} className="border-b border-[#E9ECEF] last:border-b-0">
-                            <div className="px-4 py-3 bg-[#F8F9FA]">
+                          <div key={idx} className="border-b border-[#e5e7eb] last:border-b-0">
+                            <div className="px-4 py-3 bg-[#f3f4f6]">
                               <div className="flex items-center gap-2">
-                                <FileText size={16} className="text-[#1B5E20]" />
-                                <span className="text-sm font-semibold text-[#343A40]">{certificacion}</span>
+                                <FileText size={16} className="text-[#00a8a8]" />
+                                <span className="text-sm font-semibold text-[#1c2c4a]">{certificacion}</span>
                               </div>
                             </div>
                             <div className="px-4 py-2 space-y-1">
                               <button
                                 onClick={() => descargarReporte(certificacion, 'pdf')}
-                                className="w-full text-left px-3 py-2 text-xs hover:bg-[#F8F9FA] rounded-md flex items-center gap-2 text-[#6C757D] hover:text-[#343A40] transition-colors"
+                                className="w-full text-left px-3 py-2 text-xs hover:bg-[#f3f4f6] rounded-md flex items-center gap-2 text-[#6b7280] hover:text-[#1c2c4a] transition-colors"
                               >
                                 <FileText size={14} className="text-red-600" />
                                 <span>PDF</span>
                               </button>
                               <button
                                 onClick={() => descargarReporte(certificacion, 'excel')}
-                                className="w-full text-left px-3 py-2 text-xs hover:bg-[#F8F9FA] rounded-md flex items-center gap-2 text-[#6C757D] hover:text-[#343A40] transition-colors"
+                                className="w-full text-left px-3 py-2 text-xs hover:bg-[#f3f4f6] rounded-md flex items-center gap-2 text-[#6b7280] hover:text-[#1c2c4a] transition-colors"
                               >
                                 <Download size={14} className="text-green-600" />
                                 <span>Excel</span>
                               </button>
                               <button
                                 onClick={() => descargarReporte(certificacion, 'csv')}
-                                className="w-full text-left px-3 py-2 text-xs hover:bg-[#F8F9FA] rounded-md flex items-center gap-2 text-[#6C757D] hover:text-[#343A40] transition-colors"
+                                className="w-full text-left px-3 py-2 text-xs hover:bg-[#f3f4f6] rounded-md flex items-center gap-2 text-[#6b7280] hover:text-[#1c2c4a] transition-colors"
                               >
                                 <Download size={14} className="text-blue-600" />
                                 <span>CSV</span>
@@ -6568,7 +6631,7 @@ const InnovativeDemo = () => {
                         ))}
                       </div>
                     ) : (
-                      <div className="p-4 text-center text-sm text-[#6C757D]">
+                      <div className="p-4 text-center text-sm text-[#6b7280]">
                         No hay certificaciones configuradas para este cliente
                       </div>
                     )}
@@ -6581,18 +6644,18 @@ const InnovativeDemo = () => {
         
         {/* RESUMEN OPERATIVO DEL CLIENTE - VISTA SIMPLIFICADA */}
         {clienteActual && (
-          <div className="mt-6 bg-white rounded-lg border border-[#E9ECEF] shadow-sm">
-            <div className="p-4 flex items-center justify-between border-b border-[#E9ECEF]">
+          <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm">
+            <div className="p-4 flex items-center justify-between border-b border-[#e5e7eb]">
               <div className="flex items-center gap-3">
                 <div className="text-3xl">{clienteActual.logo}</div>
                 <div>
-                  <h3 className="text-base font-semibold text-[#343A40]">{clienteActual.name}</h3>
-                  <p className="text-xs text-[#6C757D]">{clienteActual.sucursales} sucursales • {clienteActual.contacto}</p>
+                  <h3 className="text-base font-semibold text-[#1c2c4a]">{clienteActual.name}</h3>
+                  <p className="text-xs text-[#6b7280]">{clienteActual.sucursales} sucursales • {clienteActual.contacto}</p>
                 </div>
               </div>
               <button
                 onClick={() => setMostrarModalInfo(true)}
-                className="text-xs text-[#1B5E20] hover:text-[#2E7D32] font-medium flex items-center gap-1.5 px-3 py-1.5 hover:bg-[#F8F9FA] rounded-md"
+                className="text-xs text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1.5 px-3 py-1.5 hover:bg-[#f3f4f6] rounded-md"
               >
                 <Eye size={14} />
                 Ver Detalles
@@ -6600,26 +6663,26 @@ const InnovativeDemo = () => {
             </div>
             
             <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-3 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
-                <div className="text-xs text-[#6C757D] mb-1">Promedio Mensual</div>
-                <div className="text-lg font-semibold text-[#343A40]">{clienteActual.promedioMensual}</div>
-                <div className="text-xs text-[#6C757D]">ton/mes</div>
+              <div className="text-center p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+                <div className="text-xs text-[#6b7280] mb-1">Promedio Mensual</div>
+                <div className="text-lg font-semibold text-[#1c2c4a]">{clienteActual.promedioMensual}</div>
+                <div className="text-xs text-[#6b7280]">ton/mes</div>
               </div>
               
-              <div className="text-center p-3 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
-                <div className="text-xs text-[#6C757D] mb-1">Tasa Valorización</div>
-                <div className="text-lg font-semibold text-[#1B5E20]">{clienteActual.tasaValorizacion}%</div>
-                <div className="text-xs text-[#6C757D]">desviación</div>
+              <div className="text-center p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+                <div className="text-xs text-[#6b7280] mb-1">Tasa Valorización</div>
+                <div className="text-lg font-semibold text-[#00a8a8]">{clienteActual.tasaValorizacion}%</div>
+                <div className="text-xs text-[#6b7280]">desviación</div>
               </div>
               
-              <div className="text-center p-3 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
-                <div className="text-xs text-[#6C757D] mb-1">Recolección</div>
-                <div className="text-sm font-semibold text-[#343A40]">{clienteActual.frecuenciaRecoleccion}</div>
+              <div className="text-center p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+                <div className="text-xs text-[#6b7280] mb-1">Recolección</div>
+                <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.frecuenciaRecoleccion}</div>
               </div>
               
-              <div className="text-center p-3 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
-                <div className="text-xs text-[#6C757D] mb-1">Operando desde</div>
-                <div className="text-sm font-semibold text-[#343A40]">
+              <div className="text-center p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+                <div className="text-xs text-[#6b7280] mb-1">Operando desde</div>
+                <div className="text-sm font-semibold text-[#1c2c4a]">
                   {Math.floor((new Date() - new Date(clienteActual.fechaInicioOperacion)) / (1000 * 60 * 60 * 24 * 30))} meses
                 </div>
               </div>
@@ -6629,63 +6692,63 @@ const InnovativeDemo = () => {
         
         {/* KPIs - Más compactos */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-          <div className="bg-white rounded-lg p-5 border border-[#E9ECEF] shadow-sm">
+          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
             <div className="flex items-center justify-between mb-2">
-              <Recycle className="text-[#1B5E20]" size={18} />
-              <span className="text-xs text-[#6C757D]">Circulares</span>
+              <Recycle className="text-[#00a8a8]" size={18} />
+              <span className="text-xs text-[#6b7280]">Circulares</span>
             </div>
-            <div className="text-2xl font-semibold text-[#343A40]">{toneladasCirculares.toFixed(1)}</div>
-            <div className="text-xs text-[#6C757D] mt-1">ton</div>
+            <div className="text-2xl font-semibold text-[#1c2c4a]">{toneladasCirculares.toFixed(1)}</div>
+            <div className="text-xs text-[#6b7280] mt-1">ton</div>
           </div>
           
-          <div className="bg-white rounded-lg p-5 border border-[#E9ECEF] shadow-sm">
+          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
             <div className="flex items-center justify-between mb-2">
               <Trash2 className="text-red-500" size={18} />
-              <span className="text-xs text-[#6C757D]">Relleno</span>
+              <span className="text-xs text-[#6b7280]">Relleno</span>
             </div>
-            <div className="text-2xl font-semibold text-[#343A40]">{rellenoSanitario.toFixed(1)}</div>
-            <div className="text-xs text-[#6C757D] mt-1">ton</div>
+            <div className="text-2xl font-semibold text-[#1c2c4a]">{rellenoSanitario.toFixed(1)}</div>
+            <div className="text-xs text-[#6b7280] mt-1">ton</div>
           </div>
           
-          <div className="bg-white rounded-lg p-5 border border-[#E9ECEF] shadow-sm">
+          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
             <div className="flex items-center justify-between mb-2">
               <BarChart3 className="text-blue-500" size={18} />
-              <span className="text-xs text-[#6C757D]">Total</span>
+              <span className="text-xs text-[#6b7280]">Total</span>
             </div>
-            <div className="text-2xl font-semibold text-[#343A40]">{totalGenerado.toFixed(1)}</div>
-            <div className="text-xs text-[#6C757D] mt-1">ton</div>
+            <div className="text-2xl font-semibold text-[#1c2c4a]">{totalGenerado.toFixed(1)}</div>
+            <div className="text-xs text-[#6b7280] mt-1">ton</div>
           </div>
           
-          <div className="bg-white rounded-lg p-5 border border-[#E9ECEF] shadow-sm">
+          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
             <div className="flex items-center justify-between mb-2">
-              <TrendingUp className="text-[#1B5E20]" size={18} />
-              <span className="text-xs text-[#6C757D]">Desviación</span>
+              <TrendingUp className="text-[#00a8a8]" size={18} />
+              <span className="text-xs text-[#6b7280]">Desviación</span>
             </div>
-            <div className="text-2xl font-semibold text-[#343A40]">{porcentajeDesviacion}%</div>
-            <div className="text-xs text-[#6C757D] mt-1">del relleno</div>
+            <div className="text-2xl font-semibold text-[#1c2c4a]">{porcentajeDesviacion}%</div>
+            <div className="text-xs text-[#6b7280] mt-1">del relleno</div>
           </div>
         </div>
 
         {/* DIAGRAMA SANKEY - FLUJO DE MATERIALES */}
         {clienteActual && !datosSankey && (
-          <div className="mt-6 bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-8 text-center">
-            <Recycle className="mx-auto text-[#6C757D] mb-4" size={48} />
-            <h3 className="text-lg font-semibold text-[#343A40] mb-2">No hay datos de trazabilidad</h3>
-            <p className="text-sm text-[#6C757D]">Agrega datos en la tabla de trazabilidad para visualizar el flujo de materiales.</p>
+          <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm p-8 text-center">
+            <Recycle className="mx-auto text-[#6b7280] mb-4" size={48} />
+            <h3 className="text-lg font-semibold text-[#1c2c4a] mb-2">No hay datos de trazabilidad</h3>
+            <p className="text-sm text-[#6b7280]">Agrega datos en la tabla de trazabilidad para visualizar el flujo de materiales.</p>
           </div>
         )}
         {clienteActual && datosSankey && (
-          <div className="mt-6 bg-white rounded-lg border border-[#E9ECEF] shadow-sm p-6">
+          <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-base font-semibold text-[#343A40] mb-1">Flujo de Materiales</h3>
-                <p className="text-xs text-[#6C757D]">Trazabilidad completa de {clienteActual.name}</p>
+                <h3 className="text-base font-semibold text-[#1c2c4a] mb-1">Flujo de Materiales</h3>
+                <p className="text-xs text-[#6b7280]">Trazabilidad completa de {clienteActual.name}</p>
               </div>
               <div className="flex items-center gap-2">
                 <select 
                   value={selectedNodeSankey || ''} 
                   onChange={(e) => setSelectedNodeSankey(e.target.value || null)}
-                  className="px-3 py-1.5 border border-[#E9ECEF] rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-[#1B5E20] focus:border-transparent"
+                  className="px-3 py-1.5 border border-[#e5e7eb] rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent"
                 >
                   <option value="">Todos los nodos</option>
                   {datosSankey.nodes.map(node => (
@@ -6695,10 +6758,10 @@ const InnovativeDemo = () => {
                 {selectedNodeSankey && (
                   <button
                     onClick={() => setSelectedNodeSankey(null)}
-                    className="p-1.5 hover:bg-[#F8F9FA] rounded-md"
+                    className="p-1.5 hover:bg-[#f3f4f6] rounded-md"
                     title="Limpiar filtro"
                   >
-                    <RotateCcw size={14} className="text-[#6C757D]" />
+                    <RotateCcw size={14} className="text-[#6b7280]" />
                   </button>
                 )}
                 <button
@@ -6714,7 +6777,7 @@ const InnovativeDemo = () => {
                       console.error('Error exporting PNG:', error);
                     }
                   }}
-                  className="px-3 py-1.5 bg-[#1B5E20] hover:bg-[#1e4a37] text-white rounded-md text-xs font-medium flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-[#00a8a8] hover:bg-[#1e4a37] text-white rounded-md text-xs font-medium flex items-center gap-1.5"
                 >
                   <FileImage size={14} />
                   PNG
@@ -6722,7 +6785,7 @@ const InnovativeDemo = () => {
               </div>
             </div>
 
-            <div ref={sankeyRef} className="h-[500px] bg-white rounded-lg border border-[#E9ECEF]">
+            <div ref={sankeyRef} className="h-[500px] bg-white rounded-lg border border-[#e5e7eb]">
               {(() => {
                 // Filtrar datos si hay un nodo seleccionado
                 let filteredNodes = datosSankey.nodes;
@@ -6777,10 +6840,10 @@ const InnovativeDemo = () => {
                       const nombreDestino = nodeIdParts[0];
                       const registroAmbiental = nodeData?.registroAmbiental || (nodeIdParts[1] ? nodeIdParts[1].replace(')', '') : '');
                       return (
-                        <div className="bg-[#343A40] text-white p-2 rounded-md text-xs shadow-lg border border-[#1B5E20]">
+                        <div className="bg-[#1c2c4a] text-white p-2 rounded-md text-xs shadow-lg border border-[#00a8a8]">
                           <div className="font-semibold">{nombreDestino}</div>
                           {registroAmbiental && (
-                            <div className="text-[#1B5E20] font-medium mt-1">Registro: {registroAmbiental}</div>
+                            <div className="text-[#00a8a8] font-medium mt-1">Registro: {registroAmbiental}</div>
                           )}
                           {node.value && (
                             <div className="text-xs mt-1">
@@ -6795,7 +6858,7 @@ const InnovativeDemo = () => {
                         ? ((link.value / datosSankey.totalGenerado) * 100).toFixed(1) 
                         : '0';
                       return (
-                        <div className="bg-[#343A40] text-white p-2 rounded-md text-xs shadow-lg border border-[#1B5E20]">
+                        <div className="bg-[#1c2c4a] text-white p-2 rounded-md text-xs shadow-lg border border-[#00a8a8]">
                           <div className="font-semibold">{link.source.id} → {link.target.id}</div>
                           <div className="mt-1">Volumen: {link.value.toFixed(1)} ton/mes</div>
                           <div>Porcentaje: {percentage}%</div>
@@ -6831,30 +6894,30 @@ const InnovativeDemo = () => {
 
             {/* Métricas del Flujo */}
             <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-4">
-              <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF] text-center">
-                <div className="text-xs text-[#6C757D] mb-1">Total Generado</div>
-                <div className="text-lg font-semibold text-[#343A40]">{datosSankey.totalGenerado.toFixed(1)}</div>
-                <div className="text-xs text-[#6C757D]">ton/mes</div>
+              <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb] text-center">
+                <div className="text-xs text-[#6b7280] mb-1">Total Generado</div>
+                <div className="text-lg font-semibold text-[#1c2c4a]">{datosSankey.totalGenerado.toFixed(1)}</div>
+                <div className="text-xs text-[#6b7280]">ton/mes</div>
               </div>
               <div className="bg-green-50 rounded-lg p-4 border border-green-200 text-center">
-                <div className="text-xs text-[#6C757D] mb-1">Composta</div>
-                <div className="text-lg font-semibold text-[#1B5E20]">{datosSankey.totalComposta.toFixed(1)}</div>
-                <div className="text-xs text-[#6C757D]">ton/mes</div>
+                <div className="text-xs text-[#6b7280] mb-1">Composta</div>
+                <div className="text-lg font-semibold text-[#00a8a8]">{datosSankey.totalComposta.toFixed(1)}</div>
+                <div className="text-xs text-[#6b7280]">ton/mes</div>
               </div>
               <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 text-center">
-                <div className="text-xs text-[#6C757D] mb-1">Reciclaje</div>
-                <div className="text-lg font-semibold text-[#1B4965]">{datosSankey.totalReciclaje.toFixed(1)}</div>
-                <div className="text-xs text-[#6C757D]">ton/mes</div>
+                <div className="text-xs text-[#6b7280] mb-1">Reciclaje</div>
+                <div className="text-lg font-semibold text-[#008080]">{datosSankey.totalReciclaje.toFixed(1)}</div>
+                <div className="text-xs text-[#6b7280]">ton/mes</div>
               </div>
               <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 text-center">
-                <div className="text-xs text-[#6C757D] mb-1">Reuso</div>
-                <div className="text-lg font-semibold text-[#1B4965]">{datosSankey.totalReuso.toFixed(1)}</div>
-                <div className="text-xs text-[#6C757D]">ton/mes</div>
+                <div className="text-xs text-[#6b7280] mb-1">Reuso</div>
+                <div className="text-lg font-semibold text-[#008080]">{datosSankey.totalReuso.toFixed(1)}</div>
+                <div className="text-xs text-[#6b7280]">ton/mes</div>
               </div>
               <div className="bg-red-50 rounded-lg p-4 border border-red-200 text-center">
-                <div className="text-xs text-[#6C757D] mb-1">Relleno</div>
+                <div className="text-xs text-[#6b7280] mb-1">Relleno</div>
                 <div className="text-lg font-semibold text-[#DC2626]">{datosSankey.totalRelleno.toFixed(1)}</div>
-                <div className="text-xs text-[#6C757D]">ton/mes</div>
+                <div className="text-xs text-[#6b7280]">ton/mes</div>
               </div>
             </div>
           </div>
@@ -6862,50 +6925,50 @@ const InnovativeDemo = () => {
 
         {/* GRÁFICAS */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-6">
-          <div className="bg-white rounded-lg p-5 border border-[#E9ECEF] shadow-sm">
-            <h3 className="text-base font-semibold text-[#343A40] mb-4">
+          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">
               Distribución por Destino
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={calcularDistribucionPorDestino(datosEditables)} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#E9ECEF" />
-                <XAxis type="number" stroke="#6C757D" fontSize={12} />
-                <YAxis dataKey="mes" type="category" width={50} stroke="#6C757D" fontSize={12} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis type="number" stroke="#6b7280" fontSize={12} />
+                <YAxis dataKey="mes" type="category" width={50} stroke="#6b7280" fontSize={12} />
                 <Tooltip />
                 <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                <Bar dataKey="Reciclaje" fill="#1B5E20" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="Reciclaje" fill="#00a8a8" radius={[0, 4, 4, 0]} />
                 <Bar dataKey="Composta" fill="#FF8C00" radius={[0, 4, 4, 0]} />
-                <Bar dataKey="Reuso" fill="#1B4965" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="Reuso" fill="#008080" radius={[0, 4, 4, 0]} />
                 <Bar dataKey="Relleno sanitario" fill="#DC2626" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
-          <div className="bg-white rounded-lg p-5 border border-[#E9ECEF] shadow-sm">
-            <h3 className="text-base font-semibold text-[#343A40] mb-4">
+          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">
               Evolución % Desviación
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={calcularEvolucionDesviacion(datosEditables)}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E9ECEF" />
-                <XAxis dataKey="mes" stroke="#6C757D" fontSize={12} />
-                <YAxis domain={[0, 100]} stroke="#6C757D" fontSize={12} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="mes" stroke="#6b7280" fontSize={12} />
+                <YAxis domain={[0, 100]} stroke="#6b7280" fontSize={12} />
                 <Tooltip />
-                <Line type="monotone" dataKey="desviacion" stroke="#1B5E20" strokeWidth={2} dot={{ fill: '#1B5E20', r: 3 }} />
+                <Line type="monotone" dataKey="desviacion" stroke="#00a8a8" strokeWidth={2} dot={{ fill: '#00a8a8', r: 3 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* TABLA INTERACTIVA DE TRAZABILIDAD */}
-        <div className="mt-6 bg-white rounded-lg border border-[#E9ECEF] shadow-sm">
-          <div className="p-4 border-b border-[#E9ECEF] flex justify-between items-center">
-            <h3 className="text-base font-semibold text-[#343A40]">
+        <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm">
+          <div className="p-4 border-b border-[#e5e7eb] flex justify-between items-center">
+            <h3 className="text-base font-semibold text-[#1c2c4a]">
               Datos de Trazabilidad
             </h3>
             <button
               onClick={guardarCambios}
-              className="bg-[#1B5E20] hover:bg-[#1e4a37] text-white px-3 py-1.5 rounded-md font-medium text-xs shadow-sm hover:shadow-md flex items-center gap-1.5"
+              className="bg-[#00a8a8] hover:bg-[#1e4a37] text-white px-3 py-1.5 rounded-md font-medium text-xs shadow-sm hover:shadow-md flex items-center gap-1.5"
             >
               <Save size={14} />
               Guardar
@@ -6914,15 +6977,15 @@ const InnovativeDemo = () => {
 
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-[#F8F9FA] border-b border-[#E9ECEF]">
+              <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#343A40]">Material</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#1c2c4a]">Material</th>
                   {meses.map(mes => (
-                    <th key={mes} className="px-2 py-3 text-center text-xs font-semibold text-[#343A40] min-w-[60px]">
+                    <th key={mes} className="px-2 py-3 text-center text-xs font-semibold text-[#1c2c4a] min-w-[60px]">
                       {mes}
                     </th>
                   ))}
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-[#343A40]">Total</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-[#1c2c4a]">Total</th>
                 </tr>
               </thead>
               <tbody>
@@ -6933,7 +6996,7 @@ const InnovativeDemo = () => {
                   return (
                     <React.Fragment key={categoriaConfig.key}>
                       {/* Fila de categoría */}
-                      <tr className={`${categoriaConfig.color} border-b border-[#E9ECEF] cursor-pointer`}>
+                      <tr className={`${categoriaConfig.color} border-b border-[#e5e7eb] cursor-pointer`}>
                         <td 
                           colSpan={13}
                           onClick={() => toggleCategoria(categoriaConfig.key)}
@@ -6941,7 +7004,7 @@ const InnovativeDemo = () => {
                         >
                           <div className="flex items-center gap-2">
                             {estaAbierta ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                            <span className="font-semibold text-sm text-[#343A40]">{categoriaConfig.label}</span>
+                            <span className="font-semibold text-sm text-[#1c2c4a]">{categoriaConfig.label}</span>
                           </div>
                         </td>
                       </tr>
@@ -6950,8 +7013,8 @@ const InnovativeDemo = () => {
                       {estaAbierta && categoria.map((material, index) => {
                         const total = calcularTotalMaterial(material);
                         return (
-                          <tr key={index} className="border-b border-[#E9ECEF] hover:bg-[#F8F9FA]">
-                            <td className="px-4 py-2 text-xs font-medium text-[#343A40]">
+                          <tr key={index} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6]">
+                            <td className="px-4 py-2 text-xs font-medium text-[#1c2c4a]">
                               {material.material}
                             </td>
                             {meses.map(mes => (
@@ -6960,13 +7023,13 @@ const InnovativeDemo = () => {
                                   type="number"
                                   value={material[mes] || ''}
                                   onChange={(e) => actualizarValor(categoriaConfig.key, index, mes, e.target.value)}
-                                  className="w-full px-1.5 py-1 text-xs text-center border border-[#E9ECEF] rounded focus:outline-none focus:ring-1 focus:ring-[#1B5E20] focus:border-transparent"
+                                  className="w-full px-1.5 py-1 text-xs text-center border border-[#e5e7eb] rounded focus:outline-none focus:ring-1 focus:ring-[#00a8a8] focus:border-transparent"
                                   min="0"
                                   step="0.1"
                                 />
                               </td>
                             ))}
-                            <td className="px-4 py-2 text-center text-xs font-semibold text-[#343A40]">
+                            <td className="px-4 py-2 text-center text-xs font-semibold text-[#1c2c4a]">
                               {total.toFixed(1)} t
                             </td>
                           </tr>
@@ -6983,16 +7046,16 @@ const InnovativeDemo = () => {
         {/* MODAL DE INFORMACIÓN DETALLADA DEL CLIENTE */}
         {mostrarModalInfo && clienteActual && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setMostrarModalInfo(false)}>
-            <div className="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#E9ECEF]" onClick={e => e.stopPropagation()}>
-              <div className="p-6 border-b border-[#E9ECEF] flex items-center justify-between bg-[#1B5E20] text-white rounded-t-lg">
+            <div className="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#e5e7eb]" onClick={e => e.stopPropagation()}>
+              <div className="p-6 border-b border-[#e5e7eb] flex items-center justify-between bg-[#00a8a8] text-white rounded-t-lg">
                 <div className="flex items-center gap-3">
                   <div className="text-4xl">{clienteActual.logo}</div>
                   <div>
                     <h2 className="text-xl font-semibold">{clienteActual.name}</h2>
-                    <p className="text-sm text-[#388E3C]">{clienteActual.contacto} • {clienteActual.email}</p>
+                    <p className="text-sm text-[#00b3b3]">{clienteActual.contacto} • {clienteActual.email}</p>
                   </div>
                 </div>
-                <button onClick={() => setMostrarModalInfo(false)} className="text-white hover:text-[#388E3C]">
+                <button onClick={() => setMostrarModalInfo(false)} className="text-white hover:text-[#00b3b3]">
                   <X size={24} />
                 </button>
               </div>
@@ -7000,56 +7063,56 @@ const InnovativeDemo = () => {
               <div className="p-6">
                 {/* INFORMACIÓN OPERATIVA */}
                 <div className="mb-6">
-                  <h3 className="text-base font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                  <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                     <Calendar size={18} />
                     Información Operativa
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">Fecha de Inicio</div>
-                      <div className="text-sm font-semibold text-[#343A40]">{clienteActual.fechaInicioOperacion}</div>
-                      <div className="text-xs text-[#6C757D] mt-1">
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Fecha de Inicio</div>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.fechaInicioOperacion}</div>
+                      <div className="text-xs text-[#6b7280] mt-1">
                         {Math.floor((new Date() - new Date(clienteActual.fechaInicioOperacion)) / (1000 * 60 * 60 * 24 * 30))} meses operando
                       </div>
                     </div>
                     
-                    <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">Promedio Mensual</div>
-                      <div className="text-sm font-semibold text-[#343A40]">{clienteActual.promedioMensual} ton/mes</div>
-                      <div className="text-xs text-[#6C757D] mt-1">Volumen histórico</div>
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Promedio Mensual</div>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.promedioMensual} ton/mes</div>
+                      <div className="text-xs text-[#6b7280] mt-1">Volumen histórico</div>
                     </div>
                     
-                    <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">Frecuencia</div>
-                      <div className="text-sm font-semibold text-[#343A40]">{clienteActual.frecuenciaRecoleccion}</div>
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Frecuencia</div>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.frecuenciaRecoleccion}</div>
                     </div>
                     
-                    <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">Tasa Valorización</div>
-                      <div className="text-sm font-semibold text-[#1B5E20]">{clienteActual.tasaValorizacion}%</div>
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Tasa Valorización</div>
+                      <div className="text-sm font-semibold text-[#00a8a8]">{clienteActual.tasaValorizacion}%</div>
                     </div>
                     
-                    <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">Sucursales</div>
-                      <div className="text-sm font-semibold text-[#343A40]">{clienteActual.sucursales}</div>
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Sucursales</div>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.sucursales}</div>
                     </div>
                     
-                    <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">RME Gestionado</div>
-                      <div className="text-sm font-semibold text-[#343A40]">{clienteActual.rmeGestionado} ton/mes</div>
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">RME Gestionado</div>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.rmeGestionado} ton/mes</div>
                     </div>
                   </div>
                 </div>
 
                 {/* TIPOS DE RESIDUOS */}
                 <div className="mb-6">
-                  <h3 className="text-base font-semibold text-[#343A40] mb-3 flex items-center gap-2">
+                  <h3 className="text-base font-semibold text-[#1c2c4a] mb-3 flex items-center gap-2">
                     <Package size={18} />
                     Tipos de Residuos Gestionados
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {clienteActual.tiposResiduos.map((tipo, idx) => (
-                      <span key={idx} className="px-3 py-1.5 bg-[#F8F9FA] border border-[#E9ECEF] rounded-md text-xs font-medium text-[#343A40]">
+                      <span key={idx} className="px-3 py-1.5 bg-[#f3f4f6] border border-[#e5e7eb] rounded-md text-xs font-medium text-[#1c2c4a]">
                         {tipo}
                       </span>
                     ))}
@@ -7058,51 +7121,51 @@ const InnovativeDemo = () => {
 
                 {/* DESTINOS FINALES */}
                 <div>
-                  <h3 className="text-base font-semibold text-[#343A40] mb-3 flex items-center gap-2">
+                  <h3 className="text-base font-semibold text-[#1c2c4a] mb-3 flex items-center gap-2">
                     <MapPin size={18} />
                     Destinos Finales
                   </h3>
                   <div className="space-y-2">
                     <div className="flex items-start gap-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                      <div className="w-3 h-3 rounded-full bg-[#1B5E20] mt-0.5"></div>
+                      <div className="w-3 h-3 rounded-full bg-[#00a8a8] mt-0.5"></div>
                       <div className="flex-1">
-                        <div className="text-xs font-semibold text-[#343A40] mb-0.5">Reciclaje</div>
-                        <div className="text-xs text-[#6C757D]">{clienteActual.destinosFinales.reciclaje}</div>
+                        <div className="text-xs font-semibold text-[#1c2c4a] mb-0.5">Reciclaje</div>
+                        <div className="text-xs text-[#6b7280]">{clienteActual.destinosFinales.reciclaje}</div>
                       </div>
                     </div>
                     <div className="flex items-start gap-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
                       <div className="w-3 h-3 rounded-full bg-[#FF8C00] mt-0.5"></div>
                       <div className="flex-1">
-                        <div className="text-xs font-semibold text-[#343A40] mb-0.5">Composta</div>
-                        <div className="text-xs text-[#6C757D]">{clienteActual.destinosFinales.composta}</div>
+                        <div className="text-xs font-semibold text-[#1c2c4a] mb-0.5">Composta</div>
+                        <div className="text-xs text-[#6b7280]">{clienteActual.destinosFinales.composta}</div>
                       </div>
                     </div>
                     <div className="flex items-start gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                      <div className="w-3 h-3 rounded-full bg-[#1B4965] mt-0.5"></div>
+                      <div className="w-3 h-3 rounded-full bg-[#008080] mt-0.5"></div>
                       <div className="flex-1">
-                        <div className="text-xs font-semibold text-[#343A40] mb-0.5">Reuso</div>
-                        <div className="text-xs text-[#6C757D]">{clienteActual.destinosFinales.reuso}</div>
+                        <div className="text-xs font-semibold text-[#1c2c4a] mb-0.5">Reuso</div>
+                        <div className="text-xs text-[#6b7280]">{clienteActual.destinosFinales.reuso}</div>
                       </div>
                     </div>
                     <div className="flex items-start gap-3 p-3 bg-red-50 border border-red-200 rounded-lg">
                       <div className="w-3 h-3 rounded-full bg-[#DC2626] mt-0.5"></div>
                       <div className="flex-1">
-                        <div className="text-xs font-semibold text-[#343A40] mb-0.5">Relleno Sanitario</div>
-                        <div className="text-xs text-[#6C757D]">{clienteActual.destinosFinales.rellenoSanitario}</div>
+                        <div className="text-xs font-semibold text-[#1c2c4a] mb-0.5">Relleno Sanitario</div>
+                        <div className="text-xs text-[#6b7280]">{clienteActual.destinosFinales.rellenoSanitario}</div>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* SERVICIOS CONTRATADOS */}
-                <div className="mt-6 pt-6 border-t border-[#E9ECEF]">
-                  <h3 className="text-base font-semibold text-[#343A40] mb-3 flex items-center gap-2">
+                <div className="mt-6 pt-6 border-t border-[#e5e7eb]">
+                  <h3 className="text-base font-semibold text-[#1c2c4a] mb-3 flex items-center gap-2">
                     <CheckSquare size={18} />
                     Servicios Contratados
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {clienteActual.serviciosContratados.map((servicio, idx) => (
-                      <span key={idx} className="px-3 py-1.5 bg-[#1B5E20] text-white rounded-md text-xs font-medium">
+                      <span key={idx} className="px-3 py-1.5 bg-[#00a8a8] text-white rounded-md text-xs font-medium">
                         {servicio}
                       </span>
                     ))}
@@ -7119,19 +7182,19 @@ const InnovativeDemo = () => {
   // Modal Detalle Colaborador
   const TeamMemberModal = () => (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setSelectedTeamMember(null)}>
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#E9ECEF]" onClick={e => e.stopPropagation()}>
-        <div className="bg-[#1B5E20] p-6 text-white rounded-t-lg">
+      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#e5e7eb]" onClick={e => e.stopPropagation()}>
+        <div className="bg-[#00a8a8] p-6 text-white rounded-t-lg">
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-[#1B5E20] flex items-center justify-center text-white text-2xl font-semibold">
+              <div className="w-16 h-16 rounded-full bg-[#00a8a8] flex items-center justify-center text-white text-2xl font-semibold">
                 {selectedTeamMember.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
               </div>
               <div>
                 <h2 className="text-2xl font-semibold">{selectedTeamMember.name}</h2>
-                <p className="text-[#388E3C] font-medium text-sm mt-1">{selectedTeamMember.role}</p>
+                <p className="text-[#00b3b3] font-medium text-sm mt-1">{selectedTeamMember.role}</p>
               </div>
             </div>
-            <button onClick={() => setSelectedTeamMember(null)} className="text-white hover:text-[#388E3C]">
+            <button onClick={() => setSelectedTeamMember(null)} className="text-white hover:text-[#00b3b3]">
               <X size={24} />
             </button>
           </div>
@@ -7139,91 +7202,91 @@ const InnovativeDemo = () => {
         
         <div className="p-6">
           <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="bg-[#F8F9FA] rounded-lg p-5 border border-[#E9ECEF] text-center">
-              <div className="text-sm text-[#6C757D] font-medium mb-2">Eficiencia Global</div>
-              <div className="text-3xl font-semibold text-[#343A40]">{selectedTeamMember.eficienciaGlobal}%</div>
+            <div className="bg-[#f3f4f6] rounded-lg p-5 border border-[#e5e7eb] text-center">
+              <div className="text-sm text-[#6b7280] font-medium mb-2">Eficiencia Global</div>
+              <div className="text-3xl font-semibold text-[#1c2c4a]">{selectedTeamMember.eficienciaGlobal}%</div>
             </div>
-            <div className="bg-[#F8F9FA] rounded-lg p-5 border border-[#E9ECEF] text-center">
-              <div className="text-sm text-[#6C757D] font-medium mb-2">Tasa Conversión</div>
-              <div className="text-3xl font-semibold text-[#343A40]">{selectedTeamMember.tasaConversion}%</div>
+            <div className="bg-[#f3f4f6] rounded-lg p-5 border border-[#e5e7eb] text-center">
+              <div className="text-sm text-[#6b7280] font-medium mb-2">Tasa Conversión</div>
+              <div className="text-3xl font-semibold text-[#1c2c4a]">{selectedTeamMember.tasaConversion}%</div>
             </div>
-            <div className="bg-[#F8F9FA] rounded-lg p-5 border border-[#E9ECEF] text-center">
-              <div className="text-sm text-[#6C757D] font-medium mb-2">Cumplimiento Ppto.</div>
-              <div className="text-2xl font-semibold text-[#343A40]">{selectedTeamMember.cumplimientoPresupuesto}%</div>
+            <div className="bg-[#f3f4f6] rounded-lg p-5 border border-[#e5e7eb] text-center">
+              <div className="text-sm text-[#6b7280] font-medium mb-2">Cumplimiento Ppto.</div>
+              <div className="text-2xl font-semibold text-[#1c2c4a]">{selectedTeamMember.cumplimientoPresupuesto}%</div>
             </div>
           </div>
           
-          <div className="bg-[#F8F9FA] border border-[#E9ECEF] rounded-lg p-6 mb-6">
-            <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+          <div className="bg-[#f3f4f6] border border-[#e5e7eb] rounded-lg p-6 mb-6">
+            <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
               <TrendingUp size={20} />
               Pipeline Detallado
             </h3>
             <div className="grid grid-cols-4 gap-4">
-              <div className="bg-white rounded-lg p-4 text-center border border-[#E9ECEF]">
-                <div className="text-2xl font-semibold text-[#343A40]">{selectedTeamMember.leads}</div>
-                <div className="text-xs text-[#6C757D] font-medium mt-1">Leads Activos</div>
+              <div className="bg-white rounded-lg p-4 text-center border border-[#e5e7eb]">
+                <div className="text-2xl font-semibold text-[#1c2c4a]">{selectedTeamMember.leads}</div>
+                <div className="text-xs text-[#6b7280] font-medium mt-1">Leads Activos</div>
               </div>
-              <div className="bg-white rounded-lg p-4 text-center border border-[#E9ECEF]">
-                <div className="text-2xl font-semibold text-[#343A40]">{selectedTeamMember.levantamientos}</div>
-                <div className="text-xs text-[#6C757D] font-medium mt-1">Levantamientos</div>
+              <div className="bg-white rounded-lg p-4 text-center border border-[#e5e7eb]">
+                <div className="text-2xl font-semibold text-[#1c2c4a]">{selectedTeamMember.levantamientos}</div>
+                <div className="text-xs text-[#6b7280] font-medium mt-1">Levantamientos</div>
               </div>
-              <div className="bg-white rounded-lg p-4 text-center border border-[#E9ECEF]">
-                <div className="text-2xl font-semibold text-[#343A40]">{selectedTeamMember.propuestasEnviadas}</div>
-                <div className="text-xs text-[#6C757D] font-medium mt-1">Propuestas</div>
+              <div className="bg-white rounded-lg p-4 text-center border border-[#e5e7eb]">
+                <div className="text-2xl font-semibold text-[#1c2c4a]">{selectedTeamMember.propuestasEnviadas}</div>
+                <div className="text-xs text-[#6b7280] font-medium mt-1">Propuestas</div>
               </div>
-              <div className="bg-white rounded-lg p-4 text-center border border-[#E9ECEF]">
-                <div className="text-2xl font-semibold text-[#1B5E20]">{selectedTeamMember.cierres}</div>
-                <div className="text-xs text-[#6C757D] font-medium mt-1">Cierres</div>
+              <div className="bg-white rounded-lg p-4 text-center border border-[#e5e7eb]">
+                <div className="text-2xl font-semibold text-[#00a8a8]">{selectedTeamMember.cierres}</div>
+                <div className="text-xs text-[#6b7280] font-medium mt-1">Cierres</div>
               </div>
             </div>
           </div>
           
-          <div className="bg-[#F8F9FA] border border-[#E9ECEF] rounded-lg p-6 mb-6">
-            <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+          <div className="bg-[#f3f4f6] border border-[#e5e7eb] rounded-lg p-6 mb-6">
+            <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
               <DollarSign size={20} />
               Análisis Presupuestal
             </h3>
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <div className="text-sm text-[#6C757D] font-medium mb-2">Presupuesto Mensual</div>
-                <div className="text-2xl font-semibold text-[#343A40]">
+                <div className="text-sm text-[#6b7280] font-medium mb-2">Presupuesto Mensual</div>
+                <div className="text-2xl font-semibold text-[#1c2c4a]">
                   ${(selectedTeamMember.presupuestoMensual / 1000).toFixed(0)}k
                 </div>
               </div>
               <div>
-                <div className="text-sm text-[#6C757D] font-medium mb-2">Ventas Reales</div>
-                <div className="text-2xl font-semibold text-[#343A40]">
+                <div className="text-sm text-[#6b7280] font-medium mb-2">Ventas Reales</div>
+                <div className="text-2xl font-semibold text-[#1c2c4a]">
                   ${(selectedTeamMember.ventasReales / 1000).toFixed(0)}k
                 </div>
               </div>
             </div>
-            <div className="mt-4 p-4 bg-white rounded-lg border border-[#E9ECEF]">
+            <div className="mt-4 p-4 bg-white rounded-lg border border-[#e5e7eb]">
               <div className="flex justify-between items-center">
-                <span className="font-medium text-[#343A40]">Cumplimiento:</span>
-                <span className={`text-xl font-semibold ${selectedTeamMember.cumplimientoPresupuesto >= 100 ? 'text-[#1B5E20]' : 'text-orange-600'}`}>
+                <span className="font-medium text-[#1c2c4a]">Cumplimiento:</span>
+                <span className={`text-xl font-semibold ${selectedTeamMember.cumplimientoPresupuesto >= 100 ? 'text-[#00a8a8]' : 'text-orange-600'}`}>
                   {selectedTeamMember.cumplimientoPresupuesto}%
                 </span>
               </div>
             </div>
           </div>
           
-          <div className="bg-[#F8F9FA] rounded-lg p-6 border border-[#E9ECEF]">
-            <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+          <div className="bg-[#f3f4f6] rounded-lg p-6 border border-[#e5e7eb]">
+            <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
               <Target size={20} />
               KPIs de Desempeño
             </h3>
             <div className="grid grid-cols-3 gap-4">
-              <div className="bg-white rounded-lg p-4 text-center border border-[#E9ECEF]">
-                <div className="text-xs text-[#6C757D] font-medium mb-2">Tiempo Respuesta</div>
-                <div className="text-xl font-semibold text-[#343A40]">{selectedTeamMember.tiempoRespuesta}</div>
+              <div className="bg-white rounded-lg p-4 text-center border border-[#e5e7eb]">
+                <div className="text-xs text-[#6b7280] font-medium mb-2">Tiempo Respuesta</div>
+                <div className="text-xl font-semibold text-[#1c2c4a]">{selectedTeamMember.tiempoRespuesta}</div>
               </div>
-              <div className="bg-white rounded-lg p-4 text-center border border-[#E9ECEF]">
-                <div className="text-xs text-[#6C757D] font-medium mb-2">Satisfacción Cliente</div>
-                <div className="text-xl font-semibold text-[#343A40]">{selectedTeamMember.satisfaccionCliente}/5.0</div>
+              <div className="bg-white rounded-lg p-4 text-center border border-[#e5e7eb]">
+                <div className="text-xs text-[#6b7280] font-medium mb-2">Satisfacción Cliente</div>
+                <div className="text-xl font-semibold text-[#1c2c4a]">{selectedTeamMember.satisfaccionCliente}/5.0</div>
               </div>
-              <div className="bg-white rounded-lg p-4 text-center border border-[#E9ECEF]">
-                <div className="text-xs text-[#6C757D] font-medium mb-2">Actividades/Semana</div>
-                <div className="text-xl font-semibold text-[#343A40]">{selectedTeamMember.activitiesSemanal}</div>
+              <div className="bg-white rounded-lg p-4 text-center border border-[#e5e7eb]">
+                <div className="text-xs text-[#6b7280] font-medium mb-2">Actividades/Semana</div>
+                <div className="text-xl font-semibold text-[#1c2c4a]">{selectedTeamMember.activitiesSemanal}</div>
               </div>
             </div>
           </div>
@@ -7269,8 +7332,8 @@ const InnovativeDemo = () => {
 
         return (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setMostrarLevantamiento(false)}>
-            <div className="bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#E9ECEF]" onClick={e => e.stopPropagation()}>
-              <div className="p-6 border-b border-[#E9ECEF] flex items-center justify-between bg-[#1B5E20] text-white rounded-t-lg">
+            <div className="bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#e5e7eb]" onClick={e => e.stopPropagation()}>
+              <div className="p-6 border-b border-[#e5e7eb] flex items-center justify-between bg-[#00a8a8] text-white rounded-t-lg">
                 <div>
                   <h2 className="text-xl font-semibold">Resultados del Levantamiento</h2>
                   <p className="text-sm text-white/90 mt-1">{selectedLevantamiento.cliente}</p>
@@ -7282,55 +7345,55 @@ const InnovativeDemo = () => {
               
               <div className="p-6 space-y-6">
                 {/* INFORMACIÓN GENERAL */}
-                <div className="bg-[#F8F9FA] rounded-lg p-5 border border-[#E9ECEF]">
-                  <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                <div className="bg-[#f3f4f6] rounded-lg p-5 border border-[#e5e7eb]">
+                  <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                     <Building2 size={20} />
                     Información General
                   </h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Cliente</label>
-                      <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamiento.cliente}</div>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Cliente</label>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamiento.cliente}</div>
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Razón Social</label>
-                      <div className="text-sm text-[#343A40]">{info.razonSocial || 'N/A'}</div>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Razón Social</label>
+                      <div className="text-sm text-[#1c2c4a]">{info.razonSocial || 'N/A'}</div>
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">RFC</label>
-                      <div className="text-sm text-[#343A40]">{info.rfc || 'N/A'}</div>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">RFC</label>
+                      <div className="text-sm text-[#1c2c4a]">{info.rfc || 'N/A'}</div>
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Contacto Principal</label>
-                      <div className="text-sm text-[#343A40]">{info.contacto || selectedLevantamiento.ejecutivo}</div>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Contacto Principal</label>
+                      <div className="text-sm text-[#1c2c4a]">{info.contacto || selectedLevantamiento.ejecutivo}</div>
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Teléfono</label>
-                      <div className="text-sm text-[#343A40]">{info.telefono || 'N/A'}</div>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Teléfono</label>
+                      <div className="text-sm text-[#1c2c4a]">{info.telefono || 'N/A'}</div>
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Email</label>
-                      <div className="text-sm text-[#343A40]">{info.email || 'N/A'}</div>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Email</label>
+                      <div className="text-sm text-[#1c2c4a]">{info.email || 'N/A'}</div>
                     </div>
                     <div className="col-span-2">
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Dirección</label>
-                      <div className="text-sm text-[#343A40]">{info.direccion || 'N/A'}</div>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Dirección</label>
+                      <div className="text-sm text-[#1c2c4a]">{info.direccion || 'N/A'}</div>
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Superficie</label>
-                      <div className="text-sm text-[#343A40]">{info.superficie || 'N/A'}</div>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Superficie</label>
+                      <div className="text-sm text-[#1c2c4a]">{info.superficie || 'N/A'}</div>
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Número de Empleados</label>
-                      <div className="text-sm text-[#343A40]">{info.numeroEmpleados || 'N/A'}</div>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Número de Empleados</label>
+                      <div className="text-sm text-[#1c2c4a]">{info.numeroEmpleados || 'N/A'}</div>
                     </div>
                     <div className="col-span-2">
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Horario de Operación</label>
-                      <div className="text-sm text-[#343A40]">{info.horarioOperacion || 'N/A'}</div>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Horario de Operación</label>
+                      <div className="text-sm text-[#1c2c4a]">{info.horarioOperacion || 'N/A'}</div>
                     </div>
                     {info.requisitosReporte && info.requisitosReporte.length > 0 && (
                       <div className="col-span-2">
-                        <label className="block text-xs text-[#6C757D] font-medium mb-2">Requisitos de Reporte / Estándares</label>
+                        <label className="block text-xs text-[#6b7280] font-medium mb-2">Requisitos de Reporte / Estándares</label>
                         <div className="flex flex-wrap gap-2">
                           {info.requisitosReporte.map((requisito, idx) => (
                             <span key={idx} className="px-3 py-1.5 bg-[#0D47A1] text-white text-xs font-medium rounded-md border border-[#0D47A1]">
@@ -7338,26 +7401,26 @@ const InnovativeDemo = () => {
                             </span>
                           ))}
                         </div>
-                        <p className="text-xs text-[#6C757D] mt-2 italic">
+                        <p className="text-xs text-[#6b7280] mt-2 italic">
                           Estos estándares serán considerados en la generación de reportes personalizados para el cliente
                         </p>
                       </div>
                     )}
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Ejecutivo</label>
-                      <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamiento.ejecutivo}</div>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Ejecutivo</label>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamiento.ejecutivo}</div>
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Fecha</label>
-                      <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamiento.fecha}</div>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Fecha</label>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamiento.fecha}</div>
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Volumen Estimado</label>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Volumen Estimado</label>
                       <div className="text-sm font-semibold text-[#0D47A1]">{selectedLevantamiento.volumenEstimado}</div>
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Valor Estimado</label>
-                      <div className="text-sm font-semibold text-[#343A40]">
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Valor Estimado</label>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">
                         ${(selectedLevantamiento.valorEstimado / 1000).toFixed(0)}k
                       </div>
                     </div>
@@ -7366,30 +7429,30 @@ const InnovativeDemo = () => {
 
                 {/* TIPOS DE RESIDUOS */}
                 {tiposResiduos.length > 0 && (
-                  <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                    <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                  <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                    <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                       <Recycle size={20} />
                       Tipos de Residuos
                     </h3>
                     <div className="overflow-x-auto">
                       <table className="w-full">
-                        <thead className="bg-[#F8F9FA] border-b border-[#E9ECEF]">
+                        <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
                           <tr>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-[#6C757D]">Tipo</th>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-[#6C757D]">Cantidad</th>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-[#6C757D]">Porcentaje</th>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-[#6C757D]">Destino Actual</th>
-                            <th className="px-4 py-2 text-right text-xs font-semibold text-[#6C757D]">Costo</th>
+                            <th className="px-4 py-2 text-left text-xs font-semibold text-[#6b7280]">Tipo</th>
+                            <th className="px-4 py-2 text-left text-xs font-semibold text-[#6b7280]">Cantidad</th>
+                            <th className="px-4 py-2 text-left text-xs font-semibold text-[#6b7280]">Porcentaje</th>
+                            <th className="px-4 py-2 text-left text-xs font-semibold text-[#6b7280]">Destino Actual</th>
+                            <th className="px-4 py-2 text-right text-xs font-semibold text-[#6b7280]">Costo</th>
                           </tr>
                         </thead>
                         <tbody>
                           {tiposResiduos.map((residuo, idx) => (
-                            <tr key={idx} className="border-b border-[#E9ECEF]">
-                              <td className="px-4 py-3 text-sm font-semibold text-[#343A40]">{residuo.tipo}</td>
-                              <td className="px-4 py-3 text-sm text-[#343A40]">{residuo.cantidad}</td>
-                              <td className="px-4 py-3 text-sm text-[#6C757D]">{residuo.porcentaje}%</td>
-                              <td className="px-4 py-3 text-sm text-[#6C757D]">{residuo.destino}</td>
-                              <td className="px-4 py-3 text-sm text-right font-semibold text-[#343A40]">${residuo.costo?.toLocaleString() || '0'}</td>
+                            <tr key={idx} className="border-b border-[#e5e7eb]">
+                              <td className="px-4 py-3 text-sm font-semibold text-[#1c2c4a]">{residuo.tipo}</td>
+                              <td className="px-4 py-3 text-sm text-[#1c2c4a]">{residuo.cantidad}</td>
+                              <td className="px-4 py-3 text-sm text-[#6b7280]">{residuo.porcentaje}%</td>
+                              <td className="px-4 py-3 text-sm text-[#6b7280]">{residuo.destino}</td>
+                              <td className="px-4 py-3 text-sm text-right font-semibold text-[#1c2c4a]">${residuo.costo?.toLocaleString() || '0'}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -7400,42 +7463,42 @@ const InnovativeDemo = () => {
 
                 {/* PATRONES DE GENERACIÓN */}
                 {(generacion.frecuencia || generacion.volumenMensual) && (
-                  <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                    <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                  <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                    <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                       <TrendingUp size={20} />
                       Patrones de Generación
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Frecuencia de Generación</label>
-                        <div className="text-sm text-[#343A40]">{generacion.frecuencia || 'N/A'}</div>
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Frecuencia de Generación</label>
+                        <div className="text-sm text-[#1c2c4a]">{generacion.frecuencia || 'N/A'}</div>
                       </div>
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Días por Semana</label>
-                        <div className="text-sm text-[#343A40]">{generacion.diasSemana || 'N/A'}</div>
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Días por Semana</label>
+                        <div className="text-sm text-[#1c2c4a]">{generacion.diasSemana || 'N/A'}</div>
                       </div>
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Volumen Diario</label>
-                        <div className="text-sm text-[#343A40]">{generacion.volumenDiario || 'N/A'}</div>
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Volumen Diario</label>
+                        <div className="text-sm text-[#1c2c4a]">{generacion.volumenDiario || 'N/A'}</div>
                       </div>
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Volumen Semanal</label>
-                        <div className="text-sm text-[#343A40]">{generacion.volumenSemanal || 'N/A'}</div>
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Volumen Semanal</label>
+                        <div className="text-sm text-[#1c2c4a]">{generacion.volumenSemanal || 'N/A'}</div>
                       </div>
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Volumen Mensual</label>
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Volumen Mensual</label>
                         <div className="text-sm font-semibold text-[#0D47A1]">{generacion.volumenMensual || 'N/A'}</div>
                       </div>
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Horarios de Recolección</label>
-                        <div className="text-sm text-[#343A40]">
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Horarios de Recolección</label>
+                        <div className="text-sm text-[#1c2c4a]">
                           {generacion.horariosRecoleccion ? generacion.horariosRecoleccion.join(', ') : 'N/A'}
                         </div>
                       </div>
                       {generacion.variacionesEstacionales && (
                         <div className="col-span-2">
-                          <label className="block text-xs text-[#6C757D] font-medium mb-1">Variaciones Estacionales</label>
-                          <div className="text-sm text-[#343A40]">{generacion.variacionesEstacionales}</div>
+                          <label className="block text-xs text-[#6b7280] font-medium mb-1">Variaciones Estacionales</label>
+                          <div className="text-sm text-[#1c2c4a]">{generacion.variacionesEstacionales}</div>
                         </div>
                       )}
                     </div>
@@ -7444,38 +7507,38 @@ const InnovativeDemo = () => {
 
                 {/* SERVICIOS ACTUALES */}
                 {(serviciosActuales.proveedor || serviciosActuales.costoMensual) && (
-                  <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                    <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                  <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                    <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                       <FileText size={20} />
                       Servicios Actuales
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Proveedor Actual</label>
-                        <div className="text-sm text-[#343A40]">{serviciosActuales.proveedor || 'N/A'}</div>
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Proveedor Actual</label>
+                        <div className="text-sm text-[#1c2c4a]">{serviciosActuales.proveedor || 'N/A'}</div>
                       </div>
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Costo Mensual Actual</label>
-                        <div className="text-sm font-semibold text-[#343A40]">
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Costo Mensual Actual</label>
+                        <div className="text-sm font-semibold text-[#1c2c4a]">
                           ${serviciosActuales.costoMensual ? serviciosActuales.costoMensual.toLocaleString() : 'N/A'}
                         </div>
                       </div>
                       {serviciosActuales.fechaVencimiento && (
                         <div>
-                          <label className="block text-xs text-[#6C757D] font-medium mb-1">Fecha Vencimiento Contrato</label>
-                          <div className="text-sm text-[#343A40]">{serviciosActuales.fechaVencimiento}</div>
+                          <label className="block text-xs text-[#6b7280] font-medium mb-1">Fecha Vencimiento Contrato</label>
+                          <div className="text-sm text-[#1c2c4a]">{serviciosActuales.fechaVencimiento}</div>
                         </div>
                       )}
                       {serviciosActuales.satisfaccion !== undefined && (
                         <div>
-                          <label className="block text-xs text-[#6C757D] font-medium mb-1">Nivel de Satisfacción</label>
-                          <div className="text-sm text-[#343A40]">{serviciosActuales.satisfaccion}/10</div>
+                          <label className="block text-xs text-[#6b7280] font-medium mb-1">Nivel de Satisfacción</label>
+                          <div className="text-sm text-[#1c2c4a]">{serviciosActuales.satisfaccion}/10</div>
                         </div>
                       )}
                       {serviciosActuales.razonCambio && (
                         <div className="col-span-2">
-                          <label className="block text-xs text-[#6C757D] font-medium mb-1">Razón de Cambio</label>
-                          <div className="text-sm text-[#343A40]">{serviciosActuales.razonCambio}</div>
+                          <label className="block text-xs text-[#6b7280] font-medium mb-1">Razón de Cambio</label>
+                          <div className="text-sm text-[#1c2c4a]">{serviciosActuales.razonCambio}</div>
                         </div>
                       )}
                     </div>
@@ -7484,32 +7547,32 @@ const InnovativeDemo = () => {
 
                 {/* INFRAESTRUCTURA */}
                 {(infraestructura.areaAlmacenamiento || infraestructura.numeroContenedores) && (
-                  <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                    <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                  <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                    <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                       <Building2 size={20} />
                       Infraestructura
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Área de Almacenamiento</label>
-                        <div className="text-sm text-[#343A40]">{infraestructura.areaAlmacenamiento || 'N/A'}</div>
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Área de Almacenamiento</label>
+                        <div className="text-sm text-[#1c2c4a]">{infraestructura.areaAlmacenamiento || 'N/A'}</div>
                       </div>
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Número de Contenedores</label>
-                        <div className="text-sm text-[#343A40]">{infraestructura.numeroContenedores || 'N/A'}</div>
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Número de Contenedores</label>
+                        <div className="text-sm text-[#1c2c4a]">{infraestructura.numeroContenedores || 'N/A'}</div>
                       </div>
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Tipo de Almacenamiento</label>
-                        <div className="text-sm text-[#343A40]">{infraestructura.tipoAlmacenamiento || 'N/A'}</div>
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Tipo de Almacenamiento</label>
+                        <div className="text-sm text-[#1c2c4a]">{infraestructura.tipoAlmacenamiento || 'N/A'}</div>
                       </div>
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Acceso para Vehículos</label>
-                        <div className="text-sm text-[#343A40]">{infraestructura.accesoVehiculos || 'N/A'}</div>
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Acceso para Vehículos</label>
+                        <div className="text-sm text-[#1c2c4a]">{infraestructura.accesoVehiculos || 'N/A'}</div>
                       </div>
                       {infraestructura.restriccionesHorario && (
                         <div className="col-span-2">
-                          <label className="block text-xs text-[#6C757D] font-medium mb-1">Restricciones de Horario</label>
-                          <div className="text-sm text-[#343A40]">{infraestructura.restriccionesHorario}</div>
+                          <label className="block text-xs text-[#6b7280] font-medium mb-1">Restricciones de Horario</label>
+                          <div className="text-sm text-[#1c2c4a]">{infraestructura.restriccionesHorario}</div>
                         </div>
                       )}
                     </div>
@@ -7518,18 +7581,18 @@ const InnovativeDemo = () => {
 
                 {/* NECESIDADES Y OBJETIVOS */}
                 {(necesidades.serviciosRequeridos || necesidades.presupuestoDisponible) && (
-                  <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                    <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                  <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                    <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                       <Target size={20} />
                       Necesidades y Objetivos
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
                       {necesidades.serviciosRequeridos && (
                         <div className="col-span-2">
-                          <label className="block text-xs text-[#6C757D] font-medium mb-2">Servicios Requeridos</label>
+                          <label className="block text-xs text-[#6b7280] font-medium mb-2">Servicios Requeridos</label>
                           <div className="flex flex-wrap gap-2">
                             {necesidades.serviciosRequeridos.map((servicio, idx) => (
-                              <span key={idx} className="px-3 py-1 bg-[#1B5E20] text-white text-xs rounded-md">
+                              <span key={idx} className="px-3 py-1 bg-[#00a8a8] text-white text-xs rounded-md">
                                 {servicio}
                               </span>
                             ))}
@@ -7538,22 +7601,22 @@ const InnovativeDemo = () => {
                       )}
                       {necesidades.presupuestoDisponible && (
                         <div>
-                          <label className="block text-xs text-[#6C757D] font-medium mb-1">Presupuesto Disponible (mensual)</label>
-                          <div className="text-sm font-semibold text-[#343A40]">
+                          <label className="block text-xs text-[#6b7280] font-medium mb-1">Presupuesto Disponible (mensual)</label>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">
                             ${necesidades.presupuestoDisponible.toLocaleString()}
                           </div>
                         </div>
                       )}
                       {necesidades.urgencia && (
                         <div>
-                          <label className="block text-xs text-[#6C757D] font-medium mb-1">Urgencia</label>
-                          <div className="text-sm text-[#343A40]">{necesidades.urgencia}</div>
+                          <label className="block text-xs text-[#6b7280] font-medium mb-1">Urgencia</label>
+                          <div className="text-sm text-[#1c2c4a]">{necesidades.urgencia}</div>
                         </div>
                       )}
                       {necesidades.objetivosAmbientales && (
                         <div className="col-span-2">
-                          <label className="block text-xs text-[#6C757D] font-medium mb-1">Objetivos Ambientales</label>
-                          <div className="text-sm text-[#343A40]">{necesidades.objetivosAmbientales}</div>
+                          <label className="block text-xs text-[#6b7280] font-medium mb-1">Objetivos Ambientales</label>
+                          <div className="text-sm text-[#1c2c4a]">{necesidades.objetivosAmbientales}</div>
                         </div>
                       )}
                     </div>
@@ -7563,19 +7626,19 @@ const InnovativeDemo = () => {
                 {/* OBSERVACIONES */}
                 {observaciones && (
                   <div className="bg-blue-50 rounded-lg p-5 border border-blue-200">
-                    <h3 className="text-lg font-semibold text-[#343A40] mb-2 flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-[#1c2c4a] mb-2 flex items-center gap-2">
                       <FileText size={20} />
                       Observaciones
                     </h3>
-                    <div className="text-sm text-[#343A40] whitespace-pre-line">{observaciones}</div>
+                    <div className="text-sm text-[#1c2c4a] whitespace-pre-line">{observaciones}</div>
                   </div>
                 )}
 
                 {/* SIGUIENTE PASO */}
                 {selectedLevantamiento.siguientePaso && (
-                  <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                    <div className="text-xs text-[#6C757D] font-medium mb-2">Siguiente Paso</div>
-                    <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamiento.siguientePaso}</div>
+                  <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                    <div className="text-xs text-[#6b7280] font-medium mb-2">Siguiente Paso</div>
+                    <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamiento.siguientePaso}</div>
                   </div>
                 )}
               </div>
@@ -7587,8 +7650,8 @@ const InnovativeDemo = () => {
       {/* MODAL DE DETALLES DEL PROSPECTO */}
       {mostrarDetallesProspecto && selectedProspecto && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setMostrarDetallesProspecto(false)}>
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#E9ECEF]" onClick={e => e.stopPropagation()}>
-            <div className="p-6 border-b border-[#E9ECEF] flex items-center justify-between bg-[#1B5E20] text-white rounded-t-lg">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#e5e7eb]" onClick={e => e.stopPropagation()}>
+            <div className="p-6 border-b border-[#e5e7eb] flex items-center justify-between bg-[#00a8a8] text-white rounded-t-lg">
               <div>
                 <h2 className="text-xl font-semibold">{selectedProspecto.empresa}</h2>
                 <p className="text-sm text-white/90 mt-1">{selectedProspecto.industria}</p>
@@ -7601,20 +7664,20 @@ const InnovativeDemo = () => {
             <div className="p-6">
               {/* INFORMACIÓN BÁSICA */}
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Ejecutivo</div>
-                  <div className="text-lg font-bold text-[#343A40]">{selectedProspecto.ejecutivo}</div>
+                <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                  <div className="text-xs text-[#6b7280] font-medium mb-1">Ejecutivo</div>
+                  <div className="text-lg font-bold text-[#1c2c4a]">{selectedProspecto.ejecutivo}</div>
                 </div>
-                <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Status</div>
-                  <div className="text-lg font-bold text-[#343A40]">{selectedProspecto.status}</div>
+                <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                  <div className="text-xs text-[#6b7280] font-medium mb-1">Status</div>
+                  <div className="text-lg font-bold text-[#1c2c4a]">{selectedProspecto.status}</div>
                 </div>
-                <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Volumen Estimado</div>
-                  <div className="text-lg font-bold text-[#343A40]">{selectedProspecto.volumenEstimado}</div>
+                <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                  <div className="text-xs text-[#6b7280] font-medium mb-1">Volumen Estimado</div>
+                  <div className="text-lg font-bold text-[#1c2c4a]">{selectedProspecto.volumenEstimado}</div>
                 </div>
-                <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Valor Estimado</div>
+                <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                  <div className="text-xs text-[#6b7280] font-medium mb-1">Valor Estimado</div>
                   <div className="text-lg font-bold text-[#0D47A1]">
                     ${((selectedProspecto.propuesta?.ventaTotal || selectedProspecto.facturacionEstimada || 0) / 1000000).toFixed(1)}M
                   </div>
@@ -7624,21 +7687,21 @@ const InnovativeDemo = () => {
               {/* INFORMACIÓN ESTRATÉGICA */}
               <div className="space-y-4 mb-6">
                 <div>
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Comentarios</div>
-                  <div className="text-sm font-semibold text-[#343A40] bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <div className="text-xs text-[#6b7280] font-medium mb-1">Comentarios</div>
+                  <div className="text-sm font-semibold text-[#1c2c4a] bg-blue-50 border border-blue-200 rounded-lg p-3">
                     {(selectedProspecto.comentarios || "Pendiente")}
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <div className="text-xs text-[#6C757D] font-medium mb-1">Status</div>
-                    <div className="text-sm font-semibold text-[#343A40]">{selectedProspecto.status}</div>
+                    <div className="text-xs text-[#6b7280] font-medium mb-1">Status</div>
+                    <div className="text-sm font-semibold text-[#1c2c4a]">{selectedProspecto.status}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-[#6C757D] font-medium mb-1">Nivel</div>
+                    <div className="text-xs text-[#6b7280] font-medium mb-1">Nivel</div>
                     <div className={`text-sm font-semibold ${
-                      selectedProspecto.status === 'Lead nuevo' || selectedProspecto.status === 'Inicio de operación' ? 'text-[#1B5E20]' : selectedProspecto.status === 'Propuesta enviada' ? 'text-[#0D47A1]' : 'text-orange-600'
+                      selectedProspecto.status === 'Lead nuevo' || selectedProspecto.status === 'Inicio de operación' ? 'text-[#00a8a8]' : selectedProspecto.status === 'Propuesta enviada' ? 'text-[#0D47A1]' : 'text-orange-600'
                     }`}>
                       {selectedProspecto.status}
                     </div>
@@ -7646,27 +7709,27 @@ const InnovativeDemo = () => {
                 </div>
                 
                 <div>
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Servicios</div>
-                  <div className="text-sm text-[#343A40]">{(selectedProspecto.servicios || []).map(s => SERVICIOS_INNOVATIVE.find(si => si.id === s)?.nombre || s).join(", ") || "Sin servicios"}</div>
+                  <div className="text-xs text-[#6b7280] font-medium mb-1">Servicios</div>
+                  <div className="text-sm text-[#1c2c4a]">{(selectedProspecto.servicios || []).map(s => SERVICIOS_INNOVATIVE.find(si => si.id === s)?.nombre || s).join(", ") || "Sin servicios"}</div>
                 </div>
               </div>
 
               {/* INFORMACIÓN DE CONTACTO */}
-              <div className="border-t border-[#E9ECEF] pt-4 mb-6">
-                <h3 className="text-sm font-semibold text-[#343A40] mb-3">Información de Contacto</h3>
+              <div className="border-t border-[#e5e7eb] pt-4 mb-6">
+                <h3 className="text-sm font-semibold text-[#1c2c4a] mb-3">Información de Contacto</h3>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-[#6C757D]">
+                  <div className="flex items-center gap-2 text-sm text-[#6b7280]">
                     <MapPin size={14} />
                     <span>{selectedProspecto.ciudad}</span>
                   </div>
-                  <div className="text-sm text-[#6C757D]">
+                  <div className="text-sm text-[#6b7280]">
                     <span className="font-medium">Contacto:</span> {selectedProspecto.contacto?.nombre ? `${selectedProspecto.contacto.nombre} - ${selectedProspecto.contacto.puesto || ""}` : "Sin contacto"}
                   </div>
                 </div>
               </div>
               
               {/* BOTONES DE ACCIÓN */}
-              <div className="flex gap-3 pt-4 border-t border-[#E9ECEF]">
+              <div className="flex gap-3 pt-4 border-t border-[#e5e7eb]">
                 {(selectedProspecto.status === 'Levantamiento' || selectedProspecto.status === 'Propuesta enviada' || selectedProspecto.status === 'Inicio de operación') && (
                   <button
                     onClick={() => {
@@ -7677,7 +7740,7 @@ const InnovativeDemo = () => {
                         setMostrarDetallesProspecto(false);
                       }
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#F8F9FA] hover:bg-[#E9ECEF] text-[#343A40] rounded-md text-sm font-medium transition-all border border-[#E9ECEF]"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#f3f4f6] hover:bg-[#e5e7eb] text-[#1c2c4a] rounded-md text-sm font-medium transition-all border border-[#e5e7eb]"
                   >
                     <Eye size={16} />
                     Ver Levantamiento
@@ -7689,7 +7752,7 @@ const InnovativeDemo = () => {
                       setMostrarPropuesta(true);
                       setMostrarDetallesProspecto(false);
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#0D47A1] hover:bg-[#0052A3] text-white rounded-md text-sm font-medium transition-all"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#0D47A1] hover:bg-[#0D47A1] text-white rounded-md text-sm font-medium transition-all"
                   >
                     <FileText size={16} />
                     Ver Propuesta
@@ -7704,8 +7767,8 @@ const InnovativeDemo = () => {
       {/* MODAL DE LEADS */}
       {mostrarLeads && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setMostrarLeads(false)}>
-          <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#E9ECEF]" onClick={e => e.stopPropagation()}>
-            <div className="p-6 border-b border-[#E9ECEF] flex items-center justify-between bg-[#0D47A1] text-white rounded-t-lg">
+          <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#e5e7eb]" onClick={e => e.stopPropagation()}>
+            <div className="p-6 border-b border-[#e5e7eb] flex items-center justify-between bg-[#0D47A1] text-white rounded-t-lg">
               <div>
                 <h2 className="text-xl font-semibold">Leads Activos</h2>
                 <p className="text-sm text-white/90 mt-1">Total: {leadsData.length} leads</p>
@@ -7718,25 +7781,25 @@ const InnovativeDemo = () => {
             <div className="p-6">
               {/* RESUMEN */}
               <div className="grid grid-cols-4 gap-4 mb-6">
-                <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] mb-1">Total Leads</div>
-                  <div className="text-2xl font-bold text-[#343A40]">{leadsData.length}</div>
+                <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                  <div className="text-xs text-[#6b7280] mb-1">Total Leads</div>
+                  <div className="text-2xl font-bold text-[#1c2c4a]">{leadsData.length}</div>
                 </div>
-                <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] mb-1">Valor Total</div>
+                <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                  <div className="text-xs text-[#6b7280] mb-1">Valor Total</div>
                   <div className="text-2xl font-bold text-[#0D47A1]">
                     ${(leadsData.reduce((sum, l) => sum + l.valor, 0) / 1000000).toFixed(1)}M
                   </div>
                 </div>
-                <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] mb-1">Valor Promedio</div>
-                  <div className="text-2xl font-bold text-[#343A40]">
+                <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                  <div className="text-xs text-[#6b7280] mb-1">Valor Promedio</div>
+                  <div className="text-2xl font-bold text-[#1c2c4a]">
                     ${(leadsData.reduce((sum, l) => sum + l.valor, 0) / leadsData.length / 1000).toFixed(0)}K
                   </div>
                 </div>
-                <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] mb-1">Origen Principal</div>
-                  <div className="text-2xl font-bold text-[#343A40]">
+                <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                  <div className="text-xs text-[#6b7280] mb-1">Origen Principal</div>
+                  <div className="text-2xl font-bold text-[#1c2c4a]">
                     {(() => {
                       const origenes = leadsData.reduce((acc, l) => {
                         acc[l.origen] = (acc[l.origen] || 0) + 1;
@@ -7752,25 +7815,25 @@ const InnovativeDemo = () => {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-[#E9ECEF] bg-[#F8F9FA]">
-                      <th className="text-left p-3 text-xs font-semibold text-[#6C757D]">#</th>
-                      <th className="text-left p-3 text-xs font-semibold text-[#6C757D]">Empresa</th>
-                      <th className="text-left p-3 text-xs font-semibold text-[#6C757D]">Contacto</th>
-                      <th className="text-left p-3 text-xs font-semibold text-[#6C757D]">Industria</th>
-                      <th className="text-left p-3 text-xs font-semibold text-[#6C757D]">Ubicación</th>
-                      <th className="text-left p-3 text-xs font-semibold text-[#6C757D]">Origen</th>
-                      <th className="text-left p-3 text-xs font-semibold text-[#6C757D]">Fecha</th>
-                      <th className="text-right p-3 text-xs font-semibold text-[#6C757D]">Valor</th>
+                    <tr className="border-b border-[#e5e7eb] bg-[#f3f4f6]">
+                      <th className="text-left p-3 text-xs font-semibold text-[#6b7280]">#</th>
+                      <th className="text-left p-3 text-xs font-semibold text-[#6b7280]">Empresa</th>
+                      <th className="text-left p-3 text-xs font-semibold text-[#6b7280]">Contacto</th>
+                      <th className="text-left p-3 text-xs font-semibold text-[#6b7280]">Industria</th>
+                      <th className="text-left p-3 text-xs font-semibold text-[#6b7280]">Ubicación</th>
+                      <th className="text-left p-3 text-xs font-semibold text-[#6b7280]">Origen</th>
+                      <th className="text-left p-3 text-xs font-semibold text-[#6b7280]">Fecha</th>
+                      <th className="text-right p-3 text-xs font-semibold text-[#6b7280]">Valor</th>
                     </tr>
                   </thead>
                   <tbody>
                     {leadsData.map((lead, index) => (
-                      <tr key={lead.id} className="border-b border-[#E9ECEF] hover:bg-[#F8F9FA] transition-colors">
-                        <td className="p-3 text-sm text-[#6C757D]">{index + 1}</td>
-                        <td className="p-3 text-sm font-semibold text-[#343A40]">{lead.empresa}</td>
-                        <td className="p-3 text-sm text-[#6C757D]">{lead.contacto}</td>
-                        <td className="p-3 text-sm text-[#6C757D]">{lead.industria}</td>
-                        <td className="p-3 text-sm text-[#6C757D]">{lead.ubicacion}</td>
+                      <tr key={lead.id} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6] transition-colors">
+                        <td className="p-3 text-sm text-[#6b7280]">{index + 1}</td>
+                        <td className="p-3 text-sm font-semibold text-[#1c2c4a]">{lead.empresa}</td>
+                        <td className="p-3 text-sm text-[#6b7280]">{lead.contacto}</td>
+                        <td className="p-3 text-sm text-[#6b7280]">{lead.industria}</td>
+                        <td className="p-3 text-sm text-[#6b7280]">{lead.ubicacion}</td>
                         <td className="p-3">
                           <span className={`text-xs px-2 py-1 rounded ${
                             lead.origen === 'Referido' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
@@ -7781,7 +7844,7 @@ const InnovativeDemo = () => {
                             {lead.origen}
                           </span>
                         </td>
-                        <td className="p-3 text-sm text-[#6C757D]">{lead.fecha}</td>
+                        <td className="p-3 text-sm text-[#6b7280]">{lead.fecha}</td>
                         <td className="p-3 text-sm font-semibold text-[#0D47A1] text-right">
                           ${(lead.valor / 1000).toFixed(0)}K
                         </td>
@@ -7793,7 +7856,7 @@ const InnovativeDemo = () => {
 
               {/* BOTÓN DE EXPORTAR */}
               <div className="mt-6 flex justify-end">
-                <button className="flex items-center gap-2 px-4 py-2 bg-[#0D47A1] hover:bg-[#0052A3] text-white rounded-md text-sm font-medium transition-all">
+                <button className="flex items-center gap-2 px-4 py-2 bg-[#0D47A1] hover:bg-[#0D47A1] text-white rounded-md text-sm font-medium transition-all">
                   <Download size={16} />
                   Exportar CSV
                 </button>
@@ -7806,10 +7869,10 @@ const InnovativeDemo = () => {
       {/* MODAL DE LEVANTAMIENTOS */}
       {mostrarLevantamientos && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setMostrarLevantamientos(false)}>
-          <div className="bg-white rounded-lg max-w-7xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#E9ECEF]" onClick={e => e.stopPropagation()}>
+          <div className="bg-white rounded-lg max-w-7xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#e5e7eb]" onClick={e => e.stopPropagation()}>
             {!selectedLevantamientoDetalle ? (
               <>
-                <div className="p-6 border-b border-[#E9ECEF] flex items-center justify-between bg-[#1B5E20] text-white rounded-t-lg">
+                <div className="p-6 border-b border-[#e5e7eb] flex items-center justify-between bg-[#00a8a8] text-white rounded-t-lg">
                   <div>
                     <h2 className="text-xl font-semibold">Levantamientos Activos</h2>
                     <p className="text-sm text-white/90 mt-1">Total: {levantamientosActivos.filter(l => l.tipo === 'Levantamiento').length} levantamientos</p>
@@ -7827,12 +7890,12 @@ const InnovativeDemo = () => {
                         <div
                           key={levantamiento.id}
                           onClick={() => setSelectedLevantamientoDetalle(detalle || levantamiento)}
-                          className="bg-white border border-[#E9ECEF] rounded-lg p-4 hover:shadow-md transition-all cursor-pointer"
+                          className="bg-white border border-[#e5e7eb] rounded-lg p-4 hover:shadow-md transition-all cursor-pointer"
                         >
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex-1">
-                              <h3 className="font-semibold text-[#343A40] mb-1">{levantamiento.cliente}</h3>
-                              <p className="text-xs text-[#6C757D]">{levantamiento.ejecutivo}</p>
+                              <h3 className="font-semibold text-[#1c2c4a] mb-1">{levantamiento.cliente}</h3>
+                              <p className="text-xs text-[#6b7280]">{levantamiento.ejecutivo}</p>
                             </div>
                             <span className={`text-xs px-2 py-1 rounded ${
                               levantamiento.status === 'Completado' ? 'bg-green-50 text-green-700 border border-green-200' :
@@ -7844,17 +7907,17 @@ const InnovativeDemo = () => {
                           </div>
                           <div className="space-y-2 text-sm">
                             <div className="flex justify-between">
-                              <span className="text-[#6C757D]">Volumen:</span>
-                              <span className="font-semibold text-[#343A40]">{levantamiento.volumenEstimado}</span>
+                              <span className="text-[#6b7280]">Volumen:</span>
+                              <span className="font-semibold text-[#1c2c4a]">{levantamiento.volumenEstimado}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span className="text-[#6C757D]">Valor:</span>
+                              <span className="text-[#6b7280]">Valor:</span>
                               <span className="font-semibold text-[#0D47A1]">
                                 ${(levantamiento.valorEstimado / 1000000).toFixed(1)}M
                               </span>
                             </div>
-                            <div className="pt-2 border-t border-[#E9ECEF]">
-                              <span className="text-xs text-[#6C757D]">{levantamiento.siguientePaso}</span>
+                            <div className="pt-2 border-t border-[#e5e7eb]">
+                              <span className="text-xs text-[#6b7280]">{levantamiento.siguientePaso}</span>
                             </div>
                           </div>
                         </div>
@@ -7865,7 +7928,7 @@ const InnovativeDemo = () => {
               </>
             ) : (
               <>
-                <div className="p-6 border-b border-[#E9ECEF] flex items-center justify-between bg-[#1B5E20] text-white rounded-t-lg">
+                <div className="p-6 border-b border-[#e5e7eb] flex items-center justify-between bg-[#00a8a8] text-white rounded-t-lg">
                   <div>
                     <h2 className="text-xl font-semibold">Formulario de Levantamiento</h2>
                     <p className="text-sm text-white/90 mt-1">{selectedLevantamientoDetalle.cliente}</p>
@@ -7883,47 +7946,47 @@ const InnovativeDemo = () => {
                 <div className="p-6 space-y-6">
                   {/* INFORMACIÓN GENERAL */}
                   {selectedLevantamientoDetalle.informacionGeneral && (
-                    <div className="bg-[#F8F9FA] rounded-lg p-5 border border-[#E9ECEF]">
-                      <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                    <div className="bg-[#f3f4f6] rounded-lg p-5 border border-[#e5e7eb]">
+                      <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                         <Building2 size={20} />
                         Información General
                       </h3>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Razón Social</div>
-                          <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamientoDetalle.informacionGeneral.razonSocial}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Razón Social</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamientoDetalle.informacionGeneral.razonSocial}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">RFC</div>
-                          <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamientoDetalle.informacionGeneral.rfc}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">RFC</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamientoDetalle.informacionGeneral.rfc}</div>
                         </div>
                         <div className="col-span-2">
-                          <div className="text-xs text-[#6C757D] mb-1">Dirección</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.informacionGeneral.direccion}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Dirección</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.informacionGeneral.direccion}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Contacto</div>
-                          <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamientoDetalle.informacionGeneral.contacto}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Contacto</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamientoDetalle.informacionGeneral.contacto}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Teléfono</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.informacionGeneral.telefono}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Teléfono</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.informacionGeneral.telefono}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Email</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.informacionGeneral.email}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Email</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.informacionGeneral.email}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Superficie</div>
-                          <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamientoDetalle.informacionGeneral.superficie}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Superficie</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamientoDetalle.informacionGeneral.superficie}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Número de Empleados</div>
-                          <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamientoDetalle.informacionGeneral.numeroEmpleados}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Número de Empleados</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamientoDetalle.informacionGeneral.numeroEmpleados}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Horario de Operación</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.informacionGeneral.horarioOperacion}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Horario de Operación</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.informacionGeneral.horarioOperacion}</div>
                         </div>
                       </div>
                     </div>
@@ -7931,29 +7994,29 @@ const InnovativeDemo = () => {
 
                   {/* TIPOS DE RESIDUOS */}
                   {selectedLevantamientoDetalle.tiposResiduos && (
-                    <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                      <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                    <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                      <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                         <Recycle size={20} />
                         Tipos de Residuos y Generación
                       </h3>
                       <div className="overflow-x-auto">
                         <table className="w-full">
                           <thead>
-                            <tr className="border-b border-[#E9ECEF] bg-[#F8F9FA]">
-                              <th className="text-left p-3 text-xs font-semibold text-[#6C757D]">Tipo de Residuo</th>
-                              <th className="text-right p-3 text-xs font-semibold text-[#6C757D]">Cantidad</th>
-                              <th className="text-right p-3 text-xs font-semibold text-[#6C757D]">%</th>
-                              <th className="text-left p-3 text-xs font-semibold text-[#6C757D]">Destino Actual</th>
-                              <th className="text-right p-3 text-xs font-semibold text-[#6C757D]">Costo Mensual</th>
+                            <tr className="border-b border-[#e5e7eb] bg-[#f3f4f6]">
+                              <th className="text-left p-3 text-xs font-semibold text-[#6b7280]">Tipo de Residuo</th>
+                              <th className="text-right p-3 text-xs font-semibold text-[#6b7280]">Cantidad</th>
+                              <th className="text-right p-3 text-xs font-semibold text-[#6b7280]">%</th>
+                              <th className="text-left p-3 text-xs font-semibold text-[#6b7280]">Destino Actual</th>
+                              <th className="text-right p-3 text-xs font-semibold text-[#6b7280]">Costo Mensual</th>
                             </tr>
                           </thead>
                           <tbody>
                             {selectedLevantamientoDetalle.tiposResiduos.map((residuo, index) => (
-                              <tr key={index} className="border-b border-[#E9ECEF]">
-                                <td className="p-3 text-sm font-semibold text-[#343A40]">{residuo.tipo}</td>
-                                <td className="p-3 text-sm text-[#343A40] text-right">{residuo.cantidad}</td>
-                                <td className="p-3 text-sm text-[#343A40] text-right">{residuo.porcentaje}%</td>
-                                <td className="p-3 text-sm text-[#6C757D]">{residuo.destino}</td>
+                              <tr key={index} className="border-b border-[#e5e7eb]">
+                                <td className="p-3 text-sm font-semibold text-[#1c2c4a]">{residuo.tipo}</td>
+                                <td className="p-3 text-sm text-[#1c2c4a] text-right">{residuo.cantidad}</td>
+                                <td className="p-3 text-sm text-[#1c2c4a] text-right">{residuo.porcentaje}%</td>
+                                <td className="p-3 text-sm text-[#6b7280]">{residuo.destino}</td>
                                 <td className="p-3 text-sm font-semibold text-[#0D47A1] text-right">
                                   ${residuo.costo.toLocaleString()}
                                 </td>
@@ -7967,38 +8030,38 @@ const InnovativeDemo = () => {
 
                   {/* GENERACIÓN */}
                   {selectedLevantamientoDetalle.generacion && (
-                    <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                      <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                    <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                      <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                         <TrendingUp size={20} />
                         Patrones de Generación
                       </h3>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Frecuencia</div>
-                          <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamientoDetalle.generacion.frecuencia}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Frecuencia</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamientoDetalle.generacion.frecuencia}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Días por Semana</div>
-                          <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamientoDetalle.generacion.diasSemana}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Días por Semana</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamientoDetalle.generacion.diasSemana}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Volumen Diario</div>
-                          <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamientoDetalle.generacion.volumenDiario}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Volumen Diario</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamientoDetalle.generacion.volumenDiario}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Volumen Semanal</div>
-                          <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamientoDetalle.generacion.volumenSemanal}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Volumen Semanal</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamientoDetalle.generacion.volumenSemanal}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Volumen Mensual</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Volumen Mensual</div>
                           <div className="text-sm font-semibold text-[#0D47A1]">{selectedLevantamientoDetalle.generacion.volumenMensual}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Variaciones Estacionales</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.generacion.variacionesEstacionales}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Variaciones Estacionales</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.generacion.variacionesEstacionales}</div>
                         </div>
                         <div className="col-span-2 md:col-span-3">
-                          <div className="text-xs text-[#6C757D] mb-1">Horarios de Recolección Preferidos</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Horarios de Recolección Preferidos</div>
                           <div className="flex gap-2 flex-wrap">
                             {selectedLevantamientoDetalle.generacion.horariosRecoleccion.map((horario, index) => (
                               <span key={index} className="text-sm bg-blue-50 text-blue-700 px-3 py-1 rounded border border-blue-200">
@@ -8013,64 +8076,64 @@ const InnovativeDemo = () => {
 
                   {/* SERVICIOS ACTUALES */}
                   {selectedLevantamientoDetalle.serviciosActuales && (
-                    <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                      <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                    <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                      <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                         <FileText size={20} />
                         Servicios Actuales
                       </h3>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Proveedor Actual</div>
-                          <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamientoDetalle.serviciosActuales.proveedor}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Proveedor Actual</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamientoDetalle.serviciosActuales.proveedor}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Contrato Vigente</div>
-                          <div className="text-sm font-semibold text-[#343A40]">
+                          <div className="text-xs text-[#6b7280] mb-1">Contrato Vigente</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">
                             {selectedLevantamientoDetalle.serviciosActuales.contratoVigente ? 'Sí' : 'No'}
                           </div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Fecha Inicio</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.serviciosActuales.fechaInicio}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Fecha Inicio</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.serviciosActuales.fechaInicio}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Fecha Vencimiento</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.serviciosActuales.fechaVencimiento}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Fecha Vencimiento</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.serviciosActuales.fechaVencimiento}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Costo Mensual</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Costo Mensual</div>
                           <div className="text-sm font-semibold text-[#0D47A1]">
                             ${selectedLevantamientoDetalle.serviciosActuales.costoMensual.toLocaleString()}
                           </div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Frecuencia de Recolección</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.serviciosActuales.frecuenciaRecoleccion}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Frecuencia de Recolección</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.serviciosActuales.frecuenciaRecoleccion}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Tipo de Servicio</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.serviciosActuales.tipoServicio}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Tipo de Servicio</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.serviciosActuales.tipoServicio}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Nivel de Satisfacción</div>
-                          <div className="text-sm font-semibold text-[#343A40]">
+                          <div className="text-xs text-[#6b7280] mb-1">Nivel de Satisfacción</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">
                             {selectedLevantamientoDetalle.serviciosActuales.nivelSatisfaccion}/10
                           </div>
                         </div>
-                        <div className="col-span-2 grid grid-cols-3 gap-2 pt-2 border-t border-[#E9ECEF]">
-                          <div className="text-xs text-[#6C757D]">
+                        <div className="col-span-2 grid grid-cols-3 gap-2 pt-2 border-t border-[#e5e7eb]">
+                          <div className="text-xs text-[#6b7280]">
                             Separación: {selectedLevantamientoDetalle.serviciosActuales.incluyeSeparacion ? '✓' : '✗'}
                           </div>
-                          <div className="text-xs text-[#6C757D]">
+                          <div className="text-xs text-[#6b7280]">
                             Valorización: {selectedLevantamientoDetalle.serviciosActuales.incluyeValorizacion ? '✓' : '✗'}
                           </div>
-                          <div className="text-xs text-[#6C757D]">
+                          <div className="text-xs text-[#6b7280]">
                             Reporteo: {selectedLevantamientoDetalle.serviciosActuales.incluyeReporteo ? '✓' : '✗'}
                           </div>
                         </div>
                         <div className="col-span-2">
-                          <div className="text-xs text-[#6C757D] mb-1">Razón de Cambio</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.serviciosActuales.razonCambio}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Razón de Cambio</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.serviciosActuales.razonCambio}</div>
                         </div>
                       </div>
                     </div>
@@ -8078,49 +8141,49 @@ const InnovativeDemo = () => {
 
                   {/* INFRAESTRUCTURA */}
                   {selectedLevantamientoDetalle.infraestructura && (
-                    <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                      <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                    <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                      <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                         <Building2 size={20} />
                         Infraestructura
                       </h3>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Área de Almacenamiento</div>
-                          <div className="text-sm font-semibold text-[#343A40]">
+                          <div className="text-xs text-[#6b7280] mb-1">Área de Almacenamiento</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">
                             {selectedLevantamientoDetalle.infraestructura.tieneAreaAlmacenamiento ? 'Sí' : 'No'} - {selectedLevantamientoDetalle.infraestructura.areaAlmacenamiento}
                           </div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Tipo de Almacenamiento</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.infraestructura.tipoAlmacenamiento}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Tipo de Almacenamiento</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.infraestructura.tipoAlmacenamiento}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Número de Contenedores</div>
-                          <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamientoDetalle.infraestructura.numeroContenedores}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Número de Contenedores</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamientoDetalle.infraestructura.numeroContenedores}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Compactadora</div>
-                          <div className="text-sm text-[#343A40]">
+                          <div className="text-xs text-[#6b7280] mb-1">Compactadora</div>
+                          <div className="text-sm text-[#1c2c4a]">
                             {selectedLevantamientoDetalle.infraestructura.tieneCompactadora ? 'Sí' : 'No'}
                           </div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Bodega</div>
-                          <div className="text-sm text-[#343A40]">
+                          <div className="text-xs text-[#6b7280] mb-1">Bodega</div>
+                          <div className="text-sm text-[#1c2c4a]">
                             {selectedLevantamientoDetalle.infraestructura.tieneBodega ? 'Sí' : 'No'}
                           </div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Acceso para Vehículos</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.infraestructura.accesoVehiculos}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Acceso para Vehículos</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.infraestructura.accesoVehiculos}</div>
                         </div>
                         <div className="col-span-2">
-                          <div className="text-xs text-[#6C757D] mb-1">Restricciones de Horario</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.infraestructura.restriccionesHorario}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Restricciones de Horario</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.infraestructura.restriccionesHorario}</div>
                         </div>
                         <div className="col-span-2">
-                          <div className="text-xs text-[#6C757D] mb-1">Espacio Disponible</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.infraestructura.espacioDisponible}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Espacio Disponible</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.infraestructura.espacioDisponible}</div>
                         </div>
                       </div>
                     </div>
@@ -8128,28 +8191,28 @@ const InnovativeDemo = () => {
 
                   {/* NECESIDADES */}
                   {selectedLevantamientoDetalle.necesidades && (
-                    <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                      <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                    <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                      <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                         <Target size={20} />
                         Necesidades y Objetivos
                       </h3>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-2 grid grid-cols-4 gap-2">
-                          <div className="text-xs text-[#6C757D]">
+                          <div className="text-xs text-[#6b7280]">
                             Separación: {selectedLevantamientoDetalle.necesidades.separacionResiduos ? '✓' : '✗'}
                           </div>
-                          <div className="text-xs text-[#6C757D]">
+                          <div className="text-xs text-[#6b7280]">
                             Valorización: {selectedLevantamientoDetalle.necesidades.valorizacionResiduos ? '✓' : '✗'}
                           </div>
-                          <div className="text-xs text-[#6C757D]">
+                          <div className="text-xs text-[#6b7280]">
                             Trazabilidad: {selectedLevantamientoDetalle.necesidades.trazabilidad ? '✓' : '✗'}
                           </div>
-                          <div className="text-xs text-[#6C757D]">
+                          <div className="text-xs text-[#6b7280]">
                             Reporteo: {selectedLevantamientoDetalle.necesidades.reporteoMensual ? '✓' : '✗'}
                           </div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Certificaciones Requeridas</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Certificaciones Requeridas</div>
                           <div className="flex gap-2 flex-wrap">
                             {selectedLevantamientoDetalle.necesidades.certificaciones.map((cert, index) => (
                               <span key={index} className="text-xs bg-green-50 text-green-700 px-2 py-1 rounded border border-green-200">
@@ -8159,13 +8222,13 @@ const InnovativeDemo = () => {
                           </div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Presupuesto Disponible</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Presupuesto Disponible</div>
                           <div className="text-sm font-semibold text-[#0D47A1]">
                             ${selectedLevantamientoDetalle.necesidades.presupuestoDisponible.toLocaleString()}/mes
                           </div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Urgencia</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Urgencia</div>
                           <div className={`text-sm font-semibold ${
                             selectedLevantamientoDetalle.necesidades.urgencia === 'Alta' ? 'text-red-600' :
                             selectedLevantamientoDetalle.necesidades.urgencia === 'Media' ? 'text-orange-600' : 'text-green-600'
@@ -8174,12 +8237,12 @@ const InnovativeDemo = () => {
                           </div>
                         </div>
                         <div>
-                          <div className="text-xs text-[#6C757D] mb-1">Decision Maker</div>
-                          <div className="text-sm font-semibold text-[#343A40]">{selectedLevantamientoDetalle.necesidades.decisionMaker}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Decision Maker</div>
+                          <div className="text-sm font-semibold text-[#1c2c4a]">{selectedLevantamientoDetalle.necesidades.decisionMaker}</div>
                         </div>
                         <div className="col-span-2">
-                          <div className="text-xs text-[#6C757D] mb-1">Objetivos Ambientales</div>
-                          <div className="text-sm text-[#343A40]">{selectedLevantamientoDetalle.necesidades.objetivosAmbientales}</div>
+                          <div className="text-xs text-[#6b7280] mb-1">Objetivos Ambientales</div>
+                          <div className="text-sm text-[#1c2c4a]">{selectedLevantamientoDetalle.necesidades.objetivosAmbientales}</div>
                         </div>
                       </div>
                     </div>
@@ -8188,21 +8251,21 @@ const InnovativeDemo = () => {
                   {/* OBSERVACIONES */}
                   {selectedLevantamientoDetalle.observaciones && (
                     <div className="bg-blue-50 rounded-lg p-5 border border-blue-200">
-                      <h3 className="text-lg font-semibold text-[#343A40] mb-2 flex items-center gap-2">
+                      <h3 className="text-lg font-semibold text-[#1c2c4a] mb-2 flex items-center gap-2">
                         <FileText size={20} />
                         Observaciones
                       </h3>
-                      <p className="text-sm text-[#343A40] leading-relaxed">{selectedLevantamientoDetalle.observaciones}</p>
+                      <p className="text-sm text-[#1c2c4a] leading-relaxed">{selectedLevantamientoDetalle.observaciones}</p>
                     </div>
                   )}
 
                   {/* BOTONES DE ACCIÓN */}
-                  <div className="flex gap-3 pt-4 border-t border-[#E9ECEF]">
-                    <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#0D47A1] hover:bg-[#0052A3] text-white rounded-md text-sm font-medium transition-all">
+                  <div className="flex gap-3 pt-4 border-t border-[#e5e7eb]">
+                    <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#0D47A1] hover:bg-[#0D47A1] text-white rounded-md text-sm font-medium transition-all">
                       <Download size={16} />
                       Descargar PDF
                     </button>
-                    <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#1B5E20] hover:bg-[#2E7D32] text-white rounded-md text-sm font-medium transition-all">
+                    <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#00a8a8] hover:bg-[#008080] text-white rounded-md text-sm font-medium transition-all">
                       <FileText size={16} />
                       Generar Propuesta
                     </button>
@@ -8217,8 +8280,8 @@ const InnovativeDemo = () => {
       {/* MODAL DE NUEVO LEVANTAMIENTO */}
       {mostrarNuevoLevantamiento && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setMostrarNuevoLevantamiento(false)}>
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#E9ECEF]" onClick={e => e.stopPropagation()}>
-            <div className="p-6 border-b border-[#E9ECEF] flex items-center justify-between bg-[#1B5E20] text-white rounded-t-lg">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#e5e7eb]" onClick={e => e.stopPropagation()}>
+            <div className="p-6 border-b border-[#e5e7eb] flex items-center justify-between bg-[#00a8a8] text-white rounded-t-lg">
               <div>
                 <h2 className="text-xl font-semibold">Nuevo Levantamiento</h2>
                 <p className="text-sm text-white/90 mt-1">Complete el formulario para crear un nuevo levantamiento</p>
@@ -8231,77 +8294,77 @@ const InnovativeDemo = () => {
             <div className="p-6">
               <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); alert('Levantamiento guardado exitosamente'); setMostrarNuevoLevantamiento(false); }}>
                 {/* INFORMACIÓN GENERAL */}
-                <div className="bg-[#F8F9FA] rounded-lg p-5 border border-[#E9ECEF]">
-                  <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                <div className="bg-[#f3f4f6] rounded-lg p-5 border border-[#e5e7eb]">
+                  <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                     <Building2 size={20} />
                     Información General
                   </h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Cliente *</label>
-                      <input type="text" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Nombre del cliente" required />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Cliente *</label>
+                      <input type="text" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Nombre del cliente" required />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Razón Social</label>
-                      <input type="text" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Razón social" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Razón Social</label>
+                      <input type="text" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Razón social" />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">RFC</label>
-                      <input type="text" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="RFC" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">RFC</label>
+                      <input type="text" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="RFC" />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Contacto Principal *</label>
-                      <input type="text" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Nombre y cargo" required />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Contacto Principal *</label>
+                      <input type="text" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Nombre y cargo" required />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Teléfono</label>
-                      <input type="tel" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Teléfono" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Teléfono</label>
+                      <input type="tel" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Teléfono" />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Email *</label>
-                      <input type="email" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="email@ejemplo.com" required />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Email *</label>
+                      <input type="email" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="email@ejemplo.com" required />
                     </div>
                     <div className="col-span-2">
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Dirección</label>
-                      <input type="text" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Dirección completa" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Dirección</label>
+                      <input type="text" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Dirección completa" />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Superficie (m²)</label>
-                      <input type="number" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Superficie" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Superficie (m²)</label>
+                      <input type="number" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Superficie" />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Número de Empleados</label>
-                      <input type="number" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Número de empleados" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Número de Empleados</label>
+                      <input type="number" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Número de empleados" />
                     </div>
                     <div className="col-span-2">
-                      <label className="block text-xs text-[#6C757D] font-medium mb-2">Requisitos de Reporte / Estándares</label>
-                      <p className="text-xs text-[#6C757D] mb-2 italic">Seleccione los estándares que el cliente debe cumplir en sus reportes</p>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-2">Requisitos de Reporte / Estándares</label>
+                      <p className="text-xs text-[#6b7280] mb-2 italic">Seleccione los estándares que el cliente debe cumplir en sus reportes</p>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                         {['NIS', 'GRI', 'SASB', 'ESR', 'ISO 14001', 'CDP', 'TCFD', 'SBTi'].map(estandar => (
-                          <label key={estandar} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-[#F8F9FA] p-2 rounded-md">
-                            <input type="checkbox" className="rounded border-[#E9ECEF] text-[#1B5E20] focus:ring-[#1B5E20]" />
-                            <span className="text-[#343A40]">{estandar}</span>
+                          <label key={estandar} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-[#f3f4f6] p-2 rounded-md">
+                            <input type="checkbox" className="rounded border-[#e5e7eb] text-[#00a8a8] focus:ring-[#00a8a8]" />
+                            <span className="text-[#1c2c4a]">{estandar}</span>
                           </label>
                         ))}
                       </div>
                       <div className="mt-2">
-                        <input type="text" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Otros estándares (separados por comas)" />
+                        <input type="text" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Otros estándares (separados por comas)" />
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* TIPOS DE RESIDUOS */}
-                <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                  <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                  <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                     <Recycle size={20} />
                     Tipos de Residuos
                   </h3>
                   <div className="space-y-3">
                     <div className="grid grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Tipo de Residuo</label>
-                        <select className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]">
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Tipo de Residuo</label>
+                        <select className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]">
                           <option>Orgánicos</option>
                           <option>Cartón</option>
                           <option>Plástico</option>
@@ -8310,30 +8373,30 @@ const InnovativeDemo = () => {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Cantidad Estimada (ton/mes)</label>
-                        <input type="number" step="0.1" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="0.0" />
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Cantidad Estimada (ton/mes)</label>
+                        <input type="number" step="0.1" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="0.0" />
                       </div>
                       <div>
-                        <label className="block text-xs text-[#6C757D] font-medium mb-1">Destino Actual</label>
-                        <input type="text" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Relleno sanitario" />
+                        <label className="block text-xs text-[#6b7280] font-medium mb-1">Destino Actual</label>
+                        <input type="text" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Relleno sanitario" />
                       </div>
                     </div>
-                    <button type="button" className="text-sm text-[#1B5E20] hover:text-[#2E7D32] font-medium flex items-center gap-1">
+                    <button type="button" className="text-sm text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1">
                       + Agregar otro tipo de residuo
                     </button>
                   </div>
                 </div>
 
                 {/* GENERACIÓN */}
-                <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                  <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                  <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                     <TrendingUp size={20} />
                     Patrones de Generación
                   </h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Frecuencia de Generación</label>
-                      <select className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]">
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Frecuencia de Generación</label>
+                      <select className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]">
                         <option>Diaria</option>
                         <option>Semanal</option>
                         <option>Quincenal</option>
@@ -8341,18 +8404,18 @@ const InnovativeDemo = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Días por Semana</label>
-                      <input type="number" min="1" max="7" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="7" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Días por Semana</label>
+                      <input type="number" min="1" max="7" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="7" />
                     </div>
                     <div className="col-span-2">
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">
                         Volumen Mensual Estimado (ton) *
                       </label>
                       <input
                         type="number"
                         step="0.1"
                         id="volumenEstimado"
-                        className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]"
+                        className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]"
                         placeholder="Ingrese el volumen en toneladas"
                         required
                         onInput={(e) => {
@@ -8380,144 +8443,144 @@ const InnovativeDemo = () => {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Horarios Preferidos de Recolección</label>
-                      <input type="text" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Ej: 6:00 AM, 2:00 PM" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Horarios Preferidos de Recolección</label>
+                      <input type="text" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Ej: 6:00 AM, 2:00 PM" />
                     </div>
                   </div>
                 </div>
 
                 {/* SERVICIOS ACTUALES */}
-                <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                  <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                  <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                     <FileText size={20} />
                     Servicios Actuales
                   </h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Proveedor Actual</label>
-                      <input type="text" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Nombre del proveedor" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Proveedor Actual</label>
+                      <input type="text" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Nombre del proveedor" />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Costo Mensual Actual</label>
-                      <input type="number" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="$0" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Costo Mensual Actual</label>
+                      <input type="number" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="$0" />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Fecha Vencimiento Contrato</label>
-                      <input type="date" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Fecha Vencimiento Contrato</label>
+                      <input type="date" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Nivel de Satisfacción (1-10)</label>
-                      <input type="number" min="1" max="10" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="5" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Nivel de Satisfacción (1-10)</label>
+                      <input type="number" min="1" max="10" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="5" />
                     </div>
                     <div className="col-span-2">
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Razón de Cambio</label>
-                      <textarea rows="2" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="¿Por qué está buscando cambiar de proveedor?"></textarea>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Razón de Cambio</label>
+                      <textarea rows="2" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="¿Por qué está buscando cambiar de proveedor?"></textarea>
                     </div>
                   </div>
                 </div>
 
                 {/* INFRAESTRUCTURA */}
-                <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                  <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                  <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                     <Building2 size={20} />
                     Infraestructura
                   </h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Área de Almacenamiento (m²)</label>
-                      <input type="number" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="0" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Área de Almacenamiento (m²)</label>
+                      <input type="number" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="0" />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Número de Contenedores</label>
-                      <input type="number" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="0" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Número de Contenedores</label>
+                      <input type="number" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="0" />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Tipo de Almacenamiento</label>
-                      <input type="text" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Ej: Contenedores de 1.1 m³" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Tipo de Almacenamiento</label>
+                      <input type="text" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Ej: Contenedores de 1.1 m³" />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Acceso para Vehículos</label>
-                      <select className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]">
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Acceso para Vehículos</label>
+                      <select className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]">
                         <option>Fácil</option>
                         <option>Moderado</option>
                         <option>Difícil</option>
                       </select>
                     </div>
                     <div className="col-span-2">
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Restricciones de Horario</label>
-                      <textarea rows="2" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Ej: Recolección solo entre 6:00 AM - 8:00 PM"></textarea>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Restricciones de Horario</label>
+                      <textarea rows="2" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Ej: Recolección solo entre 6:00 AM - 8:00 PM"></textarea>
                     </div>
                   </div>
                 </div>
 
                 {/* NECESIDADES */}
-                <div className="bg-white rounded-lg p-5 border border-[#E9ECEF]">
-                  <h3 className="text-lg font-semibold text-[#343A40] mb-4 flex items-center gap-2">
+                <div className="bg-white rounded-lg p-5 border border-[#e5e7eb]">
+                  <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
                     <Target size={20} />
                     Necesidades y Objetivos
                   </h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
-                      <label className="block text-xs text-[#6C757D] font-medium mb-2">Servicios Requeridos</label>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-2">Servicios Requeridos</label>
                       <div className="grid grid-cols-4 gap-2">
                         <label className="flex items-center gap-2 text-sm">
-                          <input type="checkbox" className="rounded border-[#E9ECEF]" />
+                          <input type="checkbox" className="rounded border-[#e5e7eb]" />
                           <span>Separación</span>
                         </label>
                         <label className="flex items-center gap-2 text-sm">
-                          <input type="checkbox" className="rounded border-[#E9ECEF]" />
+                          <input type="checkbox" className="rounded border-[#e5e7eb]" />
                           <span>Valorización</span>
                         </label>
                         <label className="flex items-center gap-2 text-sm">
-                          <input type="checkbox" className="rounded border-[#E9ECEF]" />
+                          <input type="checkbox" className="rounded border-[#e5e7eb]" />
                           <span>Trazabilidad</span>
                         </label>
                         <label className="flex items-center gap-2 text-sm">
-                          <input type="checkbox" className="rounded border-[#E9ECEF]" />
+                          <input type="checkbox" className="rounded border-[#e5e7eb]" />
                           <span>Reporteo</span>
                         </label>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Presupuesto Disponible (mensual)</label>
-                      <input type="number" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="$0" />
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Presupuesto Disponible (mensual)</label>
+                      <input type="number" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="$0" />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Urgencia</label>
-                      <select className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]">
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Urgencia</label>
+                      <select className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]">
                         <option>Baja</option>
                         <option>Media</option>
                         <option>Alta</option>
                       </select>
                     </div>
                     <div className="col-span-2">
-                      <label className="block text-xs text-[#6C757D] font-medium mb-1">Objetivos Ambientales</label>
-                      <textarea rows="2" className="w-full px-3 py-2 border border-[#E9ECEF] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Ej: Reducir envío a relleno sanitario en 60%"></textarea>
+                      <label className="block text-xs text-[#6b7280] font-medium mb-1">Objetivos Ambientales</label>
+                      <textarea rows="2" className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Ej: Reducir envío a relleno sanitario en 60%"></textarea>
                     </div>
                   </div>
                 </div>
 
                 {/* OBSERVACIONES */}
                 <div className="bg-blue-50 rounded-lg p-5 border border-blue-200">
-                  <h3 className="text-lg font-semibold text-[#343A40] mb-2 flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-[#1c2c4a] mb-2 flex items-center gap-2">
                     <FileText size={20} />
                     Observaciones
                   </h3>
-                  <textarea rows="4" className="w-full px-3 py-2 border border-blue-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1B5E20]" placeholder="Notas adicionales sobre el levantamiento..."></textarea>
+                  <textarea rows="4" className="w-full px-3 py-2 border border-blue-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]" placeholder="Notas adicionales sobre el levantamiento..."></textarea>
                 </div>
 
                 {/* BOTONES */}
-                <div className="flex gap-3 pt-4 border-t border-[#E9ECEF]">
+                <div className="flex gap-3 pt-4 border-t border-[#e5e7eb]">
                   <button 
                     type="button"
                     onClick={() => setMostrarNuevoLevantamiento(false)}
-                    className="flex-1 px-4 py-2 border border-[#E9ECEF] hover:bg-[#F8F9FA] text-[#343A40] rounded-md text-sm font-medium transition-all"
+                    className="flex-1 px-4 py-2 border border-[#e5e7eb] hover:bg-[#f3f4f6] text-[#1c2c4a] rounded-md text-sm font-medium transition-all"
                   >
                     Cancelar
                   </button>
                   <button 
                     type="submit"
-                    className="flex-1 px-4 py-2 bg-[#1B5E20] hover:bg-[#2E7D32] text-white rounded-md text-sm font-medium transition-all flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-2 bg-[#00a8a8] hover:bg-[#008080] text-white rounded-md text-sm font-medium transition-all flex items-center justify-center gap-2"
                   >
                     <Save size={16} />
                     Guardar Levantamiento
@@ -8532,8 +8595,8 @@ const InnovativeDemo = () => {
       {/* MODAL DE PROPUESTA */}
       {mostrarPropuesta && selectedProspecto && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setMostrarPropuesta(false)}>
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#E9ECEF]" onClick={e => e.stopPropagation()}>
-            <div className="p-6 border-b border-[#E9ECEF] flex items-center justify-between bg-[#0D47A1] text-white rounded-t-lg">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#e5e7eb]" onClick={e => e.stopPropagation()}>
+            <div className="p-6 border-b border-[#e5e7eb] flex items-center justify-between bg-[#0D47A1] text-white rounded-t-lg">
               <div>
                 <h2 className="text-xl font-semibold">Propuesta Comercial</h2>
                 <p className="text-sm text-white/80 mt-1">{selectedProspecto.empresa}</p>
@@ -8545,51 +8608,51 @@ const InnovativeDemo = () => {
             
             <div className="p-6">
               <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Valor de Propuesta</div>
+                <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                  <div className="text-xs text-[#6b7280] font-medium mb-1">Valor de Propuesta</div>
                   <div className="text-lg font-bold text-[#0D47A1]">
                     ${((selectedProspecto.propuesta?.ventaTotal || selectedProspecto.facturacionEstimada || 0) / 1000000).toFixed(1)}M
                   </div>
                 </div>
-                <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Volumen Mensual</div>
-                  <div className="text-lg font-bold text-[#343A40]">{selectedProspecto.volumenEstimado}</div>
+                <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                  <div className="text-xs text-[#6b7280] font-medium mb-1">Volumen Mensual</div>
+                  <div className="text-lg font-bold text-[#1c2c4a]">{selectedProspecto.volumenEstimado}</div>
                 </div>
-                <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Status</div>
-                  <div className="text-lg font-bold text-[#343A40]">{selectedProspecto.status}</div>
+                <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                  <div className="text-xs text-[#6b7280] font-medium mb-1">Status</div>
+                  <div className="text-lg font-bold text-[#1c2c4a]">{selectedProspecto.status}</div>
                 </div>
               </div>
               
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#343A40] mb-2">Servicios Propuestos</h3>
+                  <h3 className="text-sm font-semibold text-[#1c2c4a] mb-2">Servicios Propuestos</h3>
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-white border border-[#E9ECEF] rounded-lg p-3 text-sm">Recolección</div>
-                    <div className="bg-white border border-[#E9ECEF] rounded-lg p-3 text-sm">Transporte</div>
-                    <div className="bg-white border border-[#E9ECEF] rounded-lg p-3 text-sm">Valorización</div>
-                    <div className="bg-white border border-[#E9ECEF] rounded-lg p-3 text-sm">Reporteo Mensual</div>
+                    <div className="bg-white border border-[#e5e7eb] rounded-lg p-3 text-sm">Recolección</div>
+                    <div className="bg-white border border-[#e5e7eb] rounded-lg p-3 text-sm">Transporte</div>
+                    <div className="bg-white border border-[#e5e7eb] rounded-lg p-3 text-sm">Valorización</div>
+                    <div className="bg-white border border-[#e5e7eb] rounded-lg p-3 text-sm">Reporteo Mensual</div>
                   </div>
                 </div>
                 
                 <div>
-                  <h3 className="text-sm font-semibold text-[#343A40] mb-2">Comentarios</h3>
+                  <h3 className="text-sm font-semibold text-[#1c2c4a] mb-2">Comentarios</h3>
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <div className="text-sm font-medium text-[#343A40]">{(selectedProspecto.comentarios || "Pendiente")}</div>
+                    <div className="text-sm font-medium text-[#1c2c4a]">{(selectedProspecto.comentarios || "Pendiente")}</div>
                   </div>
                 </div>
                 
                 <div>
-                  <h3 className="text-sm font-semibold text-[#343A40] mb-2">Información Estratégica</h3>
+                  <h3 className="text-sm font-semibold text-[#1c2c4a] mb-2">Información Estratégica</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <div className="text-xs text-[#6C757D] mb-1">Status</div>
-                      <div className="text-sm font-semibold text-[#343A40]">{selectedProspecto.status}</div>
+                      <div className="text-xs text-[#6b7280] mb-1">Status</div>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{selectedProspecto.status}</div>
                     </div>
                     <div>
-                      <div className="text-xs text-[#6C757D] mb-1">Status Actual</div>
+                      <div className="text-xs text-[#6b7280] mb-1">Status Actual</div>
                       <div className={`text-sm font-semibold ${
-                        selectedProspecto.status === 'Lead nuevo' || selectedProspecto.status === 'Inicio de operación' ? 'text-[#1B5E20]' : selectedProspecto.status === 'Propuesta enviada' ? 'text-[#0D47A1]' : 'text-orange-600'
+                        selectedProspecto.status === 'Lead nuevo' || selectedProspecto.status === 'Inicio de operación' ? 'text-[#00a8a8]' : selectedProspecto.status === 'Propuesta enviada' ? 'text-[#0D47A1]' : 'text-orange-600'
                       }`}>
                         {selectedProspecto.status}
                       </div>
@@ -8599,11 +8662,11 @@ const InnovativeDemo = () => {
               </div>
               
               <div className="mt-6 flex gap-3">
-                <button className="flex-1 bg-[#0D47A1] hover:bg-[#0052A3] text-white py-2 rounded-md font-medium text-sm flex items-center justify-center gap-2">
+                <button className="flex-1 bg-[#0D47A1] hover:bg-[#0D47A1] text-white py-2 rounded-md font-medium text-sm flex items-center justify-center gap-2">
                   <Download size={16} />
                   Descargar Propuesta PDF
                 </button>
-                <button className="flex-1 border border-[#0D47A1] text-[#0D47A1] hover:bg-[#F8F9FA] py-2 rounded-md font-medium text-sm">
+                <button className="flex-1 border border-[#0D47A1] text-[#0D47A1] hover:bg-[#f3f4f6] py-2 rounded-md font-medium text-sm">
                   Enviar por Email
                 </button>
               </div>
@@ -8615,7 +8678,7 @@ const InnovativeDemo = () => {
       {/* VISTA CLIENTE - MODAL */}
       {vistaCliente && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setVistaCliente(false)}>
-          <div className="bg-white rounded-lg max-w-7xl w-full max-h-[95vh] overflow-y-auto shadow-2xl border border-[#E9ECEF]" onClick={e => e.stopPropagation()}>
+          <div className="bg-white rounded-lg max-w-7xl w-full max-h-[95vh] overflow-y-auto shadow-2xl border border-[#e5e7eb]" onClick={e => e.stopPropagation()}>
             {/* HEADER CLIENTE */}
             <div className="sticky top-0 bg-[#0D47A1] text-white p-6 rounded-t-lg z-10">
               <div className="flex items-center justify-between">
@@ -8645,7 +8708,7 @@ const InnovativeDemo = () => {
             </div>
 
             {/* CONTENIDO CLIENTE */}
-            <div className="p-8 bg-[#F8F9FA]">
+            <div className="p-8 bg-[#f3f4f6]">
               {(() => {
                 const clienteVista = clienteSeleccionadoVista ? clientesConReportes.find(c => c.id === clienteSeleccionadoVista) : null;
                 const datosCliente = clienteSeleccionadoVista && trazabilidadPorCliente[clienteSeleccionadoVista] 
@@ -8672,10 +8735,10 @@ const InnovativeDemo = () => {
                   <>
                     {/* REQUISITOS DE REPORTE */}
                     {clienteVista && clienteVista.requisitosReporte && clienteVista.requisitosReporte.length > 0 && (
-                      <div className="bg-white rounded-xl p-6 border border-[#E9ECEF] shadow-sm mb-6">
+                      <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] shadow-sm mb-6">
                         <div className="flex items-center gap-2 mb-4">
                           <FileText className="text-[#0D47A1]" size={20} />
-                          <h3 className="text-lg font-semibold text-[#343A40]">Estándares de Reporte Aplicados</h3>
+                          <h3 className="text-lg font-semibold text-[#1c2c4a]">Estándares de Reporte Aplicados</h3>
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {clienteVista.requisitosReporte.map((requisito, idx) => (
@@ -8684,7 +8747,7 @@ const InnovativeDemo = () => {
                             </span>
                           ))}
                         </div>
-                        <p className="text-xs text-[#6C757D] mt-3 italic">
+                        <p className="text-xs text-[#6b7280] mt-3 italic">
                           Los reportes generados cumplen con estos estándares para garantizar la transparencia y cumplimiento normativo
                         </p>
                       </div>
@@ -8692,58 +8755,58 @@ const InnovativeDemo = () => {
                     
                     {/* KPIs PRINCIPALES */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                      <div className="bg-white rounded-xl p-6 border border-[#E9ECEF] shadow-sm">
+                      <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] shadow-sm">
                         <div className="flex items-center justify-between mb-3">
                           <div className="bg-green-50 rounded-lg p-3">
-                            <Recycle className="text-[#1B5E20]" size={24} />
+                            <Recycle className="text-[#00a8a8]" size={24} />
                           </div>
-                          <span className="text-xs text-[#6C757D] font-medium">Desviación</span>
+                          <span className="text-xs text-[#6b7280] font-medium">Desviación</span>
                         </div>
-                        <div className="text-3xl font-bold text-[#343A40] mb-1">{porcentajeDesviacion}%</div>
-                        <div className="text-sm text-[#6C757D]">Del total generado</div>
+                        <div className="text-3xl font-bold text-[#1c2c4a] mb-1">{porcentajeDesviacion}%</div>
+                        <div className="text-sm text-[#6b7280]">Del total generado</div>
                       </div>
 
-                      <div className="bg-white rounded-xl p-6 border border-[#E9ECEF] shadow-sm">
+                      <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] shadow-sm">
                         <div className="flex items-center justify-between mb-3">
                           <div className="bg-blue-50 rounded-lg p-3">
                             <Leaf className="text-[#0D47A1]" size={24} />
                           </div>
-                          <span className="text-xs text-[#6C757D] font-medium">Economía Circular</span>
+                          <span className="text-xs text-[#6b7280] font-medium">Economía Circular</span>
                         </div>
-                        <div className="text-3xl font-bold text-[#343A40] mb-1">{toneladasCirculares.toLocaleString()}</div>
-                        <div className="text-sm text-[#6C757D]">Toneladas valorizadas</div>
+                        <div className="text-3xl font-bold text-[#1c2c4a] mb-1">{toneladasCirculares.toLocaleString()}</div>
+                        <div className="text-sm text-[#6b7280]">Toneladas valorizadas</div>
                       </div>
 
-                      <div className="bg-white rounded-xl p-6 border border-[#E9ECEF] shadow-sm">
+                      <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] shadow-sm">
                         <div className="flex items-center justify-between mb-3">
                           <div className="bg-orange-50 rounded-lg p-3">
                             <Trash2 className="text-orange-600" size={24} />
                           </div>
-                          <span className="text-xs text-[#6C757D] font-medium">Relleno Sanitario</span>
+                          <span className="text-xs text-[#6b7280] font-medium">Relleno Sanitario</span>
                         </div>
-                        <div className="text-3xl font-bold text-[#343A40] mb-1">{rellenoSanitario.toLocaleString()}</div>
-                        <div className="text-sm text-[#6C757D]">Toneladas enviadas</div>
+                        <div className="text-3xl font-bold text-[#1c2c4a] mb-1">{rellenoSanitario.toLocaleString()}</div>
+                        <div className="text-sm text-[#6b7280]">Toneladas enviadas</div>
                       </div>
 
-                      <div className="bg-white rounded-xl p-6 border border-[#E9ECEF] shadow-sm">
+                      <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] shadow-sm">
                         <div className="flex items-center justify-between mb-3">
                           <div className="bg-purple-50 rounded-lg p-3">
                             <BarChart3 className="text-purple-600" size={24} />
                           </div>
-                          <span className="text-xs text-[#6C757D] font-medium">Total Generado</span>
+                          <span className="text-xs text-[#6b7280] font-medium">Total Generado</span>
                         </div>
-                        <div className="text-3xl font-bold text-[#343A40] mb-1">{totalGenerado.toLocaleString()}</div>
-                        <div className="text-sm text-[#6C757D]">Toneladas totales</div>
+                        <div className="text-3xl font-bold text-[#1c2c4a] mb-1">{totalGenerado.toLocaleString()}</div>
+                        <div className="text-sm text-[#6b7280]">Toneladas totales</div>
                       </div>
                     </div>
 
                     {/* DIAGRAMA SANKEY */}
                     {datosSankeyCliente ? (
-                      <div className="bg-white rounded-xl p-6 border border-[#E9ECEF] shadow-sm mb-8">
+                      <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] shadow-sm mb-8">
                         <div className="flex items-center justify-between mb-6">
                           <div>
-                            <h2 className="text-xl font-semibold text-[#343A40] mb-1">Flujo de Materiales</h2>
-                            <p className="text-sm text-[#6C757D]">Trazabilidad completa de residuos</p>
+                            <h2 className="text-xl font-semibold text-[#1c2c4a] mb-1">Flujo de Materiales</h2>
+                            <p className="text-sm text-[#6b7280]">Trazabilidad completa de residuos</p>
                           </div>
                           <button
                             onClick={async () => {
@@ -8764,13 +8827,13 @@ const InnovativeDemo = () => {
                                 }
                               }
                             }}
-                            className="bg-[#0D47A1] hover:bg-[#0052A3] text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-all"
+                            className="bg-[#0D47A1] hover:bg-[#0D47A1] text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 transition-all"
                           >
                             <Download size={16} />
                             Descargar
                           </button>
                         </div>
-                        <div data-sankey-cliente className="h-[500px] bg-white rounded-lg border border-[#E9ECEF]">
+                        <div data-sankey-cliente className="h-[500px] bg-white rounded-lg border border-[#e5e7eb]">
                           <ResponsiveSankey
                             data={datosSankeyCliente}
                             margin={{ top: 20, right: 200, bottom: 20, left: 200 }}
@@ -8798,10 +8861,10 @@ const InnovativeDemo = () => {
                               const nombreDestino = nodeIdParts[0];
                               const registroAmbiental = nodeData?.registroAmbiental || (nodeIdParts[1] ? nodeIdParts[1].replace(')', '') : '');
                               return (
-                                <div className="bg-[#273949] text-white p-3 rounded-lg shadow-xl border border-[#1B5E20]">
+                                <div className="bg-[#1c2c4a] text-white p-3 rounded-lg shadow-xl border border-[#00a8a8]">
                                   <div className="font-semibold text-sm">{nombreDestino}</div>
                                   {registroAmbiental && (
-                                    <div className="text-[#1B5E20] font-medium text-xs mt-1">Registro: {registroAmbiental}</div>
+                                    <div className="text-[#00a8a8] font-medium text-xs mt-1">Registro: {registroAmbiental}</div>
                                   )}
                                   {node.value && (
                                     <div className="text-xs mt-1">
@@ -8814,7 +8877,7 @@ const InnovativeDemo = () => {
                             linkTooltip={({ link }) => {
                               const percentage = ((link.value / totalGenerado) * 100).toFixed(1);
                               return (
-                                <div className="bg-[#273949] text-white p-3 rounded-lg shadow-xl border border-[#1B5E20]">
+                                <div className="bg-[#1c2c4a] text-white p-3 rounded-lg shadow-xl border border-[#00a8a8]">
                                   <div className="font-semibold text-sm">{link.source.id} → {link.target.id}</div>
                                   <div className="text-xs mt-1">
                                     <div>Volumen: {link.value} ton</div>
@@ -8827,32 +8890,32 @@ const InnovativeDemo = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="bg-white rounded-xl p-8 border border-[#E9ECEF] shadow-sm mb-8 text-center">
-                        <Recycle className="text-[#6C757D] mx-auto mb-4" size={48} />
-                        <h3 className="text-lg font-semibold text-[#343A40] mb-2">No hay datos de trazabilidad</h3>
-                        <p className="text-sm text-[#6C757D]">Los datos de trazabilidad estarán disponibles próximamente.</p>
+                      <div className="bg-white rounded-xl p-8 border border-[#e5e7eb] shadow-sm mb-8 text-center">
+                        <Recycle className="text-[#6b7280] mx-auto mb-4" size={48} />
+                        <h3 className="text-lg font-semibold text-[#1c2c4a] mb-2">No hay datos de trazabilidad</h3>
+                        <p className="text-sm text-[#6b7280]">Los datos de trazabilidad estarán disponibles próximamente.</p>
                       </div>
                     )}
 
                     {/* GRÁFICAS DE DISTRIBUCIÓN */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                      <div className="bg-white rounded-xl p-6 border border-[#E9ECEF] shadow-sm">
-                        <h3 className="text-lg font-semibold text-[#343A40] mb-4">Distribución por Destino</h3>
+                      <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] shadow-sm">
+                        <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4">Distribución por Destino</h3>
                         <ResponsiveContainer width="100%" height={300}>
                           <BarChart data={calcularDistribucionPorDestino(datosCliente)}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#E9ECEF" />
-                            <XAxis dataKey="mes" stroke="#6C757D" fontSize={12} />
-                            <YAxis stroke="#6C757D" fontSize={12} />
+                            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                            <XAxis dataKey="mes" stroke="#6b7280" fontSize={12} />
+                            <YAxis stroke="#6b7280" fontSize={12} />
                             <Tooltip 
                               contentStyle={{ 
-                                backgroundColor: '#273949', 
-                                border: '1px solid #1B5E20', 
+                                backgroundColor: '#1c2c4a', 
+                                border: '1px solid #00a8a8', 
                                 borderRadius: '8px',
                                 color: '#fff'
                               }} 
                             />
                             <Legend />
-                            <Bar dataKey="Reciclaje" fill="#1B5E20" />
+                            <Bar dataKey="Reciclaje" fill="#00a8a8" />
                             <Bar dataKey="Composta" fill="#FF9800" />
                             <Bar dataKey="Reuso" fill="#2196F3" />
                             <Bar dataKey="Relleno Sanitario" fill="#F44336" />
@@ -8860,42 +8923,42 @@ const InnovativeDemo = () => {
                         </ResponsiveContainer>
                       </div>
 
-                      <div className="bg-white rounded-xl p-6 border border-[#E9ECEF] shadow-sm">
-                        <h3 className="text-lg font-semibold text-[#343A40] mb-4">Evolución de Desviación</h3>
+                      <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] shadow-sm">
+                        <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4">Evolución de Desviación</h3>
                         <ResponsiveContainer width="100%" height={300}>
                           <LineChart data={calcularEvolucionDesviacion(datosCliente)}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#E9ECEF" />
-                            <XAxis dataKey="mes" stroke="#6C757D" fontSize={12} />
-                            <YAxis stroke="#6C757D" fontSize={12} />
+                            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                            <XAxis dataKey="mes" stroke="#6b7280" fontSize={12} />
+                            <YAxis stroke="#6b7280" fontSize={12} />
                             <Tooltip 
                               contentStyle={{ 
-                                backgroundColor: '#273949', 
-                                border: '1px solid #1B5E20', 
+                                backgroundColor: '#1c2c4a', 
+                                border: '1px solid #00a8a8', 
                                 borderRadius: '8px',
                                 color: '#fff'
                               }} 
                             />
                             <Legend />
-                            <Line type="monotone" dataKey="Desviación" stroke="#1B5E20" strokeWidth={3} dot={{ fill: '#1B5E20', r: 4 }} />
+                            <Line type="monotone" dataKey="Desviación" stroke="#00a8a8" strokeWidth={3} dot={{ fill: '#00a8a8', r: 4 }} />
                           </LineChart>
                         </ResponsiveContainer>
                       </div>
                     </div>
 
                     {/* RESUMEN MENSUAL */}
-                    <div className="bg-white rounded-xl p-6 border border-[#E9ECEF] shadow-sm mb-8">
-                      <h3 className="text-lg font-semibold text-[#343A40] mb-4">Resumen Mensual</h3>
+                    <div className="bg-white rounded-xl p-6 border border-[#e5e7eb] shadow-sm mb-8">
+                      <h3 className="text-lg font-semibold text-[#1c2c4a] mb-4">Resumen Mensual</h3>
                       <div className="overflow-x-auto">
                         <table className="w-full">
                           <thead>
-                            <tr className="border-b border-[#E9ECEF] bg-[#F8F9FA]">
-                              <th className="text-left p-3 text-xs font-semibold text-[#6C757D]">Mes</th>
-                              <th className="text-right p-3 text-xs font-semibold text-[#6C757D]">Reciclaje</th>
-                              <th className="text-right p-3 text-xs font-semibold text-[#6C757D]">Composta</th>
-                              <th className="text-right p-3 text-xs font-semibold text-[#6C757D]">Reuso</th>
-                              <th className="text-right p-3 text-xs font-semibold text-[#6C757D]">Relleno</th>
-                              <th className="text-right p-3 text-xs font-semibold text-[#6C757D]">Total</th>
-                              <th className="text-right p-3 text-xs font-semibold text-[#6C757D]">Desviación</th>
+                            <tr className="border-b border-[#e5e7eb] bg-[#f3f4f6]">
+                              <th className="text-left p-3 text-xs font-semibold text-[#6b7280]">Mes</th>
+                              <th className="text-right p-3 text-xs font-semibold text-[#6b7280]">Reciclaje</th>
+                              <th className="text-right p-3 text-xs font-semibold text-[#6b7280]">Composta</th>
+                              <th className="text-right p-3 text-xs font-semibold text-[#6b7280]">Reuso</th>
+                              <th className="text-right p-3 text-xs font-semibold text-[#6b7280]">Relleno</th>
+                              <th className="text-right p-3 text-xs font-semibold text-[#6b7280]">Total</th>
+                              <th className="text-right p-3 text-xs font-semibold text-[#6b7280]">Desviación</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -8908,14 +8971,14 @@ const InnovativeDemo = () => {
                               const desviacion = total > 0 ? (((reciclaje + composta + reuso) / total) * 100).toFixed(1) : 0;
                               
                               return (
-                                <tr key={mes} className="border-b border-[#E9ECEF] hover:bg-[#F8F9FA]">
-                                  <td className="p-3 text-sm font-semibold text-[#343A40]">{mes}</td>
-                                  <td className="p-3 text-sm text-[#343A40] text-right">{reciclaje.toLocaleString()}</td>
-                                  <td className="p-3 text-sm text-[#343A40] text-right">{composta.toLocaleString()}</td>
-                                  <td className="p-3 text-sm text-[#343A40] text-right">{reuso.toLocaleString()}</td>
-                                  <td className="p-3 text-sm text-[#343A40] text-right">{relleno.toLocaleString()}</td>
-                                  <td className="p-3 text-sm font-semibold text-[#343A40] text-right">{total.toLocaleString()}</td>
-                                  <td className="p-3 text-sm font-semibold text-[#1B5E20] text-right">{desviacion}%</td>
+                                <tr key={mes} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6]">
+                                  <td className="p-3 text-sm font-semibold text-[#1c2c4a]">{mes}</td>
+                                  <td className="p-3 text-sm text-[#1c2c4a] text-right">{reciclaje.toLocaleString()}</td>
+                                  <td className="p-3 text-sm text-[#1c2c4a] text-right">{composta.toLocaleString()}</td>
+                                  <td className="p-3 text-sm text-[#1c2c4a] text-right">{reuso.toLocaleString()}</td>
+                                  <td className="p-3 text-sm text-[#1c2c4a] text-right">{relleno.toLocaleString()}</td>
+                                  <td className="p-3 text-sm font-semibold text-[#1c2c4a] text-right">{total.toLocaleString()}</td>
+                                  <td className="p-3 text-sm font-semibold text-[#00a8a8] text-right">{desviacion}%</td>
                                 </tr>
                               );
                             })}
@@ -8930,7 +8993,7 @@ const InnovativeDemo = () => {
                         onClick={() => {
                           alert('Descargando reporte completo en PDF...');
                         }}
-                        className="bg-[#0D47A1] hover:bg-[#0052A3] text-white px-6 py-3 rounded-md font-medium text-sm flex items-center gap-2 transition-all shadow-sm hover:shadow-md"
+                        className="bg-[#0D47A1] hover:bg-[#0D47A1] text-white px-6 py-3 rounded-md font-medium text-sm flex items-center gap-2 transition-all shadow-sm hover:shadow-md"
                       >
                         <Download size={18} />
                         Descargar Reporte Completo
