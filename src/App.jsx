@@ -4674,24 +4674,50 @@ const InnovativeDemo = () => {
   );
 
   // DASHBOARD PRINCIPAL
-  const DashboardView = () => (
+  // DASHBOARD EJECUTIVO - Resumen para Dirección
+  const DashboardView = () => {
+    // Datos calculados para el dashboard
+    const leadsActivos = topProspectos.filter(p => !['Propuesta Rechazada', 'Inicio de operación'].includes(p.status));
+    const propuestasEnviadas = topProspectos.filter(p => p.status === 'Propuesta enviada');
+    const ganadas = topProspectos.filter(p => p.status === 'Inicio de operación');
+    const rechazadas = topProspectos.filter(p => p.status === 'Propuesta Rechazada');
+    const pipelineBruto = topProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
+    const pipelinePonderado = calcularWeightedPipeline(topProspectos);
+    const winRate = calcularWinRate(topProspectos);
+    const velocity = calcularPipelineVelocity(topProspectos);
+    const presupuestoTotal = salesTeamData.reduce((s, m) => s + m.presupuestoAnual2026, 0);
+    const ventasTotal = salesTeamData.reduce((s, m) => s + m.ventasReales, 0);
+
+    // Pipeline por stage para mini-funnel
+    const stageData = KANBAN_STAGES.map(stage => ({
+      ...stage,
+      count: topProspectos.filter(p => p.status === stage.id).length,
+      valor: topProspectos.filter(p => p.status === stage.id).reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0),
+    }));
+
+    // Top 5 deals por valor
+    const topDeals = [...topProspectos]
+      .filter(p => !['Propuesta Rechazada'].includes(p.status))
+      .sort((a, b) => (b.propuesta?.ventaTotal || b.facturacionEstimada || 0) - (a.propuesta?.ventaTotal || a.facturacionEstimada || 0))
+      .slice(0, 5);
+
+    // Alertas activas
+    const alertasActivas = alertas.slice(0, 4);
+
+    return (
     <div className="p-8 bg-[#faf7f2] min-h-screen">
-      <Header title="Dashboard Ejecutivo" subtitle={`Control integral - ${topProspectos.length} prospectos • ${salesTeamData.length} ejecutivos • Pipeline $${(topProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(0)}M`} />
-      
-      {/* MÉTRICAS PRINCIPALES - KPIs Dinámicos calculados de datos reales */}
+      <Header title="Dashboard Ejecutivo" subtitle="Resumen integral para Dirección Comercial" />
+
+      {/* ROW 1: KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
-        {/* KPI 1: Pipeline Ponderado (Weighted) */}
+        {/* Pipeline Ponderado */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#00a8a8]"></div>
           <div className="flex items-center justify-between">
             <div>
               <div className="text-sm text-[#6b7280] mb-1">Pipeline Ponderado</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">
-                ${(calcularWeightedPipeline(topProspectos) / 1000000).toFixed(1)}M
-              </div>
-              <div className="text-xs text-[#6b7280] mt-1">
-                Total bruto: ${(topProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(1)}M
-              </div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">${(pipelinePonderado / 1000000).toFixed(1)}M</div>
+              <div className="text-xs text-[#6b7280] mt-1">Bruto: ${(pipelineBruto / 1000000).toFixed(0)}M</div>
             </div>
             <div className="w-10 h-10 rounded-lg bg-[#00a8a8]/10 flex items-center justify-center">
               <DollarSign className="text-[#00a8a8]" size={20} />
@@ -4699,18 +4725,14 @@ const InnovativeDemo = () => {
           </div>
         </div>
 
-        {/* KPI 2: Leads Activos */}
+        {/* Oportunidades Activas */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D47A1]"></div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Leads Activos</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">
-                {topProspectos.filter(p => !['Propuesta Rechazada', 'Inicio de operación'].includes(p.status)).length}
-              </div>
-              <div className="text-xs text-[#6b7280] mt-1">
-                de {topProspectos.length} totales • {topProspectos.filter(p => p.status === 'Propuesta enviada').length} en propuesta
-              </div>
+              <div className="text-sm text-[#6b7280] mb-1">Oportunidades Activas</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{leadsActivos.length}</div>
+              <div className="text-xs text-[#6b7280] mt-1">{propuestasEnviadas.length} en propuesta • {ganadas.length} ganadas</div>
             </div>
             <div className="w-10 h-10 rounded-lg bg-[#0D47A1]/10 flex items-center justify-center">
               <Target className="text-[#0D47A1]" size={20} />
@@ -4718,18 +4740,14 @@ const InnovativeDemo = () => {
           </div>
         </div>
 
-        {/* KPI 3: Win Rate */}
+        {/* Win Rate */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#2E7D32]"></div>
           <div className="flex items-center justify-between">
             <div>
               <div className="text-sm text-[#6b7280] mb-1">Win Rate</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">
-                {calcularWinRate(topProspectos).toFixed(0)}%
-              </div>
-              <div className="text-xs text-[#6b7280] mt-1">
-                {topProspectos.filter(p => p.status === 'Inicio de operación').length} ganadas / {topProspectos.filter(p => p.status === 'Propuesta Rechazada').length} perdidas
-              </div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{winRate.toFixed(0)}%</div>
+              <div className="text-xs text-[#6b7280] mt-1">{ganadas.length}W / {rechazadas.length}L</div>
             </div>
             <div className="w-10 h-10 rounded-lg bg-[#2E7D32]/10 flex items-center justify-center">
               <Award className="text-[#2E7D32]" size={20} />
@@ -4737,18 +4755,14 @@ const InnovativeDemo = () => {
           </div>
         </div>
 
-        {/* KPI 4: Pipeline Velocity */}
+        {/* Pipeline Velocity */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#F57C00]"></div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Pipeline Velocity</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">
-                ${(calcularPipelineVelocity(topProspectos) / 1000000).toFixed(1)}M
-              </div>
-              <div className="text-xs text-[#6b7280] mt-1">
-                MXN/día • Ciclo prom. 45 días
-              </div>
+              <div className="text-sm text-[#6b7280] mb-1">Velocity</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">${(velocity / 1000000).toFixed(1)}M</div>
+              <div className="text-xs text-[#6b7280] mt-1">MXN/día</div>
             </div>
             <div className="w-10 h-10 rounded-lg bg-[#F57C00]/10 flex items-center justify-center">
               <TrendingUp className="text-[#F57C00]" size={20} />
@@ -4757,567 +4771,223 @@ const InnovativeDemo = () => {
         </div>
       </div>
 
-      {/* SECCIÓN: TOP PROSPECTOS */}
-      <div className="mt-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <Target className="text-[#00a8a8]" size={24} />
-            <h2 className="text-xl font-semibold text-[#1c2c4a]">Top Prospectos</h2>
-            <span className="text-xs bg-[#f3f4f6] text-[#6b7280] px-3 py-1 rounded-md border border-[#e5e7eb] font-medium">
-              {topProspectos.length} empresas prioritarias
-            </span>
+      {/* ROW 2: Mini Funnel + Presupuesto vs Real */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+        {/* Mini Pipeline Funnel */}
+        <div className="lg:col-span-2 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-base font-semibold text-[#1c2c4a]">Pipeline por Stage</h3>
+            <button
+              onClick={() => setCurrentView('pipeline')}
+              className="text-xs text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1"
+            >
+              Ver Pipeline completo <ChevronRight size={14} />
+            </button>
           </div>
-        </div>
-        
-        {/* RESUMEN VISUAL DE PROSPECTOS */}
-        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6 mb-6">
-          <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Resumen de Prospectos</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-white rounded-lg border border-[#00a8a8]/30 relative overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#00a8a8]"></div>
-              <div className="text-2xl font-bold text-[#00a8a8] mb-1">
-                ${(topProspectos.reduce((sum, p) => sum + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(1)}M
-              </div>
-              <div className="text-xs text-[#6b7280]">Valor Total Potencial</div>
-            </div>
-            <div className="text-center p-4 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
-              <div className="text-2xl font-bold text-[#1c2c4a] mb-1">
-                {topProspectos.filter(p => p.status === 'Reunión agendada').length}
-              </div>
-              <div className="text-xs text-[#6b7280]">En Negociación</div>
-            </div>
-            <div className="text-center p-4 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
-              <div className="text-2xl font-bold text-[#1c2c4a] mb-1">
-                {Math.round(topProspectos.filter(p => p.propuesta?.ventaTotal).length / topProspectos.length * 100)}%
-              </div>
-              <div className="text-xs text-[#6b7280]">Probabilidad Promedio</div>
-            </div>
-            <div className="text-center p-4 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
-              <div className="text-2xl font-bold text-[#1c2c4a] mb-1">
-                {topProspectos.filter(p => p.status === 'Propuesta enviada' || p.status === 'Levantamiento').length}
-              </div>
-              <div className="text-xs text-[#6b7280]">Alta Prioridad</div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {topProspectos.slice(0, 4).map(prospecto => {
-            const getColorRiesgo = (riesgo) => {
-              if (riesgo === 'Bajo' || riesgo === 'Muy Bajo') return 'text-[#00a8a8]';
-              if (riesgo === 'Medio') return 'text-orange-600';
-              return 'text-red-600';
-            };
-            
-            return (
-              <div 
-                key={prospecto.id}
-                className="bg-white rounded-lg border border-[#e5e7eb] shadow-sm hover:shadow-md transition-all"
-              >
-                {/* HEADER */}
-                <div className="p-5 border-b border-[#e5e7eb]">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-[#1c2c4a] mb-1">{prospecto.empresa}</h3>
-                      <p className="text-sm text-[#6b7280]">{prospecto.industria}</p>
-                  </div>
-                </div>
-                  <div className="flex items-center gap-2 text-sm text-[#6b7280]">
-                    <Users size={14} />
-                    <span className="font-medium">Ejecutivo:</span>
-                    <span>{prospecto.ejecutivo}</span>
-                </div>
-              </div>
-              
-                {/* CONTENIDO PRINCIPAL */}
-                <div className="p-5 space-y-4">
-                  {/* PRÓXIMO PASO */}
-                  <div>
-                    <div className="text-xs text-[#6b7280] font-medium mb-1">Comentarios</div>
-                    <div className="text-sm font-semibold text-[#1c2c4a]">{(prospecto.comentarios || "Pendiente")}</div>
-                  </div>
-                  
-                  {/* MÉTRICAS RÁPIDAS */}
-                  <div className="grid grid-cols-2 gap-3">
-                  <div>
-                      <div className="text-xs text-[#6b7280] font-medium mb-1">Status</div>
-                      <div className="text-sm font-semibold text-[#1c2c4a]">{prospecto.status}</div>
-                  </div>
-                  <div>
-                      <div className="text-xs text-[#6b7280] font-medium mb-1">Nivel</div>
-                      <div className={`text-sm font-semibold ${prospecto.status === 'Propuesta enviada' ? 'text-[#0D47A1]' : prospecto.status === 'Levantamiento' ? 'text-orange-600' : 'text-[#00a8a8]'}`}>
-                        {prospecto.status}
-                  </div>
-                    </div>
-                  </div>
-                  
-                  {/* OPORTUNIDAD */}
-                  <div>
-                    <div className="text-xs text-[#6b7280] font-medium mb-1">Servicios</div>
-                    <div className="text-sm text-[#1c2c4a]">{(prospecto.servicios || []).map(s => SERVICIOS_INNOVATIVE.find(si => si.id === s)?.nombre || s).join(", ") || "Sin servicios"}</div>
-                  </div>
-                  
-                  {/* MÉTRICAS FINANCIERAS */}
-                  <div className="grid grid-cols-2 gap-3 pt-3 border-t border-[#e5e7eb]">
-                    <div className="bg-[#f3f4f6] rounded-lg p-3 border border-[#e5e7eb]">
-                      <div className="text-xs text-[#6b7280] mb-1">Volumen</div>
-                      <div className="text-sm font-semibold text-[#1c2c4a]">{prospecto.volumenEstimado}</div>
-                </div>
-                    <div className="bg-[#f3f4f6] rounded-lg p-3 border border-[#e5e7eb]">
-                      <div className="text-xs text-[#6b7280] mb-1">Valor</div>
-                      <div className="text-sm font-semibold text-[#0D47A1]">
-                        ${((prospecto.propuesta?.ventaTotal || prospecto.facturacionEstimada || 0) / 1000000).toFixed(1)}M
-                      </div>
-                </div>
-              </div>
-              
-                  {/* BOTONES DE ACCIÓN */}
-                  <div className="flex gap-2 pt-3 border-t border-[#e5e7eb]">
-                    {(prospecto.status === 'Levantamiento' || prospecto.status === 'Propuesta enviada' || prospecto.status === 'Inicio de operación') && (
-                      <button
-                        onClick={() => {
-                          const levantamiento = levantamientosActivos.find(l => l.id === null);
-                          if (levantamiento) {
-                            setSelectedLevantamiento(levantamiento);
-                            setMostrarLevantamiento(true);
-                          }
-                        }}
-                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#f3f4f6] hover:bg-[#e5e7eb] text-[#1c2c4a] rounded-md text-xs font-medium transition-all border border-[#e5e7eb]"
+          <div className="space-y-3">
+            {stageData.map((stage, idx) => {
+              const maxCount = Math.max(...stageData.map(s => s.count), 1);
+              const pct = (stage.count / maxCount) * 100;
+              return (
+                <div key={stage.id} className="flex items-center gap-3">
+                  <div className="w-28 text-xs font-medium text-[#6b7280] text-right">{stage.label}</div>
+                  <div className="flex-1 relative">
+                    <div className="w-full bg-[#f3f4f6] rounded-full h-7 overflow-hidden">
+                      <div
+                        className="h-full rounded-full flex items-center justify-end pr-3 transition-all"
+                        style={{ width: `${Math.max(pct, 8)}%`, backgroundColor: stage.color }}
                       >
-                        <Eye size={14} />
-                        Levantamiento
-                      </button>
-                    )}
-                    {(prospecto.status === 'Propuesta enviada' || prospecto.status === 'Inicio de operación' || prospecto.status === 'Propuesta Rechazada') && (
-                      <button
-                        onClick={() => {
-                          setSelectedProspecto(prospecto);
-                          setMostrarPropuesta(true);
-                        }}
-                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#0D47A1] hover:bg-[#0D47A1] text-white rounded-md text-xs font-medium transition-all"
-                      >
-                        <FileText size={14} />
-                        Propuesta
-                      </button>
-                    )}
-                </div>
-                  
-                  {/* INFO ADICIONAL */}
-                  <div className="pt-3 border-t border-[#e5e7eb] space-y-2">
-                    <div className="flex items-center gap-2 text-xs text-[#6b7280]">
-                      <MapPin size={12} />
-                      <span>{prospecto.ciudad}</span>
-                    </div>
-                    <div className="text-xs text-[#6b7280]">
-                      <span className="font-medium">Contacto:</span> {prospecto.contacto?.nombre ? `${prospecto.contacto.nombre} - ${prospecto.contacto.puesto || ""}` : "Sin contacto"}
-                  </div>
+                        <span className="text-xs font-bold text-white">{stage.count}</span>
+                      </div>
                     </div>
                   </div>
+                  <div className="w-20 text-right">
+                    <span className="text-xs font-semibold text-[#1c2c4a]">${(stage.valor / 1000000).toFixed(1)}M</span>
                   </div>
-            );
-          })}
+                  <div className="w-12 text-right">
+                    <span className="text-xs font-medium" style={{ color: stage.color }}>{stage.prob}</span>
+                  </div>
                 </div>
-              </div>
-
-      {/* SECCIÓN: ANÁLISIS DE RECHAZOS */}
-      <div className="mt-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <TrendingDown className="text-[#00a8a8]" size={24} />
-            <h2 className="text-xl font-semibold text-[#1c2c4a]">Análisis de Rechazos</h2>
-            <span className="text-xs bg-red-50 text-red-600 px-3 py-1 rounded-md border border-red-200 font-medium">
-              {topProspectos.filter(p => p.status === 'Propuesta Rechazada').length} propuestas rechazadas
-            </span>
+              );
+            })}
+          </div>
+          {/* Conversion summary */}
+          <div className="mt-4 pt-4 border-t border-[#e5e7eb] flex items-center justify-between text-xs text-[#6b7280]">
+            <span>Total: {topProspectos.length} oportunidades</span>
+            <span>Pipeline bruto: <span className="font-semibold text-[#1c2c4a]">${(pipelineBruto / 1000000).toFixed(0)}M</span></span>
+            <span>Ponderado: <span className="font-semibold text-[#00a8a8]">${(pipelinePonderado / 1000000).toFixed(1)}M</span></span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* KPIs de Rechazos */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
-            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Impacto Financiero</h3>
-            <div className="space-y-4">
-              <div>
-                <div className="text-sm text-[#6b7280] mb-1">Valor Total Perdido</div>
-                <div className="text-3xl font-bold text-red-600">
-                  ${(topProspectos.filter(p => p.status === 'Propuesta Rechazada').reduce((sum, p) => sum + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(1)}M
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-[#6b7280] mb-1">Propuestas Rechazadas</div>
-                <div className="text-2xl font-bold text-[#1c2c4a]">
-                  {topProspectos.filter(p => p.status === 'Propuesta Rechazada').length}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-[#6b7280] mb-1">Con Motivo Documentado</div>
-                <div className="text-2xl font-bold text-[#00a8a8]">
-                  {topProspectos.filter(p => p.status === 'Propuesta Rechazada' && p.motivoRechazo).length}/{topProspectos.filter(p => p.status === 'Propuesta Rechazada').length}
-                </div>
-              </div>
-            </div>
+        {/* Presupuesto Resumen */}
+        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-base font-semibold text-[#1c2c4a]">Presupuesto 2026</h3>
+            <button
+              onClick={() => setCurrentView('team')}
+              className="text-xs text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1"
+            >
+              Ver equipo <ChevronRight size={14} />
+            </button>
           </div>
-
-          {/* Top Motivos de Rechazo */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
-            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Top 3 Motivos de Rechazo</h3>
-            <div className="space-y-3">
-              {(() => {
-                const rechazados = topProspectos.filter(p => p.status === 'Propuesta Rechazada' && p.motivoRechazo);
-                const conteoMotivos = {};
-                rechazados.forEach(p => {
-                  const motivoId = p.motivoRechazo;
-                  if (!conteoMotivos[motivoId]) {
-                    conteoMotivos[motivoId] = { count: 0, valor: 0 };
-                  }
-                  conteoMotivos[motivoId].count++;
-                  conteoMotivos[motivoId].valor += (p.propuesta?.ventaTotal || p.facturacionEstimada || 0);
-                });
-
-                const topMotivos = Object.entries(conteoMotivos)
-                  .map(([id, data]) => ({
-                    motivo: id || 'Desconocido',
-                    count: data.count,
-                    valor: data.valor
-                  }))
-                  .sort((a, b) => b.count - a.count)
-                  .slice(0, 3);
-
-                return topMotivos.map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-3 bg-[#f3f4f6] rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                        idx === 0 ? 'bg-red-100 text-red-600' :
-                        idx === 1 ? 'bg-orange-100 text-orange-600' :
-                        'bg-yellow-100 text-yellow-600'
-                      }`}>
-                        {idx + 1}
-                      </div>
-                      <div>
-                        <div className="text-sm font-medium text-[#1c2c4a]">{item.motivo}</div>
-                        <div className="text-xs text-[#6b7280]">
-                          ${(item.valor / 1000000).toFixed(1)}M perdidos
-                        </div>
-                      </div>
+          <div className="text-center mb-4">
+            <div className="text-3xl font-bold text-[#1c2c4a]">${(presupuestoTotal / 1000000).toFixed(0)}M</div>
+            <div className="text-xs text-[#6b7280] mt-1">Presupuesto anual equipo</div>
+          </div>
+          <div className="space-y-3">
+            {salesTeamData.filter(m => m.presupuestoAnual2026 > 0).sort((a, b) => b.presupuestoAnual2026 - a.presupuestoAnual2026).slice(0, 5).map(member => {
+              const pct = presupuestoTotal > 0 ? (member.presupuestoAnual2026 / presupuestoTotal * 100) : 0;
+              return (
+                <div key={member.id} className="flex items-center gap-2">
+                  <div className="w-20 text-xs text-[#6b7280] truncate">{member.name.split(' ')[0]}</div>
+                  <div className="flex-1">
+                    <div className="w-full bg-[#f3f4f6] rounded-full h-2">
+                      <div className="bg-[#00a8a8] h-2 rounded-full" style={{ width: `${pct}%` }} />
                     </div>
-                    <div className="text-lg font-bold text-[#1c2c4a]">{item.count}</div>
                   </div>
-                ));
-              })()}
-            </div>
+                  <div className="text-xs font-semibold text-[#1c2c4a] w-14 text-right">${(member.presupuestoAnual2026 / 1000000).toFixed(0)}M</div>
+                </div>
+              );
+            })}
           </div>
-
-          {/* Distribución por Categoría */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
-            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Distribución por Categoría</h3>
-            <div className="space-y-3">
-              {(() => {
-                const rechazados = topProspectos.filter(p => p.status === 'Propuesta Rechazada' && p.motivoRechazo);
-                const conteoCategorias = {};
-                rechazados.forEach(p => {
-                  const motivo = { categoria: 'General', motivo: p.motivoRechazo };
-                  const categoria = motivo?.categoria || 'Otro';
-                  conteoCategorias[categoria] = (conteoCategorias[categoria] || 0) + 1;
-                });
-
-                const total = Object.values(conteoCategorias).reduce((sum, val) => sum + val, 0);
-
-                return Object.entries(conteoCategorias)
-                  .sort((a, b) => b[1] - a[1])
-                  .map(([categoria, count]) => {
-                    const porcentaje = total > 0 ? (count / total * 100) : 0;
-                    return (
-                      <div key={categoria}>
-                        <div className="flex items-center justify-between text-sm mb-1">
-                          <span className="font-medium text-[#1c2c4a]">{categoria}</span>
-                          <span className="text-[#6b7280]">{count} ({porcentaje.toFixed(0)}%)</span>
-                        </div>
-                        <div className="w-full bg-[#f3f4f6] rounded-full h-2">
-                          <div
-                            className="bg-[#00a8a8] h-2 rounded-full"
-                            style={{ width: `${porcentaje}%` }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  });
-              })()}
-            </div>
+          {/* Chart mini */}
+          <div className="mt-4 pt-4 border-t border-[#e5e7eb]">
+            <ResponsiveContainer width="100%" height={120}>
+              <LineChart data={presupuestoEvolution}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                <XAxis dataKey="mes" tick={{ fontSize: 10, fill: '#6b7280' }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ fontSize: 11, borderRadius: 8 }} />
+                <Line type="monotone" dataKey="presupuesto" stroke="#e5e7eb" strokeWidth={1.5} dot={false} strokeDasharray="4 4" />
+                <Line type="monotone" dataKey="real" stroke="#00a8a8" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* SECCIÓN: GESTIÓN DE LEADS */}
-      <div className="mt-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <Users className="text-[#00a8a8]" size={24} />
-            <h2 className="text-xl font-semibold text-[#1c2c4a]">Gestión de Leads</h2>
-            <span className="text-xs bg-[#f3f4f6] text-[#6b7280] px-3 py-1 rounded-md border border-[#e5e7eb] font-medium">
-              {leadsConAsignacion.length} leads activos
-            </span>
+      {/* ROW 3: Top 5 Deals + Alertas + Equipo Snapshot */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+        {/* Top 5 Deals */}
+        <div className="lg:col-span-2 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-base font-semibold text-[#1c2c4a]">Top 5 Oportunidades</h3>
+            <span className="text-xs text-[#6b7280]">Por valor de pipeline</span>
+          </div>
+          <div className="space-y-2">
+            {topDeals.map((deal, idx) => {
+              const valor = deal.propuesta?.ventaTotal || deal.facturacionEstimada || 0;
+              const stage = KANBAN_STAGES.find(s => s.id === deal.status);
+              const ejecutivo = salesTeamData.find(e => e.codigo === deal.ejecutivo);
+              return (
+                <div key={deal.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-[#f3f4f6] transition-colors cursor-pointer"
+                  onClick={() => { setSelectedProspecto(deal); setMostrarDetallesProspecto(true); }}>
+                  <div className="w-6 h-6 rounded-full bg-[#f3f4f6] flex items-center justify-center text-xs font-bold text-[#6b7280]">
+                    {idx + 1}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-[#1c2c4a] truncate">{deal.empresa}</div>
+                    <div className="text-xs text-[#6b7280]">{ejecutivo?.name?.split(' ').slice(0, 2).join(' ') || deal.ejecutivo} • {deal.industria}</div>
+                  </div>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full"
+                    style={{ backgroundColor: `${stage?.color}15`, color: stage?.color }}>
+                    {stage?.label || deal.status}
+                  </span>
+                  <div className="text-sm font-bold text-[#0D47A1] whitespace-nowrap">
+                    ${(valor / 1000000).toFixed(2)}M
+                  </div>
                 </div>
-                </div>
+              );
+            })}
+          </div>
+        </div>
 
-        <div className="bg-white rounded-lg border border-[#e5e7eb] shadow-sm overflow-hidden">
-          <div className="p-6 border-b border-[#e5e7eb]">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-semibold text-[#1c2c4a]">Tabla de Leads</h3>
-              <div className="flex items-center gap-4 text-sm">
-                <div className="text-[#6b7280]">
-                  <span className="font-semibold text-[#1c2c4a]">{leadsConAsignacion.filter(l => l.asignadoA).length}</span> asignados
+        {/* Alertas y Acciones */}
+        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-base font-semibold text-[#1c2c4a]">Alertas</h3>
+            <span className="w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold">
+              {alertas.length}
+            </span>
+          </div>
+          {alertasActivas.length > 0 ? (
+            <div className="space-y-3">
+              {alertasActivas.map((alerta, idx) => (
+                <div key={idx} className={`p-3 rounded-lg border text-xs ${
+                  alerta.prioridad === 'alta' ? 'bg-red-50 border-red-200' :
+                  alerta.prioridad === 'media' ? 'bg-orange-50 border-orange-200' :
+                  'bg-yellow-50 border-yellow-200'
+                }`}>
+                  <div className="font-medium text-[#1c2c4a] mb-1">{alerta.mensaje}</div>
+                  <div className="flex items-center justify-between">
+                    <span className={`font-semibold ${
+                      alerta.prioridad === 'alta' ? 'text-red-600' : 'text-orange-600'
+                    }`}>{alerta.accion}</span>
+                  </div>
                 </div>
-                <div className="text-[#6b7280]">
-                  <span className="font-semibold text-[#1c2c4a]">{leadsConAsignacion.filter(l => !l.asignadoA).length}</span> sin asignar
-              </div>
-              </div>
+              ))}
             </div>
-          </div>
-          
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">#</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Empresa</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Contacto</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Industria</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Origen</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Fecha</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold text-[#6b7280]">Valor</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Asignado a</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(mostrarTodosLeads ? leadsConAsignacion : leadsConAsignacion.slice(0, 10)).map((lead, index) => {
-                  const ejecutivoAsignado = lead.asignadoA ? salesTeamData.find(e => e.id === lead.asignadoA) : null;
-                  
-                  return (
-                    <tr key={lead.id} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6] transition-colors">
-                      <td className="px-4 py-3 text-sm text-[#6b7280]">{index + 1}</td>
-                      <td className="px-4 py-3 text-sm font-semibold text-[#1c2c4a]">{lead.empresa}</td>
-                      <td className="px-4 py-3 text-sm text-[#6b7280]">{lead.contacto}</td>
-                      <td className="px-4 py-3 text-sm text-[#6b7280]">{lead.industria}</td>
-                      <td className="px-4 py-3">
-                        <span className={`text-xs px-2 py-1 rounded ${
-                          lead.origen === 'Referido' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                          lead.origen === 'Web' ? 'bg-green-50 text-green-700 border border-green-200' :
-                          lead.origen === 'LinkedIn' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
-                          'bg-orange-50 text-orange-700 border border-orange-200'
-                        }`}>
-                          {lead.origen}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-[#6b7280]">{lead.fecha}</td>
-                      <td className="px-4 py-3 text-sm font-semibold text-[#0D47A1] text-right">
-                        ${(lead.valor / 1000).toFixed(0)}K
-                      </td>
-                      <td className="px-4 py-3">
-                        <select
-                          value={lead.asignadoA || ''}
-                          onChange={(e) => {
-                            const nuevoAsignado = e.target.value ? parseInt(e.target.value) : null;
-                            setLeadsConAsignacion(prev => 
-                              prev.map(l => l.id === lead.id ? { ...l, asignadoA: nuevoAsignado } : l)
-                            );
-                          }}
-                          className="text-xs px-2 py-1.5 border border-[#e5e7eb] rounded-md focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <option value="">Sin asignar</option>
-                          {salesTeamData.map(ejecutivo => (
-                            <option key={ejecutivo.id} value={ejecutivo.id}>
-                              {ejecutivo.name}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          
-          {/* BOTÓN VER MÁS / VER MENOS */}
-          {leadsConAsignacion.length > 10 && (
-            <div className="p-4 border-t border-[#e5e7eb] bg-[#f3f4f6] flex justify-center">
-              <button
-                onClick={() => setMostrarTodosLeads(!mostrarTodosLeads)}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#00a8a8] hover:text-[#008080] transition-colors"
-              >
-                {mostrarTodosLeads ? (
-                  <>
-                    <ChevronUp size={16} />
-                    Ver menos ({leadsConAsignacion.length - 10} ocultos)
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown size={16} />
-                    Ver más ({leadsConAsignacion.length - 10} adicionales)
-                  </>
-                )}
-              </button>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-8 text-[#6b7280]">
+              <CheckSquare size={32} className="mb-2 text-[#2E7D32]" />
+              <span className="text-sm">Sin alertas pendientes</span>
             </div>
           )}
+
+          {/* Quick stats */}
+          <div className="mt-4 pt-4 border-t border-[#e5e7eb] space-y-2">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-[#6b7280]">Rechazadas</span>
+              <span className="font-semibold text-red-600">{rechazadas.length} (${(rechazadas.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(1)}M)</span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-[#6b7280]">Propuestas pendientes</span>
+              <span className="font-semibold text-[#0D47A1]">{propuestasEnviadas.length}</span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-[#6b7280]">Ejecutivos activos</span>
+              <span className="font-semibold text-[#1c2c4a]">{salesTeamData.length}</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* SECCIÓN: EQUIPO CON PIPELINE, PRESUPUESTO Y KPIS */}
-      <div className="mt-8">
-        <div className="flex items-center gap-3 mb-6">
-          <Users className="text-[#00a8a8]" size={24} />
-          <h2 className="text-xl font-semibold text-[#1c2c4a]">Control del Equipo</h2>
-          <span className="text-xs bg-[#f3f4f6] text-[#6b7280] px-3 py-1 rounded-md border border-[#e5e7eb] font-medium">Pipeline • Presupuesto • KPIs</span>
+      {/* ROW 4: Equipo Snapshot (compacto) */}
+      <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base font-semibold text-[#1c2c4a]">Equipo Comercial</h3>
+          <button
+            onClick={() => setCurrentView('team')}
+            className="text-xs text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1"
+          >
+            Ver Centro de Control <ChevronRight size={14} />
+          </button>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {salesTeamData.map(member => {
-            const getEficienciaColor = (eficiencia) => {
-              if (eficiencia >= 75) return 'bg-[#00a8a8]';
-              if (eficiencia >= 65) return 'bg-[#008080]';
-              return 'bg-[#00b3b3]';
-            };
-            
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {salesTeamData.filter(m => m.codigo !== 'VA').map(member => {
+            const memberProspectos = topProspectos.filter(p => p.ejecutivo === member.codigo);
+            const memberPipeline = memberProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
             return (
-            <div 
-              key={member.id} 
-                className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm hover:shadow-lg transition-all cursor-pointer overflow-hidden group"
-              onClick={() => setSelectedTeamMember(member)}
-            >
-                {/* HEADER CON GRADIENTE SUTIL */}
-                <div className={`${getEficienciaColor(member.eficienciaGlobal)} p-5 text-white`}>
-                  <div className="relative z-10">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <h3 className="text-lg font-bold mb-1">{member.name}</h3>
-                        <p className="text-xs text-white/90">{member.role}</p>
+              <div key={member.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#f3f4f6] transition-colors cursor-pointer"
+                onClick={() => setSelectedTeamMember(member)}>
+                <div className="w-9 h-9 rounded-full bg-[#00a8a8] flex items-center justify-center text-sm font-bold text-white">
+                  {member.codigo}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-semibold text-[#1c2c4a] truncate">{member.name.split(' ')[0]}</div>
+                  <div className="text-xs text-[#6b7280]">{memberProspectos.length} opps • ${(memberPipeline / 1000000).toFixed(1)}M</div>
                 </div>
                 <div className="text-right">
-                        <div className="text-3xl font-bold">{member.eficienciaGlobal}%</div>
-                        <div className="text-xs text-white/80">Eficiencia</div>
-              </div>
-              </div>
-              
-                    {/* BARRA DE EFICIENCIA VISUAL */}
-                    <div className="w-full bg-white/20 rounded-full h-2 mt-3">
-                      <div 
-                        className="bg-white h-2 rounded-full transition-all"
-                        style={{ width: `${member.eficienciaGlobal}%` }}
-                      />
-          </div>
-        </div>
-      </div>
-                
-                <div className="p-5">
-                  {/* PIPELINE VISUAL - EMBUDO MINI */}
-                  <div className="mb-5">
-                    <div className="text-xs text-[#6b7280] font-medium mb-3 flex items-center gap-2">
-                  <TrendingUp size={14} />
-                      Pipeline
+                  <div className="text-xs font-bold text-[#1c2c4a]">{member.eficienciaGlobal}%</div>
+                  <div className={`w-8 h-1.5 rounded-full ${member.eficienciaGlobal >= 75 ? 'bg-[#2E7D32]' : member.eficienciaGlobal >= 50 ? 'bg-[#F57C00]' : 'bg-red-500'}`}></div>
                 </div>
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-[#6b7280]">Leads</span>
-                        <span className="font-semibold text-[#1c2c4a]">{member.leads}</span>
-                  </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-[#6b7280]">Levant.</span>
-                        <span className="font-semibold text-[#1c2c4a]">{member.levantamientos}</span>
-                  </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-[#6b7280]">Propuestas</span>
-                        <span className="font-semibold text-[#1c2c4a]">{member.propuestasEnviadas}</span>
-                  </div>
-                      <div className="flex items-center justify-between pt-2 border-t border-[#e5e7eb] text-sm">
-                        <span className="font-medium text-[#1c2c4a]">Cierres</span>
-                        <span className="font-bold text-[#0D47A1] text-base">{member.cierres}</span>
-                  </div>
-                </div>
-                    <div className="mt-3 pt-3 border-t border-[#e5e7eb] text-center">
-                      <span className="text-xs text-[#6b7280]">Conversión </span>
-                      <span className="text-xs font-bold text-[#0D47A1]">{member.tasaConversion}%</span>
-        </div>
-      </div>
-
-                  {/* PRESUPUESTO VISUAL */}
-                  <div className="mb-4">
-                    <div className="text-xs text-[#6b7280] font-medium mb-2 flex items-center gap-2">
-                      <DollarSign size={12} />
-                      Presupuesto
-                </div>
-                    <div className="flex items-end justify-between mb-2">
-                  <div>
-                        <div className="text-xs text-[#6b7280]">Real</div>
-                        <div className="text-lg font-bold text-[#1c2c4a]">${(member.ventasReales / 1000).toFixed(0)}k</div>
-                    </div>
-                      <div className="text-right">
-                        <div className="text-xs text-[#6b7280]">Meta</div>
-                        <div className="text-base font-semibold text-[#6b7280]">${(member.presupuestoMensual / 1000).toFixed(0)}k</div>
-                  </div>
-                    </div>
-                    <div className="relative w-full bg-[#e5e7eb] rounded-full h-3 overflow-hidden">
-                      <div 
-                        className={`h-full rounded-full transition-all ${
-                          member.cumplimientoPresupuesto >= 100 
-                            ? 'bg-[#0D47A1]' 
-                            : 'bg-orange-600'
-                        }`}
-                        style={{ width: `${Math.min(member.cumplimientoPresupuesto, 100)}%` }}
-                      >
-                        <div className="h-full flex items-center justify-end pr-2">
-                          <span className="text-xs font-bold text-white">{member.cumplimientoPresupuesto}%</span>
-                  </div>
-                  </div>
-                </div>
-        </div>
-        
-                  {/* INDICADOR DE ESTADO */}
-                  <div className="pt-4 border-t border-[#e5e7eb]">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-[#6b7280]">Estado</span>
-                      <span className={`text-xs font-semibold px-2 py-1 rounded ${
-                        member.cumplimientoPresupuesto >= 100 
-                          ? 'bg-green-50 text-green-700 border border-green-200' 
-                          : member.cumplimientoPresupuesto >= 90
-                          ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                          : 'bg-orange-50 text-orange-700 border border-orange-200'
-                      }`}>
-                        {member.cumplimientoPresupuesto >= 100 ? '✓ En Meta' : 
-                         member.cumplimientoPresupuesto >= 90 ? '⚠ Cerca' : '⚠ Por debajo'}
-                      </span>
-                </div>
-              </div>
-          </div>
               </div>
             );
           })}
-        </div>
-      </div>
-
-
-      {/* PRESUPUESTO VS REAL - EVOLUCIÓN */}
-      <div className="mt-8">
-        <div className="flex items-center gap-3 mb-6">
-          <DollarSign className="text-[#00a8a8]" size={24} />
-          <h2 className="text-xl font-semibold text-[#1c2c4a]">Presupuesto vs Real</h2>
-        </div>
-        
-        <div className="bg-white rounded-lg p-8 border border-[#e5e7eb] shadow-sm">
-          <ResponsiveContainer width="100%" height={350}>
-            <LineChart data={presupuestoEvolution}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="mes" stroke="#6b7280" />
-              <YAxis stroke="#6b7280" />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="presupuesto" stroke="#6b7280" strokeWidth={2} name="Presupuesto" strokeDasharray="5 5" />
-              <Line type="monotone" dataKey="real" stroke="#00a8a8" strokeWidth={3} name="Ventas Reales" />
-            </LineChart>
-          </ResponsiveContainer>
         </div>
       </div>
     </div>
-  );
+    );
+  };
 
   // VISTA: PIPELINE COMERCIAL - Con Kanban, Funnel y Tabla
   const PipelineComercialView = () => {
