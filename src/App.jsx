@@ -4,453 +4,3175 @@ import { ResponsiveSankey } from '@nivo/sankey';
 import html2canvas from 'html2canvas';
 import { Home, TrendingUp, Package, Users, FileText, Settings, ChevronRight, Download, Search, Filter, Bell, LogOut, Menu, X, DollarSign, Target, PhoneCall, Award, Calendar, MapPin, Truck, Leaf, Briefcase, ClipboardList, CheckSquare, AlertCircle, Send, Eye, Recycle, Trash2, BarChart3, TrendingDown, ChevronDown, ChevronUp, Save, FileImage, RotateCcw, Building2 } from 'lucide-react';
 
-// TOP PROSPECTOS - EMPRESAS REALES MEXICANAS
+// SERVICIOS INNOVATIVE
+const SERVICIOS_INNOVATIVE = [
+  { id: 'rme', nombre: 'RME', descripcion: 'Residuos de Manejo Especial' },
+  { id: 'rsu', nombre: 'RSU', descripcion: 'Residuos Sólidos Urbanos' },
+  { id: 'organicos', nombre: 'R.Orgánicos', descripcion: 'Alimentos y Poda' },
+  { id: 'rp_rpbi', nombre: 'RP y RPBI', descripcion: 'Residuos Peligrosos y Biológico-Infecciosos' },
+  { id: 'destrucciones', nombre: 'Destrucciones Fiscales', descripcion: 'Destrucción fiscal certificada' },
+  { id: 'lodos', nombre: 'Lodos', descripcion: 'Lodos de planta de tratamiento' },
+  { id: 'true', nombre: 'Certificación TRUE', descripcion: 'Total Resource Use and Efficiency' },
+  { id: 'biodigestores', nombre: 'Biodigestores', descripcion: 'Digestión anaerobia de orgánicos' },
+  { id: 'sustayn', nombre: 'Sustayn', descripcion: 'Plataforma de sustentabilidad' },
+  { id: 'limpieza', nombre: 'Limpieza Especializada', descripcion: 'Servicios de limpieza industrial' }
+];
+
+// INDUSTRIAS ESTÁNDAR
+const INDUSTRIAS = [
+  'Automotriz', 'Alimenticia', 'Bebidas', 'Retail', 'Hotelería', 'Restaurantes',
+  'Servicios', 'Pinturas / Industrial', 'Fabricación de motores', 'Equipo óptico',
+  'Farmacéutica', 'Tecnología', 'Logística', 'Construcción', 'Minería', 'Otro'
+];
+
+// KPIs METAS SEMANALES POR EJECUTIVO
+const KPI_METAS = {
+  leadsNuevos: { meta: 5, frecuencia: 'semanal', label: 'Leads Nuevos' },
+  reunionesAgendadas: { meta: 2, frecuencia: 'semanal', label: 'Reuniones Agendadas' },
+  levantamientos: { meta: 2, frecuencia: 'mensual', label: 'Levantamientos' },
+  propuestasEnviadas: { meta: 0, frecuencia: 'semanal', label: 'Propuestas Enviadas' },
+  propuestasRechazadas: { meta: 0, frecuencia: 'semanal', label: 'Propuestas Rechazadas' }
+};
+
+// FUNCIÓN: Determina si un lead califica como "Prospecto"
+const esProspectoCalificado = (lead) => {
+  return !!(lead.empresa && lead.industria && lead.contacto?.nombre && lead.contacto?.puesto && lead.contacto?.correo);
+};
+
+// FUNCIÓN: Campos faltantes para ser prospecto
+const camposFaltantes = (lead) => {
+  const faltantes = [];
+  if (!lead.empresa) faltantes.push('Empresa');
+  if (!lead.industria) faltantes.push('Industria');
+  if (!lead.contacto?.nombre) faltantes.push('Nombre contacto');
+  if (!lead.contacto?.puesto) faltantes.push('Puesto');
+  if (!lead.contacto?.correo) faltantes.push('Correo');
+  return faltantes;
+};
+
+// BASE DE DATOS REAL DE PROSPECTOS/LEADS - DATOS DEL EXCEL LEADS + MARIANA + LAURA MESA
 const topProspectos = [
+  // ==========================================================================
+  // VERO ALVARADO (VA) LEADS - IDs 1-20
+  // ==========================================================================
   {
     id: 1,
-    nombre: 'Grupo Bimbo',
-    industria: 'Manufactura Alimentaria',
-    ubicacion: 'Ciudad de México',
-    potencial: 'Alto',
-    volumenEstimado: '120 ton/mes',
-    valorEstimado: 3600000,
-    probabilidad: 75,
-    etapa: 'Negociación',
-    contacto: 'María González - Gerente de Sustentabilidad',
-    ultimaActividad: 'Reunión técnica programada',
-    prioridad: 'Alta',
-    razon: 'Compromiso público con economía circular 2025',
-    levantamientoId: 1,
-    propuestaId: 1,
-    tieneLevantamiento: true,
-    tienePropuesta: true,
-    proximoPaso: 'Revisión de términos contractuales',
-    tiempoEstimadoCierre: '2-3 semanas',
-    riesgo: 'Bajo',
-    oportunidad: 'Alta - Compromiso público facilita aprobación',
-    asesorComercial: 'Carlos Mendoza'
+    empresa: 'Liverpool Plan',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Retail',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Gabriela Cisnero',
+      puesto: 'Coordinadora Sustentabilidad',
+      correo: 'agcisnerosc@liverpool.com.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: 'Aceptada',
+      ventaTotal: 1358778,
+      utilidad: 0.107,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
   },
   {
     id: 2,
-    nombre: 'Grupo Modelo (AB InBev)',
-    industria: 'Bebidas',
-    ubicacion: 'Ciudad de México',
-    potencial: 'Muy Alto',
-    volumenEstimado: '85 ton/mes',
-    valorEstimado: 2550000,
-    probabilidad: 68,
-    etapa: 'Propuesta',
-    contacto: 'Carlos Ramírez - Director de Operaciones',
-    ultimaActividad: 'Propuesta enviada - esperando respuesta',
-    prioridad: 'Alta',
-    razon: 'Iniciativa de cero residuos a relleno sanitario',
-    levantamientoId: 2,
-    propuestaId: 2,
-    tieneLevantamiento: true,
-    tienePropuesta: true,
-    proximoPaso: 'Seguimiento de propuesta - respuesta esperada',
-    tiempoEstimadoCierre: '3-4 semanas',
-    riesgo: 'Medio',
-    oportunidad: 'Muy Alta - Presupuesto aprobado para 2025',
-    asesorComercial: 'Ana Martínez',
-    fechaPropuesta: '2025-11-20'
+    empresa: 'DHL',
+    planta: null,
+    ciudad: 'Edo Mex',
+    industria: 'Logística',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Marco Pardines',
+      puesto: 'DHL Purchasing Buyer México',
+      correo: 'Marco.Pardinesc@dhl.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: '2025-07-25',
+    propuesta: {
+      status: null,
+      ventaTotal: 158785,
+      utilidad: 0.111,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
   },
   {
     id: 3,
-    nombre: 'Grupo Salinas (Elektra)',
+    empresa: 'BRINCO',
+    planta: null,
+    ciudad: 'CDMX',
     industria: 'Retail',
-    ubicacion: 'Ciudad de México',
-    potencial: 'Alto',
-    volumenEstimado: '95 ton/mes',
-    valorEstimado: 2850000,
-    probabilidad: 60,
-    etapa: 'Levantamiento',
-    contacto: 'Patricia López - Coordinadora Ambiental',
-    ultimaActividad: 'Levantamiento completado - análisis en curso',
-    prioridad: 'Media',
-    razon: 'Expansión de programa de reciclaje',
-    levantamientoId: 3,
-    propuestaId: null,
-    tieneLevantamiento: true,
-    tienePropuesta: false,
-    proximoPaso: 'Generar propuesta basada en levantamiento',
-    tiempoEstimadoCierre: '4-6 semanas',
-    riesgo: 'Medio',
-    oportunidad: 'Alta - Necesidad identificada en levantamiento',
-    asesorComercial: 'Roberto Sánchez'
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'David Mizrahi',
+      puesto: 'Owner',
+      correo: 'dmizd@brinco.com.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: '2025-07-01',
+    propuesta: {
+      status: 'Aceptada',
+      ventaTotal: 163255,
+      utilidad: 0.064,
+      carton: 2000,
+      playo: 1000,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
   },
   {
     id: 4,
-    nombre: 'Grupo Femsa (Oxxo)',
-    industria: 'Retail Conveniencia',
-    ubicacion: 'Monterrey, NL',
-    potencial: 'Muy Alto',
-    volumenEstimado: '200 ton/mes',
-    valorEstimado: 6000000,
-    probabilidad: 45,
-    etapa: 'Levantamiento',
-    contacto: 'Roberto Martínez - Gerente de Sostenibilidad',
-    ultimaActividad: 'Primera reunión exploratoria',
-    prioridad: 'Muy Alta',
-    razon: 'Red de 20,000+ tiendas - alto impacto',
-    levantamientoId: 4,
-    propuestaId: null,
-    tieneLevantamiento: true,
-    tienePropuesta: false,
-    proximoPaso: 'Completar levantamiento en 5 sucursales piloto',
-    tiempoEstimadoCierre: '6-8 semanas',
-    riesgo: 'Alto - Proceso de aprobación complejo',
-    oportunidad: 'Muy Alta - Mayor volumen potencial del pipeline',
-    asesorComercial: 'Laura Fernández'
+    empresa: 'BIMBO MARINELA',
+    planta: 'Marinela',
+    ciudad: 'CDMX',
+    industria: 'Alimenticia',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Jesus Efrain Orozco',
+      puesto: 'Indirect Procurement',
+      correo: 'jesus.orozco01@grupobimbo.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: '2025-07-25',
+    propuesta: {
+      status: null,
+      ventaTotal: 1195906,
+      utilidad: 0.202,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
   },
   {
     id: 5,
-    nombre: 'Grupo Posadas',
-    industria: 'Hotelería',
-    ubicacion: 'Ciudad de México',
-    potencial: 'Alto',
-    volumenEstimado: '45 ton/mes',
-    valorEstimado: 1350000,
-    probabilidad: 70,
-    etapa: 'Negociación',
-    contacto: 'Ana Fernández - Directora de Operaciones',
-    ultimaActividad: 'Revisión de propuesta técnica',
-    prioridad: 'Alta',
-    razon: 'Certificación LEED y estándares internacionales',
-    levantamientoId: 5,
-    propuestaId: 3,
-    tieneLevantamiento: true,
-    tienePropuesta: true,
-    proximoPaso: 'Ajustes finales en términos de servicio',
-    tiempoEstimadoCierre: '1-2 semanas',
-    riesgo: 'Bajo',
-    oportunidad: 'Alta - Certificación LEED requiere trazabilidad',
-    asesorComercial: 'Carlos Mendoza'
+    empresa: 'BIMBO AZCAPOTZALCO',
+    planta: 'Azcapotzalco',
+    ciudad: 'CDMX',
+    industria: 'Alimenticia',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Jesus Efrain Orozco',
+      puesto: 'Indirect Procurement',
+      correo: 'jesus.orozco01@grupobimbo.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: '2025-07-25',
+    propuesta: {
+      status: null,
+      ventaTotal: 259902,
+      utilidad: 0.073,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
   },
   {
     id: 6,
-    nombre: 'Grupo Lala',
-    industria: 'Lácteos',
-    ubicacion: 'Torreón, Coahuila',
-    potencial: 'Alto',
-    volumenEstimado: '65 ton/mes',
-    valorEstimado: 1950000,
-    probabilidad: 55,
-    etapa: 'Propuesta',
-    contacto: 'Luis Hernández - Gerente de Calidad',
-    ultimaActividad: 'Propuesta en evaluación interna',
-    prioridad: 'Media',
-    razon: 'Programa de economía circular',
-    levantamientoId: 6,
-    propuestaId: 4,
-    tieneLevantamiento: true,
-    tienePropuesta: true,
-    proximoPaso: 'Seguimiento de evaluación interna',
-    tiempoEstimadoCierre: '4-5 semanas',
-    riesgo: 'Medio',
-    oportunidad: 'Media - Proceso de aprobación interno lento',
-    asesorComercial: 'Ana Martínez',
-    fechaPropuesta: '2025-11-26'
+    empresa: 'BIMBO LERMA',
+    planta: 'Lerma',
+    ciudad: 'Edo Mex',
+    industria: 'Alimenticia',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Lucia Baeza',
+      puesto: 'Sup. Legal de Sustentabilidad',
+      correo: 'lucia.baeza@grupobimbo.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: '2025-08-18',
+    propuesta: {
+      status: null,
+      ventaTotal: 376213,
+      utilidad: 0.14,
+      carton: 20000,
+      playo: 842,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
   },
   {
     id: 7,
-    nombre: 'Hospital Ángeles',
-    industria: 'Salud',
-    ubicacion: 'Ciudad de México',
-    potencial: 'Medio',
-    volumenEstimado: '28 ton/mes',
-    valorEstimado: 840000,
-    probabilidad: 80,
-    etapa: 'Negociación',
-    contacto: 'Dr. Jorge Silva - Director Administrativo',
-    ultimaActividad: 'Negociación de términos finales',
-    prioridad: 'Alta',
-    razon: 'Cumplimiento normativo RME hospitalario',
-    levantamientoId: 7,
-    propuestaId: 5,
-    tieneLevantamiento: true,
-    tienePropuesta: true,
-    proximoPaso: 'Firma de contrato',
-    tiempoEstimadoCierre: '1 semana',
-    riesgo: 'Muy Bajo',
-    oportunidad: 'Alta - Urgencia por cumplimiento normativo',
-    asesorComercial: 'Roberto Sánchez'
+    empresa: 'BIMBO METROPOLITANO',
+    planta: 'Metropolitano',
+    ciudad: 'CDMX',
+    industria: 'Alimenticia',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Alan Avendaño',
+      puesto: 'Ingenieria CDM',
+      correo: 'alan.avendano01@grupobimbo.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: '2025-08-18',
+    propuesta: {
+      status: null,
+      ventaTotal: 160752,
+      utilidad: 0.188,
+      carton: 3444,
+      playo: 7630,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
   },
   {
     id: 8,
-    nombre: 'Grupo Alsea (Starbucks, Domino\'s)',
-    industria: 'Restaurantes',
-    ubicacion: 'Ciudad de México',
-    potencial: 'Muy Alto',
-    volumenEstimado: '150 ton/mes',
-    valorEstimado: 4500000,
-    probabilidad: 40,
-    etapa: 'Levantamiento',
-    contacto: 'Sofía Mendoza - Coordinadora de Sustentabilidad',
-    ultimaActividad: 'Levantamiento inicial programado',
-    prioridad: 'Muy Alta',
-    razon: 'Compromiso global de cero residuos',
-    levantamientoId: 8,
-    propuestaId: null,
-    tieneLevantamiento: true,
-    tienePropuesta: false,
-    proximoPaso: 'Iniciar levantamiento en sucursales piloto',
-    tiempoEstimadoCierre: '8-10 semanas',
-    riesgo: 'Alto - Múltiples stakeholders',
-    oportunidad: 'Muy Alta - Mayor oportunidad del pipeline',
-    asesorComercial: 'Laura Fernández'
+    empresa: 'JLL',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Servicios',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Valeria Grimaldo',
+      puesto: 'Facilities Coordinator',
+      correo: 'Valeria.Bernal@jll.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Rechazada',
+    semana: null,
+    fecha: '2025-07-25',
+    propuesta: {
+      status: 'Rechazada',
+      ventaTotal: 57721,
+      utilidad: 0.142,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
   },
   {
     id: 9,
-    nombre: 'PepsiCo México',
+    empresa: 'GRUPO PEÑAFIEL TECAMAC',
+    planta: 'Tecamac',
+    ciudad: 'Edo Mex',
     industria: 'Bebidas',
-    ubicacion: 'Ciudad de México',
-    potencial: 'Muy Alto',
-    volumenEstimado: '180 ton/mes',
-    valorEstimado: 5400000,
-    probabilidad: 0,
-    etapa: 'Rechazada',
-    contacto: 'Diana Morales - Gerente de Compras',
-    ultimaActividad: 'Propuesta rechazada',
-    prioridad: 'Baja',
-    razon: 'Licitación para gestión integral de residuos',
-    levantamientoId: null,
-    propuestaId: null,
-    tieneLevantamiento: true,
-    tienePropuesta: true,
-    proximoPaso: 'Seguimiento en 6 meses',
-    tiempoEstimadoCierre: 'N/A',
-    riesgo: 'Alto',
-    oportunidad: 'Perdida - Licitación adjudicada a competencia',
-    asesorComercial: 'Carlos Mendoza',
-    motivoRechazo: 6,
-    motivoRechazoDetalle: 'No presentamos permisos ambientales a tiempo',
-    fechaRechazo: '2025-10-15'
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Alin Rodriguez',
+      puesto: '',
+      correo: 'AlinMariana.Rodriguez@kdrp.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: '2025-07-28',
+    propuesta: {
+      status: null,
+      ventaTotal: 924336,
+      utilidad: 0.22,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
   },
   {
     id: 10,
-    nombre: 'Grupo Gigante',
-    industria: 'Retail',
-    ubicacion: 'Ciudad de México',
-    potencial: 'Alto',
-    volumenEstimado: '75 ton/mes',
-    valorEstimado: 2250000,
-    probabilidad: 0,
-    etapa: 'Rechazada',
-    contacto: 'Roberto Torres - Director de Operaciones',
-    ultimaActividad: 'Cliente decidió continuar con proveedor actual',
-    prioridad: 'Baja',
-    razon: 'Renovación de contrato de residuos',
-    levantamientoId: null,
-    propuestaId: null,
-    tieneLevantamiento: true,
-    tienePropuesta: true,
-    proximoPaso: 'N/A',
-    tiempoEstimadoCierre: 'N/A',
-    riesgo: 'Alto',
-    oportunidad: 'Perdida',
-    asesorComercial: 'Ana Martínez',
-    motivoRechazo: 1,
-    motivoRechazoDetalle: 'Nuestra propuesta fue 15% más cara que el proveedor actual',
-    fechaRechazo: '2025-09-28'
+    empresa: 'DPWORLD',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Logística',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Manuel Hernandez',
+      puesto: 'Procurement Manager',
+      correo: 'manuel.hernandez@dpworld.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: '2025-07-07',
+    propuesta: {
+      status: null,
+      ventaTotal: 37000,
+      utilidad: 0.232,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
   },
   {
     id: 11,
-    nombre: 'Hotel Fiesta Americana',
-    industria: 'Hotelería',
-    ubicacion: 'Cancún, Quintana Roo',
-    potencial: 'Medio',
-    volumenEstimado: '25 ton/mes',
-    valorEstimado: 750000,
-    probabilidad: 0,
-    etapa: 'Rechazada',
-    contacto: 'Sandra Pérez - Gerente General',
-    ultimaActividad: 'No cumplen requisito de recolección diaria',
-    prioridad: 'Baja',
-    razon: 'Programa de sustentabilidad hotelera',
-    levantamientoId: null,
-    propuestaId: null,
-    tieneLevantamiento: true,
-    tienePropuesta: true,
-    proximoPaso: 'N/A',
-    tiempoEstimadoCierre: 'N/A',
-    riesgo: 'Medio',
-    oportunidad: 'Perdida',
-    asesorComercial: 'Roberto Sánchez',
-    motivoRechazo: 4,
-    motivoRechazoDetalle: 'No tenemos capacidad de recolección diaria en Cancún',
-    fechaRechazo: '2025-10-05'
+    empresa: 'ITALIKA DESTRUCCION TOLUCA',
+    planta: 'Destrucción Toluca',
+    ciudad: 'Edo Mex',
+    industria: 'Automotriz',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Ofelia Borjon',
+      puesto: 'Analista Compras',
+      correo: 'ofelia.borjon@f6p.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Rechazada',
+    semana: null,
+    fecha: '2025-07-15',
+    propuesta: {
+      status: 'Rechazada',
+      ventaTotal: 119100,
+      utilidad: 0.207,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: 'Demora en responder',
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
   },
   {
     id: 12,
-    nombre: 'Restaurante Local Chapultepec',
+    empresa: 'ITALIKA GDL',
+    planta: 'Guadalajara',
+    ciudad: 'Guadalajara',
+    industria: 'Automotriz',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Ofelia Borjon',
+      puesto: 'Analista Compras',
+      correo: 'ofelia.borjon@f6p.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Rechazada',
+    semana: null,
+    fecha: '2025-07-04',
+    propuesta: {
+      status: 'Rechazada',
+      ventaTotal: 499,
+      utilidad: 0.377,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: 'Demora en responder',
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 13,
+    empresa: 'ITALIKA LERMA',
+    planta: 'Lerma',
+    ciudad: 'Edo Mex',
+    industria: 'Automotriz',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Ofelia Borjon',
+      puesto: 'Analista Compras',
+      correo: 'ofelia.borjon@f6p.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Rechazada',
+    semana: null,
+    fecha: '2025-07-15',
+    propuesta: {
+      status: 'Rechazada',
+      ventaTotal: 208415,
+      utilidad: 0.179,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: 'Demora en responder',
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 14,
+    empresa: 'ITALIKA TOLUCA BATERIAS',
+    planta: 'Toluca Baterías',
+    ciudad: 'Edo Mex',
+    industria: 'Automotriz',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Ofelia Borjon',
+      puesto: 'Analista Compras',
+      correo: 'ofelia.borjon@f6p.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Rechazada',
+    semana: null,
+    fecha: '2025-07-08',
+    propuesta: {
+      status: 'Rechazada',
+      ventaTotal: 7661,
+      utilidad: 0.171,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: 'Demora en responder',
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 15,
+    empresa: 'HEINEKEN PUEBLA',
+    planta: 'Puebla',
+    ciudad: 'Puebla',
+    industria: 'Bebidas',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Aidee Olvera',
+      puesto: 'Venta Residuos',
+      correo: 'aidee.olvera@heineken.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Rechazada',
+    semana: null,
+    fecha: '2025-07-08',
+    propuesta: {
+      status: 'Rechazada',
+      ventaTotal: 166495,
+      utilidad: 0.181,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: 'Precios no competitivos',
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 16,
+    empresa: 'HOTEL CONRAD PUNTA DE MITA',
+    planta: null,
+    ciudad: 'Punta de Mita',
+    industria: 'Hotelería',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Miriam Flores',
+      puesto: 'Purchasing Manager',
+      correo: 'Miriam.Flores@ConradHotels.com',
+      telefono: '',
+    },
+    servicios: ['biodigestores'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: '2025-07-07',
+    propuesta: {
+      status: null,
+      ventaTotal: 927480,
+      utilidad: 0.238,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 17,
+    empresa: 'DACOMSA',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Servicios',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Giovana Lopez',
+      puesto: 'Area Ambiental',
+      correo: 'giovana.lopez@dacomsa.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: '2025-05-14',
+    propuesta: {
+      status: null,
+      ventaTotal: 443507,
+      utilidad: 0.132,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 18,
+    empresa: 'FOUR SEASONS',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Hotelería',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Benjamin Ruiz',
+      puesto: 'Compras',
+      correo: 'bruiz@manhattanconstruction.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: '2025-08-01',
+    propuesta: {
+      status: null,
+      ventaTotal: 741000,
+      utilidad: 0.221,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 19,
+    empresa: 'GRUPO SALINAS',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Retail',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: '',
+      puesto: '',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['biodigestores'],
+    status: 'Lead nuevo',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: 'Biodigestor',
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 20,
+    empresa: 'PALLADIUM HOTEL',
+    planta: null,
+    ciudad: 'Riviera Maya',
+    industria: 'Hotelería',
+    ejecutivo: 'VA',
+    contacto: {
+      nombre: 'Javier Lopez',
+      puesto: 'Sustentabilidad',
+      correo: 'javier.lopez@palladiumhotelgroup.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+
+  // ==========================================================================
+  // LAURA MESA (LM) LEADS - IDs 21-34
+  // ==========================================================================
+  {
+    id: 21,
+    empresa: 'SMART MTY',
+    planta: 'Monterrey',
+    ciudad: 'Monterrey',
+    industria: 'Retail',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Jesus Galvan',
+      puesto: 'Director de compras',
+      correo: 'Jesus.Galvan@s-martmx.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: 5969026,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 22,
+    empresa: 'SMART CJ',
+    planta: 'Ciudad Juárez',
+    ciudad: 'Ciudad Juárez',
+    industria: 'Retail',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Jesus Galvan',
+      puesto: 'Director de compras',
+      correo: 'Jesus.Galvan@s-martmx.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 23,
+    empresa: 'CASA LEY',
+    planta: null,
+    ciudad: '',
+    industria: 'Retail',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: '',
+      puesto: '',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 24,
+    empresa: 'ALSUPER',
+    planta: null,
+    ciudad: '',
+    industria: 'Retail',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Israel Buerba',
+      puesto: 'Gerente de logistica',
+      correo: 'israel.buerba@alsuper.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 25,
+    empresa: 'OFFICE DEPOT',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Retail',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Mauricio Mosquera',
+      puesto: 'Gerente de logistica',
+      correo: 'mmosquera@officedepot.com.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Lead original de Vero Excel',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 26,
+    empresa: 'MERCADO LIBRE',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Retail',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Federico Yanes',
+      puesto: 'Gerente de compras',
+      correo: 'ext_fedyanez@mercadolibre.com.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: 32,
+    fecha: null,
+    propuesta: {
+      status: 'Aceptada',
+      ventaTotal: 698000,
+      utilidad: 0.231,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 27,
+    empresa: '3B',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Retail',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Vivian Salamanca',
+      puesto: 'Subdirectora de compras',
+      correo: 'vsr@tiendas3b.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Reunión agendada',
+    semana: 32,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 28,
+    empresa: 'CHROMALOX',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Fabricación de motores',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Deyaira Silva',
+      puesto: 'Gerente de logistica',
+      correo: 'Deyanira.Silva@chromalox.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Reunión agendada',
+    semana: 32,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 29,
+    empresa: 'LUSA',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Fabricación de motores',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Nayeli Regino',
+      puesto: 'Gerente de compras',
+      correo: 'auxiliarcomprasizt@iusa.com.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 32,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 30,
+    empresa: 'CRM SYNERGIES',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Servicios',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Alondra',
+      puesto: 'Gerente de logistica',
+      correo: 'logisticsmx2@crmsynergies.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Reunión agendada',
+    semana: 32,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 31,
+    empresa: 'BIC',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Fabricación de motores',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Julian Quevec',
+      puesto: 'Inventory manager',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 33,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 32,
+    empresa: 'JUGOS DEL VALLE',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Bebidas',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Guillermo Lopez',
+      puesto: 'Gerente de logistica',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 33,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 33,
+    empresa: 'GRUPO CORVI',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Retail',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Enrique Villaseñor',
+      puesto: 'CEO',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 33,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 34,
+    empresa: 'WALDOS',
+    planta: null,
+    ciudad: 'Edo Mex',
+    industria: 'Retail',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: '',
+      puesto: '',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: '2025-09-22',
+    propuesta: {
+      status: null,
+      ventaTotal: 658658,
+      utilidad: 0.286,
+      carton: 43000,
+      playo: 33000,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+
+  // ==========================================================================
+  // CRISTINA SESCOSSE (CS) LEADS - IDs 35-47
+  // ==========================================================================
+  {
+    id: 35,
+    empresa: 'GRUPO CARSO',
+    planta: null,
+    ciudad: 'Guadalajara',
+    industria: 'Retail',
+    ejecutivo: 'CS',
+    contacto: {
+      nombre: '',
+      puesto: '',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 36,
+    empresa: 'TRACSA',
+    planta: null,
+    ciudad: 'Guadalajara',
+    industria: 'Automotriz',
+    ejecutivo: 'CS',
+    contacto: {
+      nombre: 'Rafael',
+      puesto: 'Procurement',
+      correo: 'irrodriguez@tracsa.com.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: 'Aceptada',
+      ventaTotal: 640710,
+      utilidad: 0.186,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 37,
+    empresa: 'FARMACIAS GUADALAJARA',
+    planta: null,
+    ciudad: 'Guadalajara',
+    industria: 'Farmacéutica',
+    ejecutivo: 'CS',
+    contacto: {
+      nombre: 'Claudia',
+      puesto: 'Compras institucionales',
+      correo: 'chermosillo@fragua.com.mx',
+      telefono: '',
+    },
+    servicios: ['biodigestores'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 38,
+    empresa: 'SENSATA TECHNOLOGIES',
+    planta: null,
+    ciudad: 'Guadalajara',
+    industria: 'Tecnología',
+    ejecutivo: 'CS',
+    contacto: {
+      nombre: 'Samuel',
+      puesto: 'Compras',
+      correo: 'sromosanchez@sensata.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 39,
+    empresa: 'JABIL',
+    planta: null,
+    ciudad: 'Guadalajara',
+    industria: 'Tecnología',
+    ejecutivo: 'CS',
+    contacto: {
+      nombre: 'Alberto',
+      puesto: 'Compras',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 40,
+    empresa: 'AMAZON',
+    planta: null,
+    ciudad: 'Guadalajara',
+    industria: 'Tecnología',
+    ejecutivo: 'CS',
+    contacto: {
+      nombre: 'Gustavo',
+      puesto: 'Compras',
+      correo: 'enriqugt@amazon.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Reunión agendada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: 'Pendiente',
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 41,
+    empresa: 'GRUPO SANBORNS',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Retail',
+    ejecutivo: 'CS',
+    contacto: {
+      nombre: 'Sergio',
+      puesto: 'Compras y Abastecimientos',
+      correo: 'smendieta@sears.com.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: 'Aceptada',
+      ventaTotal: 157560,
+      utilidad: 0.164,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 42,
+    empresa: 'GENERAL MOTORS',
+    planta: null,
+    ciudad: 'Guadalajara',
+    industria: 'Automotriz',
+    ejecutivo: 'CS',
+    contacto: {
+      nombre: 'Guillermo',
+      puesto: 'Facilities Director',
+      correo: 'guillermo.arias@gm.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 43,
+    empresa: 'RAPPI',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Tecnología',
+    ejecutivo: 'CS',
+    contacto: {
+      nombre: 'Ivan Cadavid',
+      puesto: 'CEO',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Consiguiendo contacto',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 44,
+    empresa: 'FARMACIAS DEL AHORRO',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Farmacéutica',
+    ejecutivo: 'CS',
+    contacto: {
+      nombre: 'Alejandro Aldaco',
+      puesto: 'Director de Finanzas',
+      correo: 'alejandr.aldaco@fahorro.com.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 45,
+    empresa: 'FIESTA AMERICANA GDL',
+    planta: null,
+    ciudad: 'Guadalajara',
+    industria: 'Hotelería',
+    ejecutivo: 'CS',
+    contacto: {
+      nombre: 'Eduardo Cordero',
+      puesto: 'Dueño',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['biodigestores'],
+    status: 'Reunión agendada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 46,
+    empresa: 'JW MARRIOTT GDL',
+    planta: null,
+    ciudad: 'Guadalajara',
+    industria: 'Hotelería',
+    ejecutivo: 'CS',
+    contacto: {
+      nombre: 'Jorge Favier',
+      puesto: 'Dueño',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['biodigestores'],
+    status: 'Reunión agendada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 47,
+    empresa: 'ACEITE VEGETAL',
+    planta: null,
+    ciudad: 'Guadalajara',
+    industria: 'Alimenticia',
+    ejecutivo: 'CS',
+    contacto: {
+      nombre: 'Mariana Capetillo',
+      puesto: 'Dueño',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Reunión agendada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: 'Spot',
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+
+  // ==========================================================================
+  // JOSE ARMANDO MARTINEZ (AM) LEADS - IDs 48-74
+  // ==========================================================================
+  {
+    id: 48,
+    empresa: 'SANMINA PLANTA APODACA',
+    planta: 'Apodaca',
+    ciudad: 'Monterrey',
+    industria: 'Tecnología',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Daniel Vaca',
+      puesto: 'Compras',
+      correo: 'daniel.baca@sanmina.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Rechazada',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: 'Rechazada',
+      ventaTotal: 150000,
+      utilidad: 0.204,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 49,
+    empresa: 'SANMINA PLANTA GUADALUPE',
+    planta: 'Guadalupe',
+    ciudad: 'Monterrey',
+    industria: 'Tecnología',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Daniel Vaca',
+      puesto: 'Compras',
+      correo: 'daniel.baca@sanmina.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Rechazada',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: 'Rechazada',
+      ventaTotal: 210000,
+      utilidad: 0.157,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 50,
+    empresa: 'GIVAUDAN QRO',
+    planta: 'Querétaro',
+    ciudad: 'Querétaro',
+    industria: 'Alimenticia',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Marisol Medina',
+      puesto: 'Trainee in service',
+      correo: 'marisol.medina-aniq@givaudan.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: 31,
+    fecha: '2025-09-22',
+    propuesta: {
+      status: 'Pendiente',
+      ventaTotal: 1519203,
+      utilidad: 0.151,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 51,
+    empresa: 'ALPURA',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Alimenticia',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Ricardo',
+      puesto: 'Jefe compras',
+      correo: 'daniel.loera@alpura.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Levantamiento',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 52,
+    empresa: 'BIMBO PLANTA BARCEL',
+    planta: 'Barcel S31',
+    ciudad: 'Monterrey',
+    industria: 'Alimenticia',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Gabriela Cruz',
+      puesto: 'Jefe mantenimiento',
+      correo: 'gabriela.cruz@grupobimbo.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: 31,
+    fecha: '2025-08-18',
+    propuesta: {
+      status: null,
+      ventaTotal: 360929,
+      utilidad: 0.131,
+      carton: 20000,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 53,
+    empresa: 'GRUPO GONHER',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Automotriz',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Guillermo Gonzalez',
+      puesto: 'Jefe compras',
+      correo: 'ggonzalezr@grupogonher.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 54,
+    empresa: 'COSTCO MTY',
+    planta: 'Monterrey',
+    ciudad: 'Monterrey',
+    industria: 'Retail',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Adrian Trejo',
+      puesto: 'Compras',
+      correo: 'atrejo@costco.com',
+      telefono: '',
+    },
+    servicios: ['biodigestores'],
+    status: 'Lead nuevo',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 55,
+    empresa: 'WYN DE MEXICO',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Hotelería',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Raul Vazquez',
+      puesto: 'HHS',
+      correo: 'raulvh@wyindemexico.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Reunión agendada',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 56,
+    empresa: 'QUANTUM',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Tecnología',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Sebastian Monroy',
+      puesto: 'Compras',
+      correo: 's.monroy@infraquantum.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 57,
+    empresa: 'GRUPO AVANDARO',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Hotelería',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Victor Perez',
+      puesto: 'Compras',
+      correo: 'vperez@grupoavandaro.com.mx',
+      telefono: '',
+    },
+    servicios: ['biodigestores'],
+    status: 'Lead nuevo',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Oct. 6 BIOS',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 58,
+    empresa: 'SAMUEL SON AND CO',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Fabricación de motores',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Silvia Coronado',
+      puesto: 'Seguridad salud y m.ambiente',
+      correo: 'alicia.corona@samuel.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 59,
+    empresa: 'KFC MEXICO',
+    planta: null,
+    ciudad: 'Monterrey',
     industria: 'Restaurantes',
-    ubicacion: 'Ciudad de México',
-    potencial: 'Bajo',
-    volumenEstimado: '8 ton/mes',
-    valorEstimado: 240000,
-    probabilidad: 0,
-    etapa: 'Rechazada',
-    contacto: 'Mario Hernández - Propietario',
-    ultimaActividad: 'Volumen insuficiente para servicio',
-    prioridad: 'Baja',
-    razon: 'Gestión de residuos orgánicos',
-    levantamientoId: null,
-    propuestaId: null,
-    tieneLevantamiento: true,
-    tienePropuesta: false,
-    proximoPaso: 'N/A',
-    tiempoEstimadoCierre: 'N/A',
-    riesgo: 'Bajo',
-    oportunidad: 'Perdida - No viable',
-    asesorComercial: 'Patricia Morales',
-    motivoRechazo: 7,
-    motivoRechazoDetalle: 'Solo genera 8 ton/mes, por debajo del mínimo de viabilidad',
-    fechaRechazo: '2025-10-20'
-  }
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Joel Elias Arevalo',
+      puesto: 'Gerente general regional',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['biodigestores'],
+    status: 'Lead nuevo',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 60,
+    empresa: 'NUTEC BICKLEY',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Fabricación de motores',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Jesus Eduardo Mtz',
+      puesto: 'Compras',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 31,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 61,
+    empresa: 'CADENA COMERCIAL OXXO',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Retail',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Abraham Garza',
+      puesto: 'Compras',
+      correo: 'abraham.garza@oxxo.com',
+      telefono: '',
+    },
+    servicios: ['biodigestores'],
+    status: 'Reunión agendada',
+    semana: 32,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 62,
+    empresa: 'PEPSICO',
+    planta: null,
+    ciudad: 'Nacional',
+    industria: 'Alimenticia',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Monica Lopez',
+      puesto: 'Compras',
+      correo: 'monicalopez.navarro@pepsico.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Levantamiento',
+    semana: 32,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 63,
+    empresa: 'FIBRA UNO',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Servicios',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Marianela Vargas',
+      puesto: 'Compras',
+      correo: 'mblara@fibrauno.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Reunión agendada',
+    semana: 32,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 64,
+    empresa: 'BIMBO PLANTA BARCEL',
+    planta: 'Barcel S32',
+    ciudad: 'Monterrey',
+    industria: 'Alimenticia',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Gabi',
+      puesto: 'Jefe mantenimiento',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Levantamiento',
+    semana: 32,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 65,
+    empresa: 'MINI SUPER DOLLAR GENERAL',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Retail',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Lawrence Hernandez',
+      puesto: 'Compras',
+      correo: 'lawrenceh@dollargeneral.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Reunión agendada',
+    semana: 33,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 66,
+    empresa: 'BACHOCO',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Alimenticia',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Jorge Lozano',
+      puesto: 'Compras',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rp_rpbi'],
+    status: 'Propuesta enviada',
+    semana: 33,
+    fecha: '2025-09-04',
+    propuesta: {
+      status: null,
+      ventaTotal: 24934,
+      utilidad: 0.231,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 67,
+    empresa: 'RIISA MONTERREY',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Servicios',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Nancy Cueva',
+      puesto: 'Compras',
+      correo: 'ndelacueva@riisa.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Levantamiento',
+    semana: 33,
+    fecha: null,
+    propuesta: {
+      status: 'Spot',
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 68,
+    empresa: 'HEINEKEN MTY',
+    planta: 'Monterrey',
+    ciudad: 'Monterrey',
+    industria: 'Bebidas',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Adriana',
+      puesto: 'Compras',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Reunión agendada',
+    semana: 33,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 69,
+    empresa: 'REFISESA',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Alimenticia',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Rolando Zacarias',
+      puesto: 'Gerencia de abastecimientos',
+      correo: 'jrzacarias@refisesa.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: 34,
+    fecha: null,
+    propuesta: {
+      status: 'Spot',
+      ventaTotal: 2353000,
+      utilidad: 0.073,
+      carton: 500000,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 70,
+    empresa: 'PEPSICO',
+    planta: 'Propuesta Nacional',
+    ciudad: 'Nacional',
+    industria: 'Alimenticia',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Monica Lopez',
+      puesto: 'Compras',
+      correo: 'monicalopez.navarro@pepsico.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: 34,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: 11834934,
+      utilidad: 0.1332,
+      carton: 296000,
+      playo: 39000,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 71,
+    empresa: 'MORPHOS RECYCLING',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Servicios',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Reina Mondragon',
+      puesto: 'Gerencia general',
+      correo: 'gerente@morphosrecycling.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Levantamiento',
+    semana: 34,
+    fecha: null,
+    propuesta: {
+      status: 'Spot',
+      ventaTotal: 95000,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 72,
+    empresa: 'SUMERCA (TIENDAS)',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Retail',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: '',
+      puesto: '',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 34,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 73,
+    empresa: 'PROMODA',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Retail',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: '',
+      puesto: '',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 34,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 74,
+    empresa: 'GEON PERFORMANCE',
+    planta: null,
+    ciudad: 'Monterrey',
+    industria: 'Fabricación de motores',
+    ejecutivo: 'AM',
+    contacto: {
+      nombre: 'Alexis Martinez',
+      puesto: 'Sourcing specialist',
+      correo: 'alexis.martinez@geon.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: 35,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+
+  // ==========================================================================
+  // MARIANA OLMOS (MO) - STELLANTIS 6 PLANTS - IDs 75-80
+  // ==========================================================================
+  {
+    id: 75,
+    empresa: 'STELLANTIS',
+    planta: 'Van Assembly Plant',
+    ciudad: 'Saltillo',
+    industria: 'Automotriz',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Carolina Salmerón',
+      puesto: 'Senior Buyer Indirect – Cleaning & Waste',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme', 'rp_rpbi'],
+    status: 'Levantamiento',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Licitación inicia 09-feb-2026. Levantamientos realizados nov-2025. Scrap ferroso y no ferroso, RME, RP, Segregación en sitio',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 76,
+    empresa: 'STELLANTIS',
+    planta: 'Truck Assembly Plant',
+    ciudad: 'Saltillo',
+    industria: 'Automotriz',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Carolina Salmerón',
+      puesto: 'Senior Buyer Indirect – Cleaning & Waste',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme', 'rp_rpbi'],
+    status: 'Levantamiento',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Licitación inicia 09-feb-2026. Levantamientos realizados nov-2025. Scrap ferroso y no ferroso, RME, RP, Segregación en sitio',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 77,
+    empresa: 'STELLANTIS',
+    planta: 'South Engine Plant',
+    ciudad: 'Saltillo',
+    industria: 'Automotriz',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Carolina Salmerón',
+      puesto: 'Senior Buyer Indirect – Cleaning & Waste',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme', 'rp_rpbi'],
+    status: 'Levantamiento',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Licitación inicia 09-feb-2026. Levantamientos realizados nov-2025. Scrap ferroso y no ferroso, RME, RP, Segregación en sitio',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 78,
+    empresa: 'STELLANTIS',
+    planta: 'North Engine Plant',
+    ciudad: 'Ramos Arizpe',
+    industria: 'Automotriz',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Carolina Salmerón',
+      puesto: 'Senior Buyer Indirect – Cleaning & Waste',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme', 'rp_rpbi'],
+    status: 'Levantamiento',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Licitación inicia 09-feb-2026. Levantamientos realizados nov-2025. Scrap ferroso y no ferroso, RME, RP, Segregación en sitio',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 79,
+    empresa: 'STELLANTIS',
+    planta: 'Toluca Assembly Plant',
+    ciudad: 'Toluca',
+    industria: 'Automotriz',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Carolina Salmerón',
+      puesto: 'Senior Buyer Indirect – Cleaning & Waste',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme', 'rp_rpbi'],
+    status: 'Levantamiento',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Licitación inicia 09-feb-2026. Levantamientos realizados nov-2025. Scrap ferroso y no ferroso, RME, RP, Segregación en sitio',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 80,
+    empresa: 'STELLANTIS',
+    planta: 'Toluca PDC',
+    ciudad: 'Toluca',
+    industria: 'Automotriz',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Carolina Salmerón',
+      puesto: 'Senior Buyer Indirect – Cleaning & Waste',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme', 'rp_rpbi'],
+    status: 'Levantamiento',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Licitación inicia 09-feb-2026. Levantamientos realizados nov-2025. Scrap ferroso y no ferroso, RME, RP, Segregación en sitio',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+
+  // ==========================================================================
+  // MARIANA OLMOS (MO) - FEMSA/COCA-COLA 5 PLANTS - IDs 81-85
+  // ==========================================================================
+  {
+    id: 81,
+    empresa: 'FEMSA COCA-COLA',
+    planta: 'Planta Reyes',
+    ciudad: 'Los Reyes La Paz',
+    industria: 'Bebidas',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Alejandro Efraín Espinosa Díaz / Carlos Covarrubias Canut',
+      puesto: 'Coord Abastecimientos / Global Strategic Procurement',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['organicos', 'lodos', 'rp_rpbi'],
+    status: 'Licitación pendiente',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Licitación entrega 09-feb-2026 / Fallo 01-mar-2026. Subproductos. Pendiente licitación adicional de otros residuos',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 82,
+    empresa: 'FEMSA COCA-COLA',
+    planta: 'Planta Cuautitlán',
+    ciudad: 'Cuautitlán Izcalli',
+    industria: 'Bebidas',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Alejandro Efraín Espinosa Díaz / Carlos Covarrubias Canut',
+      puesto: 'Coord Abastecimientos / Global Strategic Procurement',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['organicos', 'lodos', 'rp_rpbi'],
+    status: 'Licitación pendiente',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Licitación entrega 09-feb-2026 / Fallo 01-mar-2026. Subproductos. Pendiente licitación adicional de otros residuos',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 83,
+    empresa: 'FEMSA COCA-COLA',
+    planta: 'Planta Morelia',
+    ciudad: 'Morelia',
+    industria: 'Bebidas',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Alejandro Efraín Espinosa Díaz / Carlos Covarrubias Canut',
+      puesto: 'Coord Abastecimientos / Global Strategic Procurement',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['organicos', 'lodos', 'rp_rpbi'],
+    status: 'Licitación pendiente',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Licitación entrega 09-feb-2026 / Fallo 01-mar-2026. Subproductos. Pendiente licitación adicional de otros residuos',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 84,
+    empresa: 'FEMSA COCA-COLA',
+    planta: 'Planta Cuernavaca',
+    ciudad: 'Cuernavaca',
+    industria: 'Bebidas',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Alejandro Efraín Espinosa Díaz / Carlos Covarrubias Canut',
+      puesto: 'Coord Abastecimientos / Global Strategic Procurement',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['organicos', 'lodos', 'rp_rpbi'],
+    status: 'Licitación pendiente',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Licitación entrega 09-feb-2026 / Fallo 01-mar-2026. Subproductos. Pendiente licitación adicional de otros residuos',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 85,
+    empresa: 'FEMSA COCA-COLA',
+    planta: 'Planta Ixtacomitán',
+    ciudad: 'Villahermosa',
+    industria: 'Bebidas',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Alejandro Efraín Espinosa Díaz / Carlos Covarrubias Canut',
+      puesto: 'Coord Abastecimientos / Global Strategic Procurement',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['organicos', 'lodos', 'rp_rpbi'],
+    status: 'Licitación pendiente',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Licitación entrega 09-feb-2026 / Fallo 01-mar-2026. Subproductos. Pendiente licitación adicional de otros residuos',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+
+  // ==========================================================================
+  // MARIANA OLMOS (MO) - PPG 2 PLANTS - IDs 86-87
+  // ==========================================================================
+  {
+    id: 86,
+    empresa: 'PPG',
+    planta: 'Tepexpan',
+    ciudad: 'Acolman',
+    industria: 'Química',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Gerardo Valdez Sánchez',
+      puesto: 'Gerente Jr de Servicios y Sustentabilidad',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['sustayn', 'lodos'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: 'Pendiente',
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Cotización enviada nov-2025, pendiente respuesta para reunión',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 87,
+    empresa: 'PPG',
+    planta: 'AGA',
+    ciudad: 'Tepotzotlán',
+    industria: 'Química',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Gerardo Valdez Sánchez',
+      puesto: 'Gerente Jr de Servicios y Sustentabilidad',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['sustayn', 'lodos'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: 'Pendiente',
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'AGA pendiente por definir frecuencias',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+
+  // ==========================================================================
+  // MARIANA OLMOS (MO) - OTHER PROSPECTS - IDs 88-92
+  // ==========================================================================
+  {
+    id: 88,
+    empresa: 'CLASE AZUL',
+    planta: null,
+    ciudad: 'Los Altos de Jalisco',
+    industria: 'Bebidas',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Juan Carlos Gutiérrez López',
+      puesto: 'Coordinador EHS SR',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['biodigestores'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: 'Pendiente',
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Cotización enviada 27-ene; análisis de agua enviado 03-feb; pendiente respuesta. Biodigestor OG50',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 89,
+    empresa: 'CADENA HOTELES RED NACIONAL',
+    planta: null,
+    ciudad: 'Nacional',
+    industria: 'Hotelería',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Ing. Reynaldo Alonso José Gómez',
+      puesto: 'Director General Red Nacional Gestión de Residuos y EC',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme', 'rsu', 'organicos'],
+    status: 'Reunión agendada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Llamada 05-feb; presentación Innovative 06-feb',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 90,
+    empresa: 'COSTCO TOLUCA',
+    planta: 'Toluca',
+    ciudad: 'Toluca',
+    industria: 'Retail',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Leonardo Joel Gallardo Jiménez',
+      puesto: 'Coordinador de Sustentabilidad y Energía',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Lead nuevo',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Correo enviado 12-ene; esperando respuesta',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 91,
+    empresa: 'ZEISS',
+    planta: 'CDMX',
+    ciudad: 'CDMX',
+    industria: 'Equipo óptico',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Ingrid Eunice Millan Salazar',
+      puesto: 'Auxiliar de Compras',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rsu', 'destrucciones'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: 'Pendiente',
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Contacto reunión 28-ene, cotizando. Equipo JM cotizando',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 92,
+    empresa: 'ZEISS',
+    planta: 'Apodaca',
+    ciudad: 'Apodaca',
+    industria: 'Equipo óptico',
+    ejecutivo: 'MO',
+    contacto: {
+      nombre: 'Ingrid Eunice Millan Salazar',
+      puesto: 'Auxiliar de Compras',
+      correo: '',
+      telefono: '',
+    },
+    servicios: ['rsu', 'destrucciones'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: 'Pendiente',
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Contacto reunión 28-ene, cotizando. Equipo JM cotizando',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+
+  // ==========================================================================
+  // LAURA MESA (LM) DETAILED PROSPECTS (from photo) - IDs 93-101
+  // ==========================================================================
+  {
+    id: 93,
+    empresa: 'OFFICE DEPOT',
+    planta: 'Operación',
+    ciudad: 'CDMX',
+    industria: 'Retail',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Karla Hernandez',
+      puesto: '',
+      correo: 'Karlahernandez@officedepot.com',
+      telefono: '5533746748',
+    },
+    servicios: ['rme'],
+    status: 'Inicio de operación',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: 'Aceptada',
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Contrato ganado',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 94,
+    empresa: 'TRUPER',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Fabricación de motores',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Ana Laura Magaña',
+      puesto: '',
+      correo: 'almaganat@truper.com',
+      telefono: '5518496178',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 95,
+    empresa: 'TOTAL PLAY',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Servicios',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Ofelia Borjon',
+      puesto: '',
+      correo: 'ofelia.borjon@f6p.mx',
+      telefono: '5631090269',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 96,
+    empresa: 'WALDOS',
+    planta: 'Detalle LM',
+    ciudad: 'Edo Mex',
+    industria: 'Retail',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Aylin Alvarez',
+      puesto: '',
+      correo: 'alvarezal@grupovision.com.mx',
+      telefono: '5631218519',
+    },
+    servicios: ['rme'],
+    status: 'Propuesta enviada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: '',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 97,
+    empresa: 'PALACIO DE HIERRO',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Retail',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Hector Rico',
+      puesto: '',
+      correo: 'hrico@ph.com.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Licitación pendiente',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Información de licitación pendiente',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 98,
+    empresa: 'MERCADO LIBRE',
+    planta: 'Operación',
+    ciudad: 'CDMX',
+    industria: 'Retail',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Federico Yanez',
+      puesto: '',
+      correo: 'ext_fedyanez@mercadolibre.com.mx',
+      telefono: '5575408039',
+    },
+    servicios: ['rme'],
+    status: 'Inicio de operación',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: 'Aceptada',
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Licitación ganada sin inicio de operación',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 99,
+    empresa: 'DIDI',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Servicios',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Kaily Paez',
+      puesto: '',
+      correo: 'Kailypaezpaez@didiglobal.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Levantamiento',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'En revisión de volúmenes y materiales',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 100,
+    empresa: 'PALMAS CHIAPAS',
+    planta: null,
+    ciudad: 'Chiapas',
+    industria: 'Alimenticia',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Deisy Mendez',
+      puesto: '',
+      correo: 'deisy.mendez@palma.com.mx',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Reunión agendada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Prospecto - presentación por agendar',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
+  {
+    id: 101,
+    empresa: 'GUNDERSON CONCARRIL',
+    planta: null,
+    ciudad: 'CDMX',
+    industria: 'Automotriz',
+    ejecutivo: 'LM',
+    contacto: {
+      nombre: 'Gabriela Ramirez',
+      puesto: '',
+      correo: 'gabriela.ramirez@gbrx.com',
+      telefono: '',
+    },
+    servicios: ['rme'],
+    status: 'Reunión agendada',
+    semana: null,
+    fecha: null,
+    propuesta: {
+      status: null,
+      ventaTotal: null,
+      utilidad: null,
+      carton: null,
+      playo: null,
+    },
+    motivoRechazo: null,
+    comentarios: 'Prospecto - presentación por agendar',
+    volumenEstimado: null,
+    facturacionEstimada: null,
+  },
 ];
 
-// DATOS DEL PIPELINE COMERCIAL
-// DATOS DE LEADS
-const leadsData = [
-  { id: 1, empresa: 'Coca-Cola FEMSA', contacto: 'Juan Pérez - Gerente de Sustentabilidad', fecha: '15 Nov 2025', origen: 'Referido', valor: 320000, industria: 'Bebidas', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 2, empresa: 'Grupo Herdez', contacto: 'María García - Directora de Operaciones', fecha: '14 Nov 2025', origen: 'Web', valor: 280000, industria: 'Alimentos', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 3, empresa: 'Grupo Carso', contacto: 'Carlos López - Coordinador Ambiental', fecha: '13 Nov 2025', origen: 'LinkedIn', valor: 450000, industria: 'Conglomerado', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 4, empresa: 'Grupo México', contacto: 'Ana Martínez - Gerente de Sostenibilidad', fecha: '12 Nov 2025', origen: 'Referido', valor: 380000, industria: 'Minería', ubicacion: 'Hermosillo, Sonora', asignadoA: null },
-  { id: 5, empresa: 'Grupo Televisa', contacto: 'Roberto Sánchez - Director de Operaciones', fecha: '11 Nov 2025', origen: 'Web', valor: 290000, industria: 'Medios', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 6, empresa: 'Grupo Gigante', contacto: 'Patricia Fernández - Coordinadora Ambiental', fecha: '10 Nov 2025', origen: 'Evento', valor: 310000, industria: 'Retail', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 7, empresa: 'Grupo Coppel', contacto: 'Luis Hernández - Gerente de Sostenibilidad', fecha: '9 Nov 2025', origen: 'Referido', valor: 340000, industria: 'Retail', ubicacion: 'Culiacán, Sinaloa', asignadoA: null },
-  { id: 8, empresa: 'Grupo Chedraui', contacto: 'Sofía Mendoza - Directora de Operaciones', fecha: '8 Nov 2025', origen: 'Web', valor: 360000, industria: 'Retail', ubicacion: 'Xalapa, Veracruz', asignadoA: null },
-  { id: 9, empresa: 'Grupo Palacio de Hierro', contacto: 'Jorge Silva - Coordinador Ambiental', fecha: '7 Nov 2025', origen: 'LinkedIn', valor: 270000, industria: 'Retail', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 10, empresa: 'Grupo Liverpool', contacto: 'Carmen Ruiz - Gerente de Sostenibilidad', fecha: '6 Nov 2025', origen: 'Referido', valor: 330000, industria: 'Retail', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 11, empresa: 'Grupo Soriana', contacto: 'Fernando Torres - Director de Operaciones', fecha: '5 Nov 2025', origen: 'Web', valor: 350000, industria: 'Retail', ubicacion: 'Torreón, Coahuila', asignadoA: null },
-  { id: 12, empresa: 'Grupo Comercial Chedraui', contacto: 'Laura González - Coordinadora Ambiental', fecha: '4 Nov 2025', origen: 'Evento', valor: 300000, industria: 'Retail', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 13, empresa: 'Grupo Bafar', contacto: 'Miguel Ángel Ramírez - Gerente de Sostenibilidad', fecha: '3 Nov 2025', origen: 'Referido', valor: 280000, industria: 'Alimentos', ubicacion: 'Chihuahua, Chihuahua', asignadoA: null },
-  { id: 14, empresa: 'Grupo La Moderna', contacto: 'Isabel Castro - Directora de Operaciones', fecha: '2 Nov 2025', origen: 'Web', valor: 290000, industria: 'Alimentos', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 15, empresa: 'Grupo Maseca', contacto: 'Ricardo Morales - Coordinador Ambiental', fecha: '1 Nov 2025', origen: 'LinkedIn', valor: 320000, industria: 'Alimentos', ubicacion: 'Monterrey, NL', asignadoA: null },
-  { id: 16, empresa: 'Grupo Bimbo', contacto: 'Elena Vargas - Gerente de Sostenibilidad', fecha: '31 Oct 2025', origen: 'Referido', valor: 400000, industria: 'Alimentos', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 17, empresa: 'Grupo Lala', contacto: 'Diego Moreno - Director de Operaciones', fecha: '30 Oct 2025', origen: 'Web', valor: 310000, industria: 'Lácteos', ubicacion: 'Torreón, Coahuila', asignadoA: null },
-  { id: 18, empresa: 'Grupo Jumex', contacto: 'Gabriela Jiménez - Coordinadora Ambiental', fecha: '29 Oct 2025', origen: 'Evento', valor: 270000, industria: 'Bebidas', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 19, empresa: 'Grupo Bachoco', contacto: 'Andrés Ríos - Gerente de Sostenibilidad', fecha: '28 Oct 2025', origen: 'Referido', valor: 340000, industria: 'Alimentos', ubicacion: 'Celaya, Guanajuato', asignadoA: null },
-  { id: 20, empresa: 'Grupo La Costeña', contacto: 'Claudia Núñez - Directora de Operaciones', fecha: '27 Oct 2025', origen: 'Web', valor: 280000, industria: 'Alimentos', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 21, empresa: 'Grupo Nutrisa', contacto: 'Oscar Delgado - Coordinador Ambiental', fecha: '26 Oct 2025', origen: 'LinkedIn', valor: 260000, industria: 'Alimentos', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 22, empresa: 'Grupo Sigma Alimentos', contacto: 'Verónica Pacheco - Gerente de Sostenibilidad', fecha: '25 Oct 2025', origen: 'Referido', valor: 350000, industria: 'Alimentos', ubicacion: 'Monterrey, NL', asignadoA: null },
-  { id: 23, empresa: 'Grupo Alpura', contacto: 'Raúl Mendoza - Director de Operaciones', fecha: '24 Oct 2025', origen: 'Web', valor: 300000, industria: 'Lácteos', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 24, empresa: 'Grupo Danone', contacto: 'Adriana Solís - Coordinadora Ambiental', fecha: '23 Oct 2025', origen: 'Evento', valor: 320000, industria: 'Lácteos', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 25, empresa: 'Grupo Nestlé', contacto: 'Héctor Vega - Gerente de Sostenibilidad', fecha: '22 Oct 2025', origen: 'Referido', valor: 380000, industria: 'Alimentos', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 26, empresa: 'Grupo Unilever', contacto: 'Mónica Rojas - Directora de Operaciones', fecha: '21 Oct 2025', origen: 'Web', valor: 330000, industria: 'Consumo', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 27, empresa: 'Grupo Procter & Gamble', contacto: 'Javier Campos - Coordinador Ambiental', fecha: '20 Oct 2025', origen: 'LinkedIn', valor: 360000, industria: 'Consumo', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 28, empresa: 'Grupo Kimberly-Clark', contacto: 'Daniela Fuentes - Gerente de Sostenibilidad', fecha: '19 Oct 2025', origen: 'Referido', valor: 340000, industria: 'Consumo', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 29, empresa: 'Grupo 3M', contacto: 'Alberto Sánchez - Director de Operaciones', fecha: '18 Oct 2025', origen: 'Web', valor: 310000, industria: 'Manufactura', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 30, empresa: 'Grupo Johnson & Johnson', contacto: 'Lucía Ramírez - Coordinadora Ambiental', fecha: '17 Oct 2025', origen: 'Evento', valor: 370000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 31, empresa: 'Grupo Pfizer', contacto: 'Rodrigo Martínez - Gerente de Sostenibilidad', fecha: '16 Oct 2025', origen: 'Referido', valor: 320000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 32, empresa: 'Grupo Bayer', contacto: 'Natalia Cruz - Directora de Operaciones', fecha: '15 Oct 2025', origen: 'Web', valor: 330000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 33, empresa: 'Grupo Novartis', contacto: 'Eduardo Morales - Coordinador Ambiental', fecha: '14 Oct 2025', origen: 'LinkedIn', valor: 300000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 34, empresa: 'Grupo Sanofi', contacto: 'Alejandra Torres - Gerente de Sostenibilidad', fecha: '13 Oct 2025', origen: 'Referido', valor: 310000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 35, empresa: 'Grupo GlaxoSmithKline', contacto: 'Francisco López - Director de Operaciones', fecha: '12 Oct 2025', origen: 'Web', valor: 320000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 36, empresa: 'Grupo Merck', contacto: 'Patricia Hernández - Coordinadora Ambiental', fecha: '11 Oct 2025', origen: 'Evento', valor: 290000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 37, empresa: 'Grupo Abbott', contacto: 'Roberto Díaz - Gerente de Sostenibilidad', fecha: '10 Oct 2025', origen: 'Referido', valor: 340000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 38, empresa: 'Grupo Medtronic', contacto: 'Sandra Gutiérrez - Directora de Operaciones', fecha: '9 Oct 2025', origen: 'Web', valor: 310000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 39, empresa: 'Grupo Boston Scientific', contacto: 'Manuel Ortega - Coordinador Ambiental', fecha: '8 Oct 2025', origen: 'LinkedIn', valor: 300000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 40, empresa: 'Grupo Stryker', contacto: 'Mariana Flores - Gerente de Sostenibilidad', fecha: '7 Oct 2025', origen: 'Referido', valor: 320000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 41, empresa: 'Grupo Zimmer Biomet', contacto: 'José Luis Pérez - Director de Operaciones', fecha: '6 Oct 2025', origen: 'Web', valor: 310000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 42, empresa: 'Grupo Edwards Lifesciences', contacto: 'Carmen López - Coordinadora Ambiental', fecha: '5 Oct 2025', origen: 'Evento', valor: 290000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 43, empresa: 'Grupo Intuitive Surgical', contacto: 'Alfonso Ruiz - Gerente de Sostenibilidad', fecha: '4 Oct 2025', origen: 'Referido', valor: 350000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 44, empresa: 'Grupo ResMed', contacto: 'Gloria Martínez - Directora de Operaciones', fecha: '3 Oct 2025', origen: 'Web', valor: 300000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null },
-  { id: 45, empresa: 'Grupo Dexcom', contacto: 'Pedro Sánchez - Coordinador Ambiental', fecha: '2 Oct 2025', origen: 'LinkedIn', valor: 310000, industria: 'Salud', ubicacion: 'Ciudad de México', asignadoA: null }
-];
+// leadsData ahora se genera dinámicamente desde topProspectos
+const leadsData = topProspectos.map(p => ({
+  id: p.id,
+  empresa: p.empresa + (p.planta ? ` - ${p.planta}` : ''),
+  contacto: p.contacto?.nombre ? `${p.contacto.nombre} - ${p.contacto.puesto || ''}` : 'Sin contacto',
+  fecha: p.fecha || null,
+  origen: 'Directo',
+  valor: p.propuesta?.ventaTotal || p.facturacionEstimada || 0,
+  industria: p.industria,
+  ubicacion: p.ciudad,
+  asignadoA: p.ejecutivo,
+  status: p.status
+}));
 
-const pipelineData = [
-  { etapa: 'Leads', cantidad: 45, valor: 13500000, objetivo: 55 },
-  { etapa: 'Levantamientos', cantidad: 32, valor: 9600000, objetivo: 40 },
-  { etapa: 'Propuestas', cantidad: 24, valor: 7200000, objetivo: 30 },
-  { etapa: 'Negociación', cantidad: 15, valor: 4500000, objetivo: 20 },
-  { etapa: 'Cierre', cantidad: 8, valor: 2400000, objetivo: 12 }
-];
+// Pipeline se calcula dinámicamente desde los datos reales
+const calcularPipelineData = (prospectos) => {
+  const stages = ['Lead nuevo', 'Reunión agendada', 'Levantamiento', 'Propuesta enviada', 'Inicio de operación'];
+  return stages.map(stage => {
+    const items = prospectos.filter(p => p.status === stage);
+    return {
+      etapa: stage,
+      cantidad: items.length,
+      valor: items.reduce((sum, p) => sum + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0),
+      objetivo: stage === 'Lead nuevo' ? 50 : stage === 'Reunión agendada' ? 30 : stage === 'Levantamiento' ? 20 : stage === 'Propuesta enviada' ? 15 : 5
+    };
+  });
+};
+
+const pipelineData = calcularPipelineData(topProspectos);
 
 // DATOS DEL EQUIPO REAL - INNOVATIVE GROUP
 const salesTeamData = [
   {
     id: 1,
+    codigo: 'VA',
+    name: 'Veronica Arias',
+    role: 'Directora Comercial',
+    ubicacion: 'CDMX',
+    zona: 'Nacional (Dirección)',
+    leads: 4,
+    levantamientos: 4,
+    propuestasEnviadas: 5,
+    reuniones: 4,
+    cierres: 2,
+    tasaConversion: 125,
+    presupuestoAnual2026: 0,
+    presupuestoMensual: 0,
+    ventasReales: 0,
+    cumplimientoPresupuesto: 0,
+    tiempoRespuesta: '1.5 hrs',
+    satisfaccionCliente: 4.9,
+    activitiesSemanal: 35,
+    eficienciaGlobal: 90,
+    avatar: '👩‍💼',
+    ultimaActividad: 'Kick Off Hub Digital Comercial',
+    notas: 'Directora del equipo comercial. Prospectos directos con cuentas estratégicas.',
+    // KPIs semanales reales del Excel (semana 31)
+    kpisSemanales: [
+      { semana: 31, leadsNuevos: 4, reunionesAgendadas: 4, levantamientos: 4, propuestasEnviadas: 5, propuestasRechazadas: 0 }
+    ]
+  },
+  {
+    id: 2,
+    codigo: 'CR',
     name: 'Carmen Rodríguez',
     role: 'Ejecutiva Senior',
-    ubicacion: 'CDMX',
-    // Pipeline
+    ubicacion: 'León, Guanajuato',
+    zona: 'Bajío',
     leads: 44,
     levantamientos: 3,
     propuestasEnviadas: 12,
     reuniones: 22,
-    cierres: 12,
+    cierres: 0,
     tasaConversion: 27,
-    // Presupuesto
-    presupuestoMensual: 900000,
-    ventasReales: 1050000,
-    cumplimientoPresupuesto: 117,
-    // KPIs
+    presupuestoAnual2026: 47135000,
+    presupuestoMensual: 3928000,
+    ventasReales: 0,
+    cumplimientoPresupuesto: 0,
     tiempoRespuesta: '1.5 hrs',
     satisfaccionCliente: 4.9,
     activitiesSemanal: 35,
     eficienciaGlobal: 85,
     avatar: '👩‍💼',
-    ultimaActividad: 'Cierre confirmado - Cliente corporativo',
-    notas: 'La más fuerte del equipo - modelo a clonar'
+    ultimaActividad: 'Seguimiento prospectos Bajío',
+    notas: 'La más fuerte del equipo - modelo a clonar. Ya tiene Excel estructurado con contactos y rechazos.',
+    kpisSemanales: [
+      { semana: 31, leadsNuevos: 6, reunionesAgendadas: 1, levantamientos: 0, propuestasEnviadas: 7, propuestasRechazadas: 0 },
+      { semana: 32, leadsNuevos: 2, reunionesAgendadas: 2, levantamientos: 1, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 33, leadsNuevos: 5, reunionesAgendadas: 2, levantamientos: 0, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 34, leadsNuevos: 6, reunionesAgendadas: 2, levantamientos: 0, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 35, leadsNuevos: 1, reunionesAgendadas: 2, levantamientos: 0, propuestasEnviadas: 1, propuestasRechazadas: 0 },
+      { semana: 36, leadsNuevos: 2, reunionesAgendadas: 2, levantamientos: 0, propuestasEnviadas: 1, propuestasRechazadas: 1, comentario: 'ARCELORMITTAL (Se descarta prospecto por decisión del área comercial)' },
+      { semana: 37, leadsNuevos: 14, reunionesAgendadas: 5, levantamientos: 0, propuestasEnviadas: 0, propuestasRechazadas: 1, comentario: 'JATCO (Paletas de plástico, DECLINAMOS dar seguimiento a esta licitación)' },
+      { semana: 38, leadsNuevos: 1, reunionesAgendadas: 2, levantamientos: 1, propuestasEnviadas: 1, propuestasRechazadas: 1, comentario: 'MAGNA COSMA SLP Licitación Maquinaria' },
+      { semana: 39, leadsNuevos: 3, reunionesAgendadas: 2, levantamientos: 1, propuestasEnviadas: 1, propuestasRechazadas: 0 },
+      { semana: 40, leadsNuevos: 4, reunionesAgendadas: 2, levantamientos: 0, propuestasEnviadas: 1, propuestasRechazadas: 0 }
+    ]
   },
   {
-    id: 2,
-    name: 'Armando Martínez',
+    id: 3,
+    codigo: 'AM',
+    name: 'Jose Armando Martínez',
     role: 'Ejecutivo Senior',
-    ubicacion: 'Monterrey',
+    ubicacion: 'Monterrey, NL',
+    zona: 'Norte',
     leads: 57,
     levantamientos: 22,
     propuestasEnviadas: 2,
     reuniones: 37,
-    cierres: 2,
+    cierres: 0,
     tasaConversion: 3.5,
-    presupuestoMensual: 850000,
-    ventasReales: 420000,
-    cumplimientoPresupuesto: 49,
+    presupuestoAnual2026: 79577000,
+    presupuestoMensual: 6631000,
+    ventasReales: 0,
+    cumplimientoPresupuesto: 0,
     tiempoRespuesta: '4.2 hrs',
     satisfaccionCliente: 4.2,
     activitiesSemanal: 45,
     eficienciaGlobal: 45,
     avatar: '👨‍💼',
-    ultimaActividad: 'Visita en frío - Zona industrial',
-    notas: 'Alto volumen, bajo cierre - único que hace knock knock'
-  },
-  {
-    id: 3,
-    name: 'Cristina Silva',
-    role: 'Ejecutiva',
-    ubicacion: 'Guadalajara',
-    leads: 0,
-    levantamientos: 1,
-    propuestasEnviadas: 1,
-    reuniones: 3,
-    cierres: 1,
-    tasaConversion: 100,
-    presupuestoMensual: 600000,
-    ventasReales: 750000,
-    cumplimientoPresupuesto: 125,
-    tiempoRespuesta: '2.0 hrs',
-    satisfaccionCliente: 4.7,
-    activitiesSemanal: 15,
-    eficienciaGlobal: 70,
-    avatar: '👩‍💼',
-    ultimaActividad: 'Seguimiento Paxa',
-    notas: 'Nueva pero trajo cuenta grande por contactos personales'
+    ultimaActividad: 'Visita Tampico - levantamiento OXXO',
+    notas: 'Alto volumen, bajo cierre - único que hace knock knock. Zona Norte con alto potencial.',
+    kpisSemanales: [
+      { semana: 31, leadsNuevos: 11, reunionesAgendadas: 5, levantamientos: 1, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 32, leadsNuevos: 3, reunionesAgendadas: 3, levantamientos: 1, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 33, leadsNuevos: 5, reunionesAgendadas: 4, levantamientos: 3, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 34, leadsNuevos: 4, reunionesAgendadas: 2, levantamientos: 2, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 35, leadsNuevos: 2, reunionesAgendadas: 2, levantamientos: 0, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 36, leadsNuevos: 4, reunionesAgendadas: 0, levantamientos: 0, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 37, leadsNuevos: 6, reunionesAgendadas: 2, levantamientos: 0, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 39, leadsNuevos: 7, reunionesAgendadas: 5, levantamientos: 3, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 40, leadsNuevos: 2, reunionesAgendadas: 1, levantamientos: 2, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 41, leadsNuevos: 2, reunionesAgendadas: 2, levantamientos: 5, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 42, leadsNuevos: 2, reunionesAgendadas: 2, levantamientos: 1, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 43, leadsNuevos: 2, reunionesAgendadas: 2, levantamientos: 1, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 44, leadsNuevos: 3, reunionesAgendadas: 3, levantamientos: 1, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 45, leadsNuevos: 2, reunionesAgendadas: 2, levantamientos: 1, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 46, leadsNuevos: 2, reunionesAgendadas: 2, levantamientos: 1, propuestasEnviadas: 2, propuestasRechazadas: 0 }
+    ]
   },
   {
     id: 4,
+    codigo: 'LM',
     name: 'Laura Mesa',
     role: 'Ejecutiva',
     ubicacion: 'CDMX',
+    zona: 'CDMX / Edo Mex',
     leads: 19,
     levantamientos: 0,
     propuestasEnviadas: 0,
     reuniones: 4,
-    cierres: 0,
+    cierres: 2,
     tasaConversion: 0,
-    presupuestoMensual: 550000,
+    presupuestoAnual2026: 10513000,
+    presupuestoMensual: 876000,
     ventasReales: 0,
     cumplimientoPresupuesto: 0,
     tiempoRespuesta: '5.5 hrs',
@@ -458,21 +3180,30 @@ const salesTeamData = [
     activitiesSemanal: 12,
     eficienciaGlobal: 25,
     avatar: '👩‍💼',
-    ultimaActividad: 'Prospección LinkedIn',
-    notas: 'Contactos personales, necesita coaching en cierre'
+    ultimaActividad: 'Office Depot - inicio de operación',
+    notas: 'Contactos personales, necesita coaching en cierre. Contratos ganados: Office Depot, Mercado Libre.',
+    kpisSemanales: [
+      { semana: 31, leadsNuevos: 5, reunionesAgendadas: 1, levantamientos: 0, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 32, leadsNuevos: 5, reunionesAgendadas: 1, levantamientos: 0, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 33, leadsNuevos: 4, reunionesAgendadas: 0, levantamientos: 0, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 34, leadsNuevos: 5, reunionesAgendadas: 2, levantamientos: 0, propuestasEnviadas: 0, propuestasRechazadas: 0 }
+    ]
   },
   {
     id: 5,
+    codigo: 'LS',
     name: 'Laura Sobrino',
     role: 'Ejecutiva',
     ubicacion: 'CDMX',
+    zona: 'CDMX / Internacional',
     leads: 5,
     levantamientos: 0,
     propuestasEnviadas: 0,
     reuniones: 2,
     cierres: 0,
     tasaConversion: 0,
-    presupuestoMensual: 500000,
+    presupuestoAnual2026: 9125000,
+    presupuestoMensual: 760000,
     ventasReales: 0,
     cumplimientoPresupuesto: 0,
     tiempoRespuesta: '6.0 hrs',
@@ -481,7 +3212,64 @@ const salesTeamData = [
     eficienciaGlobal: 20,
     avatar: '👩‍💼',
     ultimaActividad: 'Capacitación interna',
-    notas: 'Contactos personales, en desarrollo'
+    notas: 'En desarrollo. Prospectos internacionales (Guatemala, Costa Rica).',
+    kpisSemanales: [
+      { semana: 31, leadsNuevos: 0, reunionesAgendadas: 0, levantamientos: 0, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 32, leadsNuevos: 2, reunionesAgendadas: 1, levantamientos: 0, propuestasEnviadas: 0, propuestasRechazadas: 0 },
+      { semana: 33, leadsNuevos: 3, reunionesAgendadas: 1, levantamientos: 0, propuestasEnviadas: 0, propuestasRechazadas: 0 }
+    ]
+  },
+  {
+    id: 6,
+    codigo: 'CS',
+    name: 'Cristina Sescosse',
+    role: 'Ejecutiva',
+    ubicacion: 'Guadalajara, Jalisco',
+    zona: 'Occidente',
+    leads: 0,
+    levantamientos: 0,
+    propuestasEnviadas: 0,
+    reuniones: 0,
+    cierres: 0,
+    tasaConversion: 0,
+    presupuestoAnual2026: 18107320,
+    presupuestoMensual: 1509000,
+    ventasReales: 0,
+    cumplimientoPresupuesto: 0,
+    tiempoRespuesta: '2.0 hrs',
+    satisfaccionCliente: 4.7,
+    activitiesSemanal: 15,
+    eficienciaGlobal: 70,
+    avatar: '👩‍💼',
+    ultimaActividad: 'Seguimiento Farmacias Guadalajara / Amazon',
+    notas: 'Nueva pero trajo cuenta grande por contactos personales. Zona Occidente con biodigestores.',
+    kpisSemanales: []
+  },
+  {
+    id: 7,
+    codigo: 'MO',
+    name: 'Mariana Olmos',
+    role: 'Ejecutiva',
+    ubicacion: 'CDMX',
+    zona: 'CDMX / Nacional',
+    leads: 19,
+    levantamientos: 6,
+    propuestasEnviadas: 4,
+    reuniones: 3,
+    cierres: 0,
+    tasaConversion: 0,
+    presupuestoAnual2026: 0,
+    presupuestoMensual: 0,
+    ventasReales: 0,
+    cumplimientoPresupuesto: 0,
+    tiempoRespuesta: '3.0 hrs',
+    satisfaccionCliente: 4.5,
+    activitiesSemanal: 20,
+    eficienciaGlobal: 60,
+    avatar: '👩‍💼',
+    ultimaActividad: 'Licitación Stellantis y FEMSA/Coca-Cola',
+    notas: 'Cuentas grandes: Stellantis (6 plantas), FEMSA (5 plantas), PPG. Licitaciones activas feb-2026.',
+    kpisSemanales: []
   }
 ];
 
@@ -1331,13 +4119,13 @@ const InnovativeDemo = () => {
 
     // Propuestas sin seguimiento (> 5 días hábiles)
     topProspectos.filter(p =>
-      p.etapa === 'Propuesta' &&
-      p.fechaPropuesta &&
-      calcularDiasHabiles(p.fechaPropuesta) >= 5
+      p.status === 'Propuesta enviada' &&
+      p.fecha &&
+      calcularDiasHabiles(p.fecha) >= 5
     ).forEach(p => {
       nuevasAlertas.push({
         tipo: 'seguimiento_propuesta',
-        mensaje: `Propuesta a ${p.nombre} sin respuesta hace ${calcularDiasHabiles(p.fechaPropuesta)} días hábiles`,
+        mensaje: `Propuesta a ${p.empresa} sin respuesta hace ${calcularDiasHabiles(p.fecha)} días hábiles`,
         prioridad: 'alta',
         prospecto: p,
         accion: 'Dar seguimiento'
@@ -1461,7 +4249,7 @@ const InnovativeDemo = () => {
               <div>
                 <h3 className="text-xl font-bold text-[#343A40]">Motivo de Rechazo</h3>
                 <p className="text-sm text-[#6C757D] mt-1">
-                  {prospecto?.nombre}
+                  {prospecto?.empresa}
                 </p>
               </div>
               <button onClick={onClose} className="text-[#6C757D] hover:text-[#343A40]">
@@ -1763,25 +4551,25 @@ const InnovativeDemo = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center p-4 bg-[#1B5E20] rounded-lg text-white">
               <div className="text-2xl font-bold mb-1">
-                ${(topProspectos.reduce((sum, p) => sum + p.valorEstimado, 0) / 1000000).toFixed(1)}M
+                ${(topProspectos.reduce((sum, p) => sum + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(1)}M
               </div>
               <div className="text-xs opacity-90">Valor Total Potencial</div>
             </div>
             <div className="text-center p-4 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
               <div className="text-2xl font-bold text-[#343A40] mb-1">
-                {topProspectos.filter(p => p.etapa === 'Negociación').length}
+                {topProspectos.filter(p => p.status === 'Reunión agendada').length}
               </div>
               <div className="text-xs text-[#6C757D]">En Negociación</div>
             </div>
             <div className="text-center p-4 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
               <div className="text-2xl font-bold text-[#343A40] mb-1">
-                {Math.round(topProspectos.reduce((sum, p) => sum + p.probabilidad, 0) / topProspectos.length)}%
+                {Math.round(topProspectos.filter(p => p.propuesta?.ventaTotal).length / topProspectos.length * 100)}%
               </div>
               <div className="text-xs text-[#6C757D]">Probabilidad Promedio</div>
             </div>
             <div className="text-center p-4 bg-[#F8F9FA] rounded-lg border border-[#E9ECEF]">
               <div className="text-2xl font-bold text-[#343A40] mb-1">
-                {topProspectos.filter(p => p.prioridad === 'Muy Alta' || p.prioridad === 'Alta').length}
+                {topProspectos.filter(p => p.status === 'Propuesta enviada' || p.status === 'Levantamiento').length}
               </div>
               <div className="text-xs text-[#6C757D]">Alta Prioridad</div>
             </div>
@@ -1805,14 +4593,14 @@ const InnovativeDemo = () => {
                 <div className="p-5 border-b border-[#E9ECEF]">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-[#343A40] mb-1">{prospecto.nombre}</h3>
+                      <h3 className="text-lg font-semibold text-[#343A40] mb-1">{prospecto.empresa}</h3>
                       <p className="text-sm text-[#6C757D]">{prospecto.industria}</p>
                   </div>
                 </div>
                   <div className="flex items-center gap-2 text-sm text-[#6C757D]">
                     <Users size={14} />
-                    <span className="font-medium">Asesor:</span>
-                    <span>{prospecto.asesorComercial}</span>
+                    <span className="font-medium">Ejecutivo:</span>
+                    <span>{prospecto.ejecutivo}</span>
                 </div>
               </div>
               
@@ -1820,28 +4608,28 @@ const InnovativeDemo = () => {
                 <div className="p-5 space-y-4">
                   {/* PRÓXIMO PASO */}
                   <div>
-                    <div className="text-xs text-[#6C757D] font-medium mb-1">Próximo Paso</div>
-                    <div className="text-sm font-semibold text-[#343A40]">{prospecto.proximoPaso}</div>
+                    <div className="text-xs text-[#6C757D] font-medium mb-1">Comentarios</div>
+                    <div className="text-sm font-semibold text-[#343A40]">{(prospecto.comentarios || "Pendiente")}</div>
                   </div>
                   
                   {/* MÉTRICAS RÁPIDAS */}
                   <div className="grid grid-cols-2 gap-3">
                   <div>
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">Tiempo Estimado</div>
-                      <div className="text-sm font-semibold text-[#343A40]">{prospecto.tiempoEstimadoCierre}</div>
+                      <div className="text-xs text-[#6C757D] font-medium mb-1">Status</div>
+                      <div className="text-sm font-semibold text-[#343A40]">{prospecto.status}</div>
                   </div>
                   <div>
-                      <div className="text-xs text-[#6C757D] font-medium mb-1">Riesgo</div>
-                      <div className={`text-sm font-semibold ${getColorRiesgo(prospecto.riesgo)}`}>
-                        {prospecto.riesgo}
+                      <div className="text-xs text-[#6C757D] font-medium mb-1">Nivel</div>
+                      <div className={`text-sm font-semibold ${prospecto.status === 'Propuesta enviada' ? 'text-[#0D47A1]' : prospecto.status === 'Levantamiento' ? 'text-orange-600' : 'text-[#1B5E20]'}`}>
+                        {prospecto.status}
                   </div>
                     </div>
                   </div>
                   
                   {/* OPORTUNIDAD */}
                   <div>
-                    <div className="text-xs text-[#6C757D] font-medium mb-1">Oportunidad</div>
-                    <div className="text-sm text-[#343A40]">{prospecto.oportunidad}</div>
+                    <div className="text-xs text-[#6C757D] font-medium mb-1">Servicios</div>
+                    <div className="text-sm text-[#343A40]">{(prospecto.servicios || []).map(s => SERVICIOS_INNOVATIVE.find(si => si.id === s)?.nombre || s).join(", ") || "Sin servicios"}</div>
                   </div>
                   
                   {/* MÉTRICAS FINANCIERAS */}
@@ -1853,17 +4641,17 @@ const InnovativeDemo = () => {
                     <div className="bg-[#F8F9FA] rounded-lg p-3 border border-[#E9ECEF]">
                       <div className="text-xs text-[#6C757D] mb-1">Valor</div>
                       <div className="text-sm font-semibold text-[#0D47A1]">
-                        ${(prospecto.valorEstimado / 1000000).toFixed(1)}M
+                        ${((prospecto.propuesta?.ventaTotal || prospecto.facturacionEstimada || 0) / 1000000).toFixed(1)}M
                       </div>
                 </div>
               </div>
               
                   {/* BOTONES DE ACCIÓN */}
                   <div className="flex gap-2 pt-3 border-t border-[#E9ECEF]">
-                    {prospecto.tieneLevantamiento && (
+                    {(prospecto.status === 'Levantamiento' || prospecto.status === 'Propuesta enviada' || prospecto.status === 'Inicio de operación') && (
                       <button
                         onClick={() => {
-                          const levantamiento = levantamientosActivos.find(l => l.id === prospecto.levantamientoId);
+                          const levantamiento = levantamientosActivos.find(l => l.id === null);
                           if (levantamiento) {
                             setSelectedLevantamiento(levantamiento);
                             setMostrarLevantamiento(true);
@@ -1875,7 +4663,7 @@ const InnovativeDemo = () => {
                         Levantamiento
                       </button>
                     )}
-                    {prospecto.tienePropuesta && (
+                    {(prospecto.status === 'Propuesta enviada' || prospecto.status === 'Inicio de operación' || prospecto.status === 'Propuesta Rechazada') && (
                       <button
                         onClick={() => {
                           setSelectedProspecto(prospecto);
@@ -1893,10 +4681,10 @@ const InnovativeDemo = () => {
                   <div className="pt-3 border-t border-[#E9ECEF] space-y-2">
                     <div className="flex items-center gap-2 text-xs text-[#6C757D]">
                       <MapPin size={12} />
-                      <span>{prospecto.ubicacion}</span>
+                      <span>{prospecto.ciudad}</span>
                     </div>
                     <div className="text-xs text-[#6C757D]">
-                      <span className="font-medium">Contacto:</span> {prospecto.contacto}
+                      <span className="font-medium">Contacto:</span> {prospecto.contacto?.nombre ? `${prospecto.contacto.nombre} - ${prospecto.contacto.puesto || ""}` : "Sin contacto"}
                   </div>
                     </div>
                   </div>
@@ -1913,7 +4701,7 @@ const InnovativeDemo = () => {
             <TrendingDown className="text-[#1B5E20]" size={24} />
             <h2 className="text-xl font-semibold text-[#343A40]">Análisis de Rechazos</h2>
             <span className="text-xs bg-red-50 text-red-600 px-3 py-1 rounded-md border border-red-200 font-medium">
-              {topProspectos.filter(p => p.etapa === 'Rechazada').length} propuestas rechazadas
+              {topProspectos.filter(p => p.status === 'Propuesta Rechazada').length} propuestas rechazadas
             </span>
           </div>
         </div>
@@ -1926,19 +4714,19 @@ const InnovativeDemo = () => {
               <div>
                 <div className="text-sm text-[#6C757D] mb-1">Valor Total Perdido</div>
                 <div className="text-3xl font-bold text-red-600">
-                  ${(topProspectos.filter(p => p.etapa === 'Rechazada').reduce((sum, p) => sum + p.valorEstimado, 0) / 1000000).toFixed(1)}M
+                  ${(topProspectos.filter(p => p.status === 'Propuesta Rechazada').reduce((sum, p) => sum + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(1)}M
                 </div>
               </div>
               <div>
                 <div className="text-sm text-[#6C757D] mb-1">Propuestas Rechazadas</div>
                 <div className="text-2xl font-bold text-[#343A40]">
-                  {topProspectos.filter(p => p.etapa === 'Rechazada').length}
+                  {topProspectos.filter(p => p.status === 'Propuesta Rechazada').length}
                 </div>
               </div>
               <div>
                 <div className="text-sm text-[#6C757D] mb-1">Con Motivo Documentado</div>
                 <div className="text-2xl font-bold text-[#1B5E20]">
-                  {topProspectos.filter(p => p.etapa === 'Rechazada' && p.motivoRechazo).length}/{topProspectos.filter(p => p.etapa === 'Rechazada').length}
+                  {topProspectos.filter(p => p.status === 'Propuesta Rechazada' && p.motivoRechazo).length}/{topProspectos.filter(p => p.status === 'Propuesta Rechazada').length}
                 </div>
               </div>
             </div>
@@ -1949,7 +4737,7 @@ const InnovativeDemo = () => {
             <h3 className="text-base font-semibold text-[#343A40] mb-4">Top 3 Motivos de Rechazo</h3>
             <div className="space-y-3">
               {(() => {
-                const rechazados = topProspectos.filter(p => p.etapa === 'Rechazada' && p.motivoRechazo);
+                const rechazados = topProspectos.filter(p => p.status === 'Propuesta Rechazada' && p.motivoRechazo);
                 const conteoMotivos = {};
                 rechazados.forEach(p => {
                   const motivoId = p.motivoRechazo;
@@ -1957,12 +4745,12 @@ const InnovativeDemo = () => {
                     conteoMotivos[motivoId] = { count: 0, valor: 0 };
                   }
                   conteoMotivos[motivoId].count++;
-                  conteoMotivos[motivoId].valor += p.valorEstimado;
+                  conteoMotivos[motivoId].valor += (p.propuesta?.ventaTotal || p.facturacionEstimada || 0);
                 });
 
                 const topMotivos = Object.entries(conteoMotivos)
                   .map(([id, data]) => ({
-                    motivo: MOTIVOS_RECHAZO.find(m => m.id === parseInt(id))?.motivo || 'Desconocido',
+                    motivo: id || 'Desconocido',
                     count: data.count,
                     valor: data.valor
                   }))
@@ -1998,10 +4786,10 @@ const InnovativeDemo = () => {
             <h3 className="text-base font-semibold text-[#343A40] mb-4">Distribución por Categoría</h3>
             <div className="space-y-3">
               {(() => {
-                const rechazados = topProspectos.filter(p => p.etapa === 'Rechazada' && p.motivoRechazo);
+                const rechazados = topProspectos.filter(p => p.status === 'Propuesta Rechazada' && p.motivoRechazo);
                 const conteoCategorias = {};
                 rechazados.forEach(p => {
-                  const motivo = MOTIVOS_RECHAZO.find(m => m.id === p.motivoRechazo);
+                  const motivo = { categoria: 'General', motivo: p.motivoRechazo };
                   const categoria = motivo?.categoria || 'Otro';
                   conteoCategorias[categoria] = (conteoCategorias[categoria] || 0) + 1;
                 });
@@ -2330,16 +5118,16 @@ const InnovativeDemo = () => {
                         Real: <button
                           type="button"
                           className={`font-semibold border-0 bg-transparent p-0 ${
-                            item.etapa === 'Leads' ? 'text-[#0D47A1] cursor-pointer hover:underline' : 
-                            item.etapa === 'Levantamientos' ? 'text-[#0D47A1] cursor-pointer hover:underline' : 
+                            item.etapa === 'Lead nuevo' ? 'text-[#0D47A1] cursor-pointer hover:underline' : 
+                            item.etapa === 'Levantamiento' ? 'text-[#0D47A1] cursor-pointer hover:underline' : 
                             'text-[#343A40] cursor-default'
                           }`}
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            if (item.etapa === 'Leads') {
+                            if (item.etapa === 'Lead nuevo') {
                               setMostrarLeads(true);
-                            } else if (item.etapa === 'Levantamientos') {
+                            } else if (item.etapa === 'Levantamiento') {
                               setMostrarLevantamientos(true);
                             }
                           }}
@@ -2380,14 +5168,14 @@ const InnovativeDemo = () => {
                             <button
                               type="button"
                               className={`text-xs font-semibold text-white border-0 bg-transparent p-0 ${
-                                item.etapa === 'Leads' || item.etapa === 'Levantamientos' ? 'cursor-pointer hover:underline' : 'cursor-default'
+                                item.etapa === 'Lead nuevo' || item.etapa === 'Levantamiento' ? 'cursor-pointer hover:underline' : 'cursor-default'
                               }`}
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                if (item.etapa === 'Leads') {
+                                if (item.etapa === 'Lead nuevo') {
                                   setMostrarLeads(true);
-                                } else if (item.etapa === 'Levantamientos') {
+                                } else if (item.etapa === 'Levantamiento') {
                                   setMostrarLevantamientos(true);
                                 }
                               }}
@@ -2465,14 +5253,14 @@ const InnovativeDemo = () => {
                         <button
                           type="button"
                           className={`text-xl font-bold border-0 bg-transparent p-0 text-white ${
-                            item.etapa === 'Leads' || item.etapa === 'Levantamientos' ? 'cursor-pointer hover:underline' : 'cursor-default'
+                            item.etapa === 'Lead nuevo' || item.etapa === 'Levantamiento' ? 'cursor-pointer hover:underline' : 'cursor-default'
                           }`}
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            if (item.etapa === 'Leads') {
+                            if (item.etapa === 'Lead nuevo') {
                               setMostrarLeads(true);
-                            } else if (item.etapa === 'Levantamientos') {
+                            } else if (item.etapa === 'Levantamiento') {
                               setMostrarLevantamientos(true);
                             }
                           }}
@@ -2513,14 +5301,14 @@ const InnovativeDemo = () => {
                 <button
                   type="button"
                   className={`text-2xl font-bold mb-1 border-0 bg-transparent p-0 ${
-                    item.etapa === 'Leads' || item.etapa === 'Levantamientos' ? 'cursor-pointer hover:underline text-[#0D47A1]' : 'text-[#343A40] cursor-default'
+                    item.etapa === 'Lead nuevo' || item.etapa === 'Levantamiento' ? 'cursor-pointer hover:underline text-[#0D47A1]' : 'text-[#343A40] cursor-default'
                   }`}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    if (item.etapa === 'Leads') {
+                    if (item.etapa === 'Lead nuevo') {
                       setMostrarLeads(true);
-                    } else if (item.etapa === 'Levantamientos') {
+                    } else if (item.etapa === 'Levantamiento') {
                       setMostrarLevantamientos(true);
                     }
                   }}
@@ -4802,7 +7590,7 @@ const InnovativeDemo = () => {
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#E9ECEF]" onClick={e => e.stopPropagation()}>
             <div className="p-6 border-b border-[#E9ECEF] flex items-center justify-between bg-[#1B5E20] text-white rounded-t-lg">
               <div>
-                <h2 className="text-xl font-semibold">{selectedProspecto.nombre}</h2>
+                <h2 className="text-xl font-semibold">{selectedProspecto.empresa}</h2>
                 <p className="text-sm text-white/90 mt-1">{selectedProspecto.industria}</p>
               </div>
               <button onClick={() => setMostrarDetallesProspecto(false)} className="text-white hover:text-white/80">
@@ -4814,12 +7602,12 @@ const InnovativeDemo = () => {
               {/* INFORMACIÓN BÁSICA */}
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Asesor Comercial</div>
-                  <div className="text-lg font-bold text-[#343A40]">{selectedProspecto.asesorComercial}</div>
+                  <div className="text-xs text-[#6C757D] font-medium mb-1">Ejecutivo</div>
+                  <div className="text-lg font-bold text-[#343A40]">{selectedProspecto.ejecutivo}</div>
                 </div>
                 <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Etapa Actual</div>
-                  <div className="text-lg font-bold text-[#343A40]">{selectedProspecto.etapa}</div>
+                  <div className="text-xs text-[#6C757D] font-medium mb-1">Status</div>
+                  <div className="text-lg font-bold text-[#343A40]">{selectedProspecto.status}</div>
                 </div>
                 <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
                   <div className="text-xs text-[#6C757D] font-medium mb-1">Volumen Estimado</div>
@@ -4828,7 +7616,7 @@ const InnovativeDemo = () => {
                 <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
                   <div className="text-xs text-[#6C757D] font-medium mb-1">Valor Estimado</div>
                   <div className="text-lg font-bold text-[#0D47A1]">
-                    ${(selectedProspecto.valorEstimado / 1000000).toFixed(1)}M
+                    ${((selectedProspecto.propuesta?.ventaTotal || selectedProspecto.facturacionEstimada || 0) / 1000000).toFixed(1)}M
                   </div>
                 </div>
               </div>
@@ -4836,31 +7624,30 @@ const InnovativeDemo = () => {
               {/* INFORMACIÓN ESTRATÉGICA */}
               <div className="space-y-4 mb-6">
                 <div>
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Próximo Paso</div>
+                  <div className="text-xs text-[#6C757D] font-medium mb-1">Comentarios</div>
                   <div className="text-sm font-semibold text-[#343A40] bg-blue-50 border border-blue-200 rounded-lg p-3">
-                    {selectedProspecto.proximoPaso}
+                    {(selectedProspecto.comentarios || "Pendiente")}
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <div className="text-xs text-[#6C757D] font-medium mb-1">Tiempo Estimado de Cierre</div>
-                    <div className="text-sm font-semibold text-[#343A40]">{selectedProspecto.tiempoEstimadoCierre}</div>
+                    <div className="text-xs text-[#6C757D] font-medium mb-1">Status</div>
+                    <div className="text-sm font-semibold text-[#343A40]">{selectedProspecto.status}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-[#6C757D] font-medium mb-1">Riesgo</div>
+                    <div className="text-xs text-[#6C757D] font-medium mb-1">Nivel</div>
                     <div className={`text-sm font-semibold ${
-                      selectedProspecto.riesgo === 'Bajo' || selectedProspecto.riesgo === 'Muy Bajo' ? 'text-[#1B5E20]' : 
-                      selectedProspecto.riesgo === 'Medio' ? 'text-orange-600' : 'text-red-600'
+                      selectedProspecto.status === 'Lead nuevo' || selectedProspecto.status === 'Inicio de operación' ? 'text-[#1B5E20]' : selectedProspecto.status === 'Propuesta enviada' ? 'text-[#0D47A1]' : 'text-orange-600'
                     }`}>
-                      {selectedProspecto.riesgo}
+                      {selectedProspecto.status}
                     </div>
                   </div>
                 </div>
                 
                 <div>
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Oportunidad</div>
-                  <div className="text-sm text-[#343A40]">{selectedProspecto.oportunidad}</div>
+                  <div className="text-xs text-[#6C757D] font-medium mb-1">Servicios</div>
+                  <div className="text-sm text-[#343A40]">{(selectedProspecto.servicios || []).map(s => SERVICIOS_INNOVATIVE.find(si => si.id === s)?.nombre || s).join(", ") || "Sin servicios"}</div>
                 </div>
               </div>
 
@@ -4870,20 +7657,20 @@ const InnovativeDemo = () => {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm text-[#6C757D]">
                     <MapPin size={14} />
-                    <span>{selectedProspecto.ubicacion}</span>
+                    <span>{selectedProspecto.ciudad}</span>
                   </div>
                   <div className="text-sm text-[#6C757D]">
-                    <span className="font-medium">Contacto:</span> {selectedProspecto.contacto}
+                    <span className="font-medium">Contacto:</span> {selectedProspecto.contacto?.nombre ? `${selectedProspecto.contacto.nombre} - ${selectedProspecto.contacto.puesto || ""}` : "Sin contacto"}
                   </div>
                 </div>
               </div>
               
               {/* BOTONES DE ACCIÓN */}
               <div className="flex gap-3 pt-4 border-t border-[#E9ECEF]">
-                {selectedProspecto.tieneLevantamiento && (
+                {(selectedProspecto.status === 'Levantamiento' || selectedProspecto.status === 'Propuesta enviada' || selectedProspecto.status === 'Inicio de operación') && (
                   <button
                     onClick={() => {
-                      const levantamiento = levantamientosActivos.find(l => l.id === selectedProspecto.levantamientoId);
+                      const levantamiento = levantamientosActivos.find(l => l.id === null);
                       if (levantamiento) {
                         setSelectedLevantamiento(levantamiento);
                         setMostrarLevantamiento(true);
@@ -4896,7 +7683,7 @@ const InnovativeDemo = () => {
                     Ver Levantamiento
                   </button>
                 )}
-                {selectedProspecto.tienePropuesta && (
+                {(selectedProspecto.status === 'Propuesta enviada' || selectedProspecto.status === 'Inicio de operación' || selectedProspecto.status === 'Propuesta Rechazada') && (
                   <button
                     onClick={() => {
                       setMostrarPropuesta(true);
@@ -5749,7 +8536,7 @@ const InnovativeDemo = () => {
             <div className="p-6 border-b border-[#E9ECEF] flex items-center justify-between bg-[#0D47A1] text-white rounded-t-lg">
               <div>
                 <h2 className="text-xl font-semibold">Propuesta Comercial</h2>
-                <p className="text-sm text-white/80 mt-1">{selectedProspecto.nombre}</p>
+                <p className="text-sm text-white/80 mt-1">{selectedProspecto.empresa}</p>
               </div>
               <button onClick={() => setMostrarPropuesta(false)} className="text-white hover:text-white/80">
                 <X size={24} />
@@ -5761,7 +8548,7 @@ const InnovativeDemo = () => {
                 <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
                   <div className="text-xs text-[#6C757D] font-medium mb-1">Valor de Propuesta</div>
                   <div className="text-lg font-bold text-[#0D47A1]">
-                    ${(selectedProspecto.valorEstimado / 1000000).toFixed(1)}M
+                    ${((selectedProspecto.propuesta?.ventaTotal || selectedProspecto.facturacionEstimada || 0) / 1000000).toFixed(1)}M
                   </div>
                 </div>
                 <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
@@ -5769,8 +8556,8 @@ const InnovativeDemo = () => {
                   <div className="text-lg font-bold text-[#343A40]">{selectedProspecto.volumenEstimado}</div>
                 </div>
                 <div className="bg-[#F8F9FA] rounded-lg p-4 border border-[#E9ECEF]">
-                  <div className="text-xs text-[#6C757D] font-medium mb-1">Etapa Actual</div>
-                  <div className="text-lg font-bold text-[#343A40]">{selectedProspecto.etapa}</div>
+                  <div className="text-xs text-[#6C757D] font-medium mb-1">Status</div>
+                  <div className="text-lg font-bold text-[#343A40]">{selectedProspecto.status}</div>
                 </div>
               </div>
               
@@ -5786,9 +8573,9 @@ const InnovativeDemo = () => {
                 </div>
                 
                 <div>
-                  <h3 className="text-sm font-semibold text-[#343A40] mb-2">Próximo Paso</h3>
+                  <h3 className="text-sm font-semibold text-[#343A40] mb-2">Comentarios</h3>
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <div className="text-sm font-medium text-[#343A40]">{selectedProspecto.proximoPaso}</div>
+                    <div className="text-sm font-medium text-[#343A40]">{(selectedProspecto.comentarios || "Pendiente")}</div>
                   </div>
                 </div>
                 
@@ -5796,16 +8583,15 @@ const InnovativeDemo = () => {
                   <h3 className="text-sm font-semibold text-[#343A40] mb-2">Información Estratégica</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <div className="text-xs text-[#6C757D] mb-1">Tiempo Estimado de Cierre</div>
-                      <div className="text-sm font-semibold text-[#343A40]">{selectedProspecto.tiempoEstimadoCierre}</div>
+                      <div className="text-xs text-[#6C757D] mb-1">Status</div>
+                      <div className="text-sm font-semibold text-[#343A40]">{selectedProspecto.status}</div>
                     </div>
                     <div>
-                      <div className="text-xs text-[#6C757D] mb-1">Nivel de Riesgo</div>
+                      <div className="text-xs text-[#6C757D] mb-1">Status Actual</div>
                       <div className={`text-sm font-semibold ${
-                        selectedProspecto.riesgo === 'Bajo' || selectedProspecto.riesgo === 'Muy Bajo' ? 'text-[#1B5E20]' : 
-                        selectedProspecto.riesgo === 'Medio' ? 'text-orange-600' : 'text-red-600'
+                        selectedProspecto.status === 'Lead nuevo' || selectedProspecto.status === 'Inicio de operación' ? 'text-[#1B5E20]' : selectedProspecto.status === 'Propuesta enviada' ? 'text-[#0D47A1]' : 'text-orange-600'
                       }`}>
-                        {selectedProspecto.riesgo}
+                        {selectedProspecto.status}
                       </div>
                     </div>
                   </div>
@@ -6171,7 +8957,7 @@ const InnovativeDemo = () => {
           onSave={(datosRechazo) => {
             // En una aplicación real, aquí se actualizaría el estado del prospecto
             console.log('Datos de rechazo guardados:', datosRechazo);
-            alert(`Motivo de rechazo registrado exitosamente para ${prospectoParaRechazar.nombre}`);
+            alert(`Motivo de rechazo registrado exitosamente para ${prospectoParaRechazar.empresa}`);
             setMostrarModalRechazo(false);
             setProspectoParaRechazar(null);
             setMotivoRechazoSeleccionado('');
