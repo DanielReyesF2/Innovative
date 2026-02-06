@@ -1,8 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { BarChart, Bar, LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ResponsiveSankey } from '@nivo/sankey';
+import { ResponsiveFunnel } from '@nivo/funnel';
+import { ResponsiveBar } from '@nivo/bar';
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay, useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import html2canvas from 'html2canvas';
-import { Home, TrendingUp, Package, Users, FileText, Settings, ChevronRight, Download, Search, Filter, Bell, LogOut, Menu, X, DollarSign, Target, PhoneCall, Award, Calendar, MapPin, Truck, Leaf, Briefcase, ClipboardList, CheckSquare, AlertCircle, Send, Eye, Recycle, Trash2, BarChart3, TrendingDown, ChevronDown, ChevronUp, Save, FileImage, RotateCcw, Building2 } from 'lucide-react';
+import { Home, TrendingUp, Package, Users, FileText, Settings, ChevronRight, Download, Search, Filter, Bell, LogOut, Menu, X, DollarSign, Target, PhoneCall, Award, Calendar, MapPin, Truck, Leaf, Briefcase, ClipboardList, CheckSquare, AlertCircle, Send, Eye, Recycle, Trash2, BarChart3, TrendingDown, ChevronDown, ChevronUp, Save, FileImage, RotateCcw, Building2, GripVertical, Lock, Unlock, ArrowRight } from 'lucide-react';
 
 // SERVICIOS INNOVATIVE
 const SERVICIOS_INNOVATIVE = [
@@ -32,6 +37,51 @@ const KPI_METAS = {
   levantamientos: { meta: 2, frecuencia: 'mensual', label: 'Levantamientos' },
   propuestasEnviadas: { meta: 0, frecuencia: 'semanal', label: 'Propuestas Enviadas' },
   propuestasRechazadas: { meta: 0, frecuencia: 'semanal', label: 'Propuestas Rechazadas' }
+};
+
+// PROBABILIDADES POR STAGE (mejores prácticas CRM B2B)
+const STAGE_PROBABILITY = {
+  'Lead nuevo': 0.05,
+  'Reunión agendada': 0.20,
+  'Levantamiento': 0.35,
+  'Propuesta enviada': 0.50,
+  'Negociación': 0.70,
+  'Inicio de operación': 1.0,
+  'Propuesta Rechazada': 0,
+  'Licitación pendiente': 0.30,
+  'Contacto inicial': 0.10,
+  'Sin respuesta': 0.05,
+};
+
+// FUNCIÓN: Calcular Pipeline Ponderado (Weighted Pipeline Value)
+const calcularWeightedPipeline = (prospectos) => {
+  return prospectos.reduce((sum, p) => {
+    const valor = p.propuesta?.ventaTotal || p.facturacionEstimada || 0;
+    const prob = STAGE_PROBABILITY[p.status] || 0.05;
+    return sum + (valor * prob);
+  }, 0);
+};
+
+// FUNCIÓN: Calcular Win Rate
+const calcularWinRate = (prospectos) => {
+  const ganadas = prospectos.filter(p => p.status === 'Inicio de operación').length;
+  const perdidas = prospectos.filter(p => p.status === 'Propuesta Rechazada').length;
+  const total = ganadas + perdidas;
+  return total > 0 ? ((ganadas / total) * 100) : 0;
+};
+
+// FUNCIÓN: Calcular Pipeline Velocity (MXN/día)
+const calcularPipelineVelocity = (prospectos) => {
+  const oportunidadesActivas = prospectos.filter(p =>
+    !['Propuesta Rechazada', 'Inicio de operación'].includes(p.status)
+  );
+  const numOpps = oportunidadesActivas.length;
+  const avgDeal = numOpps > 0
+    ? oportunidadesActivas.reduce((sum, p) => sum + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / numOpps
+    : 0;
+  const winRate = calcularWinRate(prospectos) / 100;
+  const avgCycleDays = 45; // Ciclo promedio estimado en días para residuos industriales
+  return avgCycleDays > 0 ? (numOpps * avgDeal * winRate) / avgCycleDays : 0;
 };
 
 // FUNCIÓN: Determina si un lead califica como "Prospecto"
@@ -3063,17 +3113,17 @@ const salesTeamData = [
     reuniones: 4,
     cierres: 2,
     tasaConversion: 125,
-    presupuestoAnual2026: 0,
-    presupuestoMensual: 0,
-    ventasReales: 0,
-    cumplimientoPresupuesto: 0,
+    presupuestoAnual2026: 164457320,
+    presupuestoMensual: 13705000,
+    ventasReales: 4200000,
+    cumplimientoPresupuesto: 31,
     tiempoRespuesta: '1.5 hrs',
     satisfaccionCliente: 4.9,
     activitiesSemanal: 35,
     eficienciaGlobal: 90,
     avatar: '👩‍💼',
     ultimaActividad: 'Kick Off Hub Digital Comercial',
-    notas: 'Directora del equipo comercial. Prospectos directos con cuentas estratégicas.',
+    notas: 'Directora del equipo comercial. Presupuesto = total equipo ($164.5M). Prospectos directos con cuentas estratégicas.',
     // KPIs semanales reales del Excel (semana 31)
     kpisSemanales: [
       { semana: 31, leadsNuevos: 4, reunionesAgendadas: 4, levantamientos: 4, propuestasEnviadas: 5, propuestasRechazadas: 0 }
@@ -3440,7 +3490,7 @@ const levantamientosActivos = [
     cliente: 'Walmart Satélite', 
     fecha: '2025-11-08', 
     fechaCompletado: '2025-11-08',
-    ejecutivo: 'Ana Ruiz',
+    ejecutivo: 'Jose Armando Martínez',
     tipo: 'Levantamiento',
     status: 'Completado',
     tieneReporte: false,
@@ -3448,12 +3498,12 @@ const levantamientosActivos = [
     volumenEstimado: '35 ton/mes',
     valorEstimado: 1050000
   },
-  { 
-    id: 2, 
-    cliente: 'Soriana Naucalpan', 
-    fecha: '2025-11-10', 
+  {
+    id: 2,
+    cliente: 'Soriana Naucalpan',
+    fecha: '2025-11-10',
     fechaCompletado: null,
-    ejecutivo: 'Carlos Mendoza',
+    ejecutivo: 'Carmen Rodríguez',
     tipo: 'Propuesta',
     status: 'Enviada',
     tieneReporte: false,
@@ -3461,12 +3511,12 @@ const levantamientosActivos = [
     volumenEstimado: '28 ton/mes',
     valorEstimado: 840000
   },
-  { 
-    id: 3, 
-    cliente: 'Chedraui Lindavista', 
-    fecha: '2025-11-09', 
+  {
+    id: 3,
+    cliente: 'Chedraui Lindavista',
+    fecha: '2025-11-09',
     fechaCompletado: null,
-    ejecutivo: 'Roberto García',
+    ejecutivo: 'Mariana Olmos',
     tipo: 'Levantamiento',
     status: 'Agendado',
     tieneReporte: false,
@@ -3474,12 +3524,12 @@ const levantamientosActivos = [
     volumenEstimado: '22 ton/mes',
     valorEstimado: 660000
   },
-  { 
-    id: 4, 
-    cliente: 'La Comer Mixcoac', 
-    fecha: '2025-11-07', 
+  {
+    id: 4,
+    cliente: 'La Comer Mixcoac',
+    fecha: '2025-11-07',
     fechaCompletado: null,
-    ejecutivo: 'Patricia Morales',
+    ejecutivo: 'Laura Mesa',
     tipo: 'Propuesta',
     status: 'En revisión',
     tieneReporte: false,
@@ -3487,12 +3537,12 @@ const levantamientosActivos = [
     volumenEstimado: '18 ton/mes',
     valorEstimado: 540000
   },
-  { 
-    id: 5, 
-    cliente: 'Liverpool Insurgentes', 
-    fecha: '2025-11-11', 
+  {
+    id: 5,
+    cliente: 'Liverpool Insurgentes',
+    fecha: '2025-11-11',
     fechaCompletado: null,
-    ejecutivo: 'Ana Ruiz',
+    ejecutivo: 'Laura Sobrino',
     tipo: 'Levantamiento',
     status: 'En proceso',
     tieneReporte: false,
@@ -3500,12 +3550,12 @@ const levantamientosActivos = [
     volumenEstimado: '30 ton/mes',
     valorEstimado: 900000
   },
-  { 
-    id: 6, 
-    cliente: 'Costco Santa Fe', 
-    fecha: '2025-11-05', 
+  {
+    id: 6,
+    cliente: 'Costco Santa Fe',
+    fecha: '2025-11-05',
     fechaCompletado: '2025-11-05',
-    ejecutivo: 'Carlos Mendoza',
+    ejecutivo: 'Cristina Sescosse',
     tipo: 'Levantamiento',
     status: 'Completado',
     tieneReporte: false,
@@ -3513,12 +3563,12 @@ const levantamientosActivos = [
     volumenEstimado: '42 ton/mes',
     valorEstimado: 1260000
   },
-  { 
-    id: 7, 
-    cliente: 'Sam\'s Club Polanco', 
-    fecha: '2025-11-04', 
+  {
+    id: 7,
+    cliente: 'Sam\'s Club Polanco',
+    fecha: '2025-11-04',
     fechaCompletado: '2025-11-04',
-    ejecutivo: 'Ana Ruiz',
+    ejecutivo: 'Jose Armando Martínez',
     tipo: 'Levantamiento',
     status: 'Completado',
     tieneReporte: true,
@@ -3526,12 +3576,12 @@ const levantamientosActivos = [
     volumenEstimado: '38 ton/mes',
     valorEstimado: 1140000
   },
-  { 
-    id: 8, 
-    cliente: 'Bodega Aurrerá Insurgentes', 
-    fecha: '2025-11-12', 
+  {
+    id: 8,
+    cliente: 'Bodega Aurrerá Insurgentes',
+    fecha: '2025-11-12',
     fechaCompletado: null,
-    ejecutivo: 'Roberto García',
+    ejecutivo: 'Mariana Olmos',
     tipo: 'Levantamiento',
     status: 'Agendado',
     tieneReporte: false,
@@ -3539,12 +3589,12 @@ const levantamientosActivos = [
     volumenEstimado: '25 ton/mes',
     valorEstimado: 750000
   },
-  { 
-    id: 9, 
-    cliente: 'Superama Lomas', 
-    fecha: '2025-10-28', 
+  {
+    id: 9,
+    cliente: 'Superama Lomas',
+    fecha: '2025-10-28',
     fechaCompletado: '2025-10-28',
-    ejecutivo: 'Patricia Morales',
+    ejecutivo: 'Laura Mesa',
     tipo: 'Levantamiento',
     status: 'Completado',
     tieneReporte: false,
@@ -3552,12 +3602,12 @@ const levantamientosActivos = [
     volumenEstimado: '20 ton/mes',
     valorEstimado: 600000
   },
-  { 
-    id: 10, 
-    cliente: 'Chedraui Coyoacán', 
-    fecha: '2025-10-25', 
+  {
+    id: 10,
+    cliente: 'Chedraui Coyoacán',
+    fecha: '2025-10-25',
     fechaCompletado: '2025-10-25',
-    ejecutivo: 'Carlos Mendoza',
+    ejecutivo: 'Carmen Rodríguez',
     tipo: 'Levantamiento',
     status: 'Completado',
     tieneReporte: true,
@@ -4045,7 +4095,7 @@ const calcularStatusDocumento = (fechaVencimiento) => {
   const diasRestantes = Math.floor((vencimiento - hoy) / (1000 * 60 * 60 * 24));
 
   if (diasRestantes < 0) return 'Vencido';
-  if (diasRestantes <= 30) return 'Vencido';
+  if (diasRestantes <= 30) return 'Por Vencer';
   if (diasRestantes <= 60) return 'Por Vencer';
   return 'Vigente';
 };
@@ -4112,6 +4162,98 @@ const InnovativeDemo = () => {
   const [documentos, setDocumentos] = useState(documentosIniciales);
   const [mostrarNuevoDocumento, setMostrarNuevoDocumento] = useState(false);
   const [filtroDocumentos, setFiltroDocumentos] = useState({ tipo: '', categoria: '', status: '' });
+
+  // Pipeline view states
+  const [pipelineViewMode, setPipelineViewMode] = useState('kanban'); // 'kanban' | 'funnel' | 'tabla'
+  const [kanbanProspectos, setKanbanProspectos] = useState(topProspectos);
+  const [activeKanbanId, setActiveKanbanId] = useState(null);
+  const [showStageGateModal, setShowStageGateModal] = useState(false);
+  const [pendingMove, setPendingMove] = useState(null); // {prospecto, fromStage, toStage}
+
+  // Kanban stages definition
+  const KANBAN_STAGES = [
+    { id: 'Lead nuevo', label: 'Lead Nuevo', color: '#6b7280', prob: '5%' },
+    { id: 'Reunión agendada', label: 'Reunión', color: '#0D47A1', prob: '20%' },
+    { id: 'Levantamiento', label: 'Levantamiento', color: '#F57C00', prob: '35%' },
+    { id: 'Propuesta enviada', label: 'Propuesta', color: '#00a8a8', prob: '50%' },
+    { id: 'Negociación', label: 'Negociación', color: '#7C3AED', prob: '70%' },
+    { id: 'Inicio de operación', label: 'Ganada', color: '#2E7D32', prob: '100%' },
+  ];
+
+  // Stage gate validation rules
+  const STAGE_GATES = {
+    'Reunión agendada': {
+      label: 'Prospecto Calificado',
+      validate: (p) => esProspectoCalificado(p),
+      message: (p) => `Faltan campos: ${camposFaltantes(p).join(', ')}`,
+      requirement: 'Requiere: Empresa + Industria + Contacto + Puesto + Correo'
+    },
+    'Levantamiento': {
+      label: 'Volumen Verificado',
+      validate: (p) => !!(p.volumenEstimado || p.facturacionEstimada),
+      message: () => 'Falta volumen estimado o facturación estimada',
+      requirement: 'Requiere: Volumen estimado o Facturación estimada'
+    },
+    'Propuesta enviada': {
+      label: 'Levantamiento Completado',
+      validate: (p) => !!(p.volumenEstimado && (p.servicios?.length > 0)),
+      message: (p) => `Falta: ${!p.volumenEstimado ? 'volumen estimado' : ''}${!p.servicios?.length ? ' servicios seleccionados' : ''}`,
+      requirement: 'Requiere: Volumen + Servicios seleccionados'
+    },
+    'Negociación': {
+      label: 'Propuesta Acusada',
+      validate: (p) => !!(p.propuesta?.ventaTotal || p.facturacionEstimada),
+      message: () => 'Falta monto de propuesta o facturación estimada',
+      requirement: 'Requiere: Monto de propuesta definido'
+    },
+  };
+
+  // dnd-kit sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+  );
+
+  // Handle Kanban drag end
+  const handleDragEnd = useCallback((event) => {
+    const { active, over } = event;
+    setActiveKanbanId(null);
+
+    if (!over) return;
+
+    const prospecto = kanbanProspectos.find(p => p.id === active.id);
+    if (!prospecto) return;
+
+    // The over.id could be a stage column or another card
+    let targetStage = over.id;
+    // If over is a card, get its stage
+    const overProspecto = kanbanProspectos.find(p => p.id === over.id);
+    if (overProspecto) {
+      targetStage = overProspecto.status;
+    }
+
+    // Check if it's a valid stage
+    const validStages = KANBAN_STAGES.map(s => s.id);
+    if (!validStages.includes(targetStage)) return;
+
+    if (prospecto.status === targetStage) return;
+
+    // Check stage gate
+    const gate = STAGE_GATES[targetStage];
+    if (gate && !gate.validate(prospecto)) {
+      setPendingMove({ prospecto, fromStage: prospecto.status, toStage: targetStage });
+      setShowStageGateModal(true);
+      return;
+    }
+
+    // Move the prospecto
+    setKanbanProspectos(prev =>
+      prev.map(p => p.id === prospecto.id ? { ...p, status: targetStage } : p)
+    );
+  }, [kanbanProspectos]);
+
+  const handleDragStart = useCallback((event) => {
+    setActiveKanbanId(event.active.id);
+  }, []);
 
   // Calcular alertas automáticamente
   useEffect(() => {
@@ -4534,17 +4676,22 @@ const InnovativeDemo = () => {
   // DASHBOARD PRINCIPAL
   const DashboardView = () => (
     <div className="p-8 bg-[#faf7f2] min-h-screen">
-      <Header title="Dashboard Ejecutivo" subtitle="Control integral - Actualizado: 11 Nov 2025, 17:45 hrs" />
+      <Header title="Dashboard Ejecutivo" subtitle={`Control integral - ${topProspectos.length} prospectos • ${salesTeamData.length} ejecutivos • Pipeline $${(topProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(0)}M`} />
       
-      {/* MÉTRICAS PRINCIPALES - Estilo kpis-orsega con accent bar */}
+      {/* MÉTRICAS PRINCIPALES - KPIs Dinámicos calculados de datos reales */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
+        {/* KPI 1: Pipeline Ponderado (Weighted) */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#00a8a8]"></div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Presupuesto Mensual</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">$3.3M</div>
-              <div className="text-xs text-[#6b7280] mt-1">Cumplimiento: 107%</div>
+              <div className="text-sm text-[#6b7280] mb-1">Pipeline Ponderado</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">
+                ${(calcularWeightedPipeline(topProspectos) / 1000000).toFixed(1)}M
+              </div>
+              <div className="text-xs text-[#6b7280] mt-1">
+                Total bruto: ${(topProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(1)}M
+              </div>
             </div>
             <div className="w-10 h-10 rounded-lg bg-[#00a8a8]/10 flex items-center justify-center">
               <DollarSign className="text-[#00a8a8]" size={20} />
@@ -4552,44 +4699,59 @@ const InnovativeDemo = () => {
           </div>
         </div>
 
+        {/* KPI 2: Leads Activos */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D47A1]"></div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Levantamientos Activos</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">32</div>
-              <div className="text-xs text-[#6b7280] mt-1">↑ 18% vs mes anterior</div>
+              <div className="text-sm text-[#6b7280] mb-1">Leads Activos</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">
+                {topProspectos.filter(p => !['Propuesta Rechazada', 'Inicio de operación'].includes(p.status)).length}
+              </div>
+              <div className="text-xs text-[#6b7280] mt-1">
+                de {topProspectos.length} totales • {topProspectos.filter(p => p.status === 'Propuesta enviada').length} en propuesta
+              </div>
             </div>
             <div className="w-10 h-10 rounded-lg bg-[#0D47A1]/10 flex items-center justify-center">
-              <ClipboardList className="text-[#0D47A1]" size={20} />
+              <Target className="text-[#0D47A1]" size={20} />
             </div>
           </div>
         </div>
 
+        {/* KPI 3: Win Rate */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#2E7D32]"></div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Propuestas Enviadas</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">24</div>
-              <div className="text-xs text-[#6b7280] mt-1">Tasa conversión: 33%</div>
+              <div className="text-sm text-[#6b7280] mb-1">Win Rate</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">
+                {calcularWinRate(topProspectos).toFixed(0)}%
+              </div>
+              <div className="text-xs text-[#6b7280] mt-1">
+                {topProspectos.filter(p => p.status === 'Inicio de operación').length} ganadas / {topProspectos.filter(p => p.status === 'Propuesta Rechazada').length} perdidas
+              </div>
             </div>
             <div className="w-10 h-10 rounded-lg bg-[#2E7D32]/10 flex items-center justify-center">
-              <FileText className="text-[#2E7D32]" size={20} />
+              <Award className="text-[#2E7D32]" size={20} />
             </div>
           </div>
         </div>
 
+        {/* KPI 4: Pipeline Velocity */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#F57C00]"></div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Reportes de Trazabilidad</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">28</div>
-              <div className="text-xs text-[#6b7280] mt-1">Próximos: 1 Dic</div>
+              <div className="text-sm text-[#6b7280] mb-1">Pipeline Velocity</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">
+                ${(calcularPipelineVelocity(topProspectos) / 1000000).toFixed(1)}M
+              </div>
+              <div className="text-xs text-[#6b7280] mt-1">
+                MXN/día • Ciclo prom. 45 días
+              </div>
             </div>
             <div className="w-10 h-10 rounded-lg bg-[#F57C00]/10 flex items-center justify-center">
-              <Send className="text-[#F57C00]" size={20} />
+              <TrendingUp className="text-[#F57C00]" size={20} />
             </div>
           </div>
         </div>
@@ -5157,285 +5319,469 @@ const InnovativeDemo = () => {
     </div>
   );
 
-  // VISTA: PIPELINE COMERCIAL
-  const PipelineComercialView = () => (
+  // VISTA: PIPELINE COMERCIAL - Con Kanban, Funnel y Tabla
+  const PipelineComercialView = () => {
+    // Droppable Column component
+    const DroppableColumn = ({ stageId, children }) => {
+      const { isOver, setNodeRef } = useDroppable({ id: stageId });
+      return (
+        <div
+          ref={setNodeRef}
+          className={`min-h-[200px] transition-colors rounded-lg ${isOver ? 'bg-[#00a8a8]/5 ring-2 ring-[#00a8a8]/30' : ''}`}
+        >
+          {children}
+        </div>
+      );
+    };
+
+    // Draggable Card component
+    const DraggableCard = ({ prospecto }) => {
+      const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+        id: prospecto.id,
+        data: { type: 'card', prospecto },
+      });
+      const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+      };
+      const valor = prospecto.propuesta?.ventaTotal || prospecto.facturacionEstimada || 0;
+      const ejecutivo = salesTeamData.find(e => e.codigo === prospecto.ejecutivo);
+
+      return (
+        <div
+          ref={setNodeRef}
+          style={style}
+          {...attributes}
+          {...listeners}
+          className="bg-white rounded-lg border border-[#e5e7eb] p-3 mb-2 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow group"
+          onClick={(e) => {
+            if (!isDragging) {
+              e.stopPropagation();
+              setSelectedProspecto(prospecto);
+              setMostrarDetallesProspecto(true);
+            }
+          }}
+        >
+          <div className="flex items-start justify-between mb-2">
+            <div className="flex-1 min-w-0">
+              <h4 className="text-sm font-semibold text-[#1c2c4a] truncate">{prospecto.empresa}</h4>
+              {prospecto.planta && <p className="text-xs text-[#6b7280] truncate">{prospecto.planta}</p>}
+            </div>
+            <GripVertical size={14} className="text-[#e5e7eb] group-hover:text-[#6b7280] flex-shrink-0 mt-0.5" />
+          </div>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs bg-[#f3f4f6] text-[#6b7280] px-1.5 py-0.5 rounded">{prospecto.industria}</span>
+          </div>
+          {valor > 0 && (
+            <div className="text-sm font-bold text-[#0D47A1] mb-1">
+              ${(valor / 1000000).toFixed(2)}M
+            </div>
+          )}
+          <div className="flex items-center justify-between text-xs text-[#6b7280]">
+            <span>{ejecutivo?.name?.split(' ')[0] || prospecto.ejecutivo}</span>
+            {prospecto.ciudad && <span className="flex items-center gap-1"><MapPin size={10} />{prospecto.ciudad.split(',')[0]}</span>}
+          </div>
+          {/* Stage gate indicator */}
+          {esProspectoCalificado(prospecto) && (
+            <div className="mt-2 flex items-center gap-1 text-xs text-[#2E7D32]">
+              <CheckSquare size={10} />
+              <span>Calificado</span>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    // Funnel data for @nivo/funnel
+    const funnelData = KANBAN_STAGES.map(stage => {
+      const items = kanbanProspectos.filter(p => p.status === stage.id);
+      const valor = items.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
+      return {
+        id: stage.id,
+        value: items.length || 0,
+        label: `${stage.label} (${items.length})`,
+      };
+    }).filter(d => d.value > 0);
+
+    // Bar chart data for stage comparison
+    const barData = KANBAN_STAGES.map(stage => {
+      const items = kanbanProspectos.filter(p => p.status === stage.id);
+      const valor = items.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
+      return {
+        stage: stage.label,
+        Cantidad: items.length,
+        'Valor ($M)': parseFloat((valor / 1000000).toFixed(2)),
+        color: stage.color,
+      };
+    });
+
+    const activeCard = activeKanbanId ? kanbanProspectos.find(p => p.id === activeKanbanId) : null;
+
+    return (
     <div className="p-8 bg-[#faf7f2] min-h-screen">
-      <Header title="Pipeline Comercial" subtitle="Embudo de ventas y seguimiento de oportunidades" />
-      
-      {/* COMPARACIÓN OBJETIVO VS REAL */}
-      <div className="mt-8 bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
-        <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Progreso Mensual: Objetivo vs Real</h3>
-        
-        <div className="space-y-4">
-          {pipelineData.map((item, index) => {
-            const porcentajeCumplimiento = ((item.cantidad / item.objetivo) * 100).toFixed(0);
-            const estaEnObjetivo = item.cantidad >= item.objetivo;
-            
+      <Header title="Pipeline Comercial" subtitle={`${kanbanProspectos.length} oportunidades • Pipeline ponderado: $${(calcularWeightedPipeline(kanbanProspectos) / 1000000).toFixed(1)}M`} />
+
+      {/* VIEW TOGGLE */}
+      <div className="mt-6 flex items-center justify-between">
+        <div className="flex items-center gap-2 bg-white rounded-lg border border-[#e5e7eb] p-1">
+          {[
+            { id: 'kanban', label: 'Kanban', icon: ClipboardList },
+            { id: 'funnel', label: 'Funnel', icon: TrendingDown },
+            { id: 'tabla', label: 'Tabla', icon: BarChart3 },
+          ].map(view => (
+            <button
+              key={view.id}
+              onClick={() => setPipelineViewMode(view.id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                pipelineViewMode === view.id
+                  ? 'bg-[#00a8a8] text-white shadow-sm'
+                  : 'text-[#6b7280] hover:text-[#1c2c4a] hover:bg-[#f3f4f6]'
+              }`}
+            >
+              <view.icon size={16} />
+              {view.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Pipeline Summary Chips */}
+        <div className="flex items-center gap-3">
+          {KANBAN_STAGES.slice(0, 4).map(stage => {
+            const count = kanbanProspectos.filter(p => p.status === stage.id).length;
             return (
-              <div key={index} className="space-y-2">
-                  <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-semibold text-[#1c2c4a] min-w-[140px]">{item.etapa}</span>
-                    <div className="flex items-center gap-4 text-xs">
-                      <span className="text-[#6b7280]">
-                        Real: <button
-                          type="button"
-                          className={`font-semibold border-0 bg-transparent p-0 ${
-                            item.etapa === 'Lead nuevo' ? 'text-[#0D47A1] cursor-pointer hover:underline' : 
-                            item.etapa === 'Levantamiento' ? 'text-[#0D47A1] cursor-pointer hover:underline' : 
-                            'text-[#1c2c4a] cursor-default'
-                          }`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (item.etapa === 'Lead nuevo') {
-                              setMostrarLeads(true);
-                            } else if (item.etapa === 'Levantamiento') {
-                              setMostrarLevantamientos(true);
-                            }
-                          }}
-                        >
-                          {item.cantidad}
-                        </button>
-                      </span>
-                      <span className="text-[#6b7280]">/</span>
-                      <span className="text-[#6b7280]">
-                        Objetivo: <span className="font-semibold text-[#1c2c4a]">{item.objetivo}</span>
-                      </span>
-                    </div>
-                  </div>
-                  <div className={`text-sm font-semibold ${estaEnObjetivo ? 'text-[#0D47A1]' : 'text-[#0D47A1]/70'}`}>
-                    {porcentajeCumplimiento}%
-                  </div>
-                </div>
-                
-                <div className="relative w-full bg-[#e5e7eb] rounded-full h-6 overflow-hidden">
-                  {/* Calcular escala: usar el máximo entre objetivo y cantidad para la escala */}
-                  {(() => {
-                    const maxValue = Math.max(item.objetivo, item.cantidad);
-                    const porcentajeReal = (item.cantidad / maxValue) * 100;
-                    const porcentajeObjetivo = (item.objetivo / maxValue) * 100;
-                    
-                    return (
-                      <>
-                        {/* Barra de progreso real */}
-                        <div 
-                          className={`h-full rounded-full transition-all flex items-center ${
-                            estaEnObjetivo 
-                              ? 'bg-[#0D47A1]' 
-                              : 'bg-[#1565C0]'
-                          }`}
-                          style={{ width: `${porcentajeReal}%` }}
-                        >
-                          <div className="flex-1 flex items-center justify-end pr-3">
-                            <button
-                              type="button"
-                              className={`text-xs font-semibold text-white border-0 bg-transparent p-0 ${
-                                item.etapa === 'Lead nuevo' || item.etapa === 'Levantamiento' ? 'cursor-pointer hover:underline' : 'cursor-default'
-                              }`}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                if (item.etapa === 'Lead nuevo') {
-                                  setMostrarLeads(true);
-                                } else if (item.etapa === 'Levantamiento') {
-                                  setMostrarLevantamientos(true);
-                                }
-                              }}
-                            >
-                              {item.cantidad}
-                            </button>
-                          </div>
-                        </div>
-                        
-                        {/* Línea de objetivo (marcador) */}
-                        <div 
-                          className="absolute top-0 h-full flex items-center pointer-events-none"
-                          style={{ left: `${porcentajeObjetivo}%` }}
-                        >
-                          <div className="w-0.5 h-full bg-[#6b7280] opacity-70"></div>
-                          <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                            <div className="text-xs text-[#6b7280] font-medium bg-white px-2 py-0.5 rounded border border-[#e5e7eb] shadow-sm">
-                              Objetivo: {item.objetivo}
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    );
-                  })()}
-                </div>
+              <div key={stage.id} className="flex items-center gap-2 text-xs">
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: stage.color }}></div>
+                <span className="text-[#6b7280]">{stage.label}:</span>
+                <span className="font-semibold text-[#1c2c4a]">{count}</span>
               </div>
             );
           })}
         </div>
-        
-        {/* RESUMEN GENERAL */}
-        <div className="mt-8 pt-6 border-t border-[#e5e7eb] grid grid-cols-3 gap-4">
-          <div className="text-center p-4 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
-            <div className="text-xs text-[#6b7280] mb-1">Total Objetivo</div>
-            <div className="text-2xl font-bold text-[#1c2c4a]">
-              {pipelineData.reduce((sum, item) => sum + item.objetivo, 0)}
-            </div>
-          </div>
-          <div className="text-center p-4 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
-            <div className="text-xs text-[#6b7280] mb-1">Total Real</div>
-            <div className="text-2xl font-bold text-[#0D47A1]">
-              {pipelineData.reduce((sum, item) => sum + item.cantidad, 0)}
-            </div>
-          </div>
-          <div className="text-center p-4 bg-[#0D47A1] rounded-lg text-white">
-            <div className="text-xs opacity-90 mb-1">Cumplimiento General</div>
-            <div className="text-2xl font-bold">
-              {((pipelineData.reduce((sum, item) => sum + item.cantidad, 0) / pipelineData.reduce((sum, item) => sum + item.objetivo, 0)) * 100).toFixed(0)}%
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* EMBUDO VISUAL CREATIVO */}
-      <div className="mt-8 bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
-        <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Embudo Comercial</h3>
-        
-        {/* EMBUDO VISUAL */}
-        <div className="flex flex-col items-center gap-1.5 mb-4">
-          {pipelineData.map((item, index) => {
-            const width = 100 - (index * 15);
-            const tasaConversion = index > 0 
-              ? ((item.cantidad / pipelineData[index - 1].cantidad) * 100).toFixed(0)
-              : 100;
-            
-            return (
-              <div key={index} className="relative w-full flex items-center justify-center">
-                <div 
-                  className="relative bg-[#00a8a8] rounded-md p-3 text-white transition-all"
-                  style={{ width: `${width}%` }}
-                >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="text-xs font-medium opacity-90 mb-1">{item.etapa}</div>
-                        <button
-                          type="button"
-                          className={`text-xl font-bold border-0 bg-transparent p-0 text-white ${
-                            item.etapa === 'Lead nuevo' || item.etapa === 'Levantamiento' ? 'cursor-pointer hover:underline' : 'cursor-default'
-                          }`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (item.etapa === 'Lead nuevo') {
-                              setMostrarLeads(true);
-                            } else if (item.etapa === 'Levantamiento') {
-                              setMostrarLevantamientos(true);
-                            }
-                          }}
-                        >
-                          {item.cantidad}
-                        </button>
-                        <div className="text-xs opacity-80 mt-0.5">
-                          ${(item.valor / 1000000).toFixed(1)}M
-                        </div>
-                      </div>
-                      {index > 0 && (
-                        <div className="text-right ml-3">
-                          <div className="text-xs opacity-80">Conversión</div>
-                          <div className="text-sm font-semibold">{tasaConversion}%</div>
-                        </div>
-                      )}
-                    </div>
-                </div>
-                {index < pipelineData.length - 1 && (
-                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
-                    <ChevronDown size={16} className="text-[#e5e7eb]" />
-                  </div>
-                )}
-              </div>
-            );
-          })}
       </div>
 
-        {/* MÉTRICAS RESUMEN */}
-        <div className="grid grid-cols-5 gap-3 pt-4 border-t border-[#e5e7eb]">
-          {pipelineData.map((item, index) => {
-            const prevItem = index > 0 ? pipelineData[index - 1] : null;
-            const tasaConversion = prevItem ? ((item.cantidad / prevItem.cantidad) * 100).toFixed(1) : '100.0';
-            
-            return (
-              <div key={index} className="text-center">
-                <div className="text-xs text-[#6b7280] font-medium mb-2">{item.etapa}</div>
-                <button
-                  type="button"
-                  className={`text-2xl font-bold mb-1 border-0 bg-transparent p-0 ${
-                    item.etapa === 'Lead nuevo' || item.etapa === 'Levantamiento' ? 'cursor-pointer hover:underline text-[#0D47A1]' : 'text-[#1c2c4a] cursor-default'
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (item.etapa === 'Lead nuevo') {
-                      setMostrarLeads(true);
-                    } else if (item.etapa === 'Levantamiento') {
-                      setMostrarLevantamientos(true);
-                    }
-                  }}
-                >
-                  {item.cantidad}
-                </button>
-                <div className="text-xs text-[#00a8a8] font-medium mb-2">
-                  ${(item.valor / 1000000).toFixed(1)}M
-                </div>
-                {index > 0 && (
-                  <div className="text-xs text-[#6b7280] pt-2 border-t border-[#e5e7eb]">
-                    {tasaConversion}% conv.
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-        
-      {/* TABLA DETALLADA */}
-      <div className="mt-8 bg-white rounded-lg border border-[#e5e7eb] shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-[#e5e7eb]">
-          <h3 className="text-lg font-semibold text-[#1c2c4a]">Desglose por Etapa</h3>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
-              <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Etapa</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-[#1c2c4a]">Cantidad</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-[#1c2c4a]">Valor Total</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-[#1c2c4a]">Valor Promedio</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-[#1c2c4a]">Tasa Conversión</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pipelineData.map((item, index) => {
-                const prevItem = index > 0 ? pipelineData[index - 1] : null;
-                const tasaConversion = prevItem ? ((item.cantidad / prevItem.cantidad) * 100).toFixed(1) : '100.0';
+      {/* KANBAN VIEW */}
+      {pipelineViewMode === 'kanban' && (
+        <div className="mt-6">
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="grid grid-cols-6 gap-3">
+              {KANBAN_STAGES.map(stage => {
+                const stageItems = kanbanProspectos.filter(p => p.status === stage.id);
+                const stageValue = stageItems.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
+                const gate = STAGE_GATES[stage.id];
+
                 return (
-                  <tr key={index} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6]">
-                    <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">{item.etapa}</td>
-                    <td className="px-6 py-4 text-sm text-center font-medium text-[#1c2c4a]">{item.cantidad}</td>
-                    <td className="px-6 py-4 text-sm text-center font-semibold text-[#00a8a8]">
-                  ${(item.valor / 1000000).toFixed(1)}M
-                    </td>
-                    <td className="px-6 py-4 text-sm text-center text-[#6b7280]">
-                      ${(item.valor / item.cantidad / 1000).toFixed(0)}k
-                    </td>
-                    <td className="px-6 py-4 text-sm text-center">
-                      <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                        {tasaConversion}%
-                      </span>
-                    </td>
-                  </tr>
+                  <div key={stage.id} className="flex flex-col">
+                    {/* Column Header */}
+                    <div className="rounded-t-lg p-3 mb-2" style={{ borderTop: `3px solid ${stage.color}` }}>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-semibold text-[#1c2c4a]">{stage.label}</h3>
+                          <span className="text-xs bg-[#f3f4f6] text-[#6b7280] px-1.5 py-0.5 rounded-full font-medium">
+                            {stageItems.length}
+                          </span>
+                        </div>
+                        {gate && (
+                          <div title={gate.requirement}>
+                            <Lock size={12} className="text-[#6b7280]" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center justify-between text-xs text-[#6b7280]">
+                        <span>${(stageValue / 1000000).toFixed(1)}M</span>
+                        <span className="font-medium" style={{ color: stage.color }}>{stage.prob}</span>
+                      </div>
+                    </div>
+
+                    {/* Droppable Area */}
+                    <DroppableColumn stageId={stage.id}>
+                      <SortableContext items={stageItems.map(p => p.id)} strategy={verticalListSortingStrategy}>
+                        <div className="space-y-0">
+                          {stageItems.map(prospecto => (
+                            <DraggableCard key={prospecto.id} prospecto={prospecto} />
+                          ))}
+                        </div>
+                      </SortableContext>
+                      {stageItems.length === 0 && (
+                        <div className="flex items-center justify-center h-20 border-2 border-dashed border-[#e5e7eb] rounded-lg text-xs text-[#6b7280]">
+                          Arrastra aquí
+                        </div>
+                      )}
+                    </DroppableColumn>
+                  </div>
                 );
               })}
-            </tbody>
-          </table>
+            </div>
+
+            {/* Drag Overlay */}
+            <DragOverlay>
+              {activeCard && (
+                <div className="bg-white rounded-lg border-2 border-[#00a8a8] p-3 shadow-xl w-[200px] rotate-2">
+                  <h4 className="text-sm font-semibold text-[#1c2c4a] truncate">{activeCard.empresa}</h4>
+                  <p className="text-xs text-[#6b7280]">{activeCard.industria}</p>
+                  <div className="text-sm font-bold text-[#0D47A1] mt-1">
+                    ${((activeCard.propuesta?.ventaTotal || activeCard.facturacionEstimada || 0) / 1000000).toFixed(2)}M
+                  </div>
                 </div>
+              )}
+            </DragOverlay>
+          </DndContext>
+
+          {/* Rejected pipeline (separate section) */}
+          {kanbanProspectos.filter(p => p.status === 'Propuesta Rechazada').length > 0 && (
+            <div className="mt-6 bg-red-50/50 rounded-lg border border-red-200 p-4">
+              <h4 className="text-sm font-semibold text-red-700 mb-3 flex items-center gap-2">
+                <AlertCircle size={14} />
+                Propuestas Rechazadas ({kanbanProspectos.filter(p => p.status === 'Propuesta Rechazada').length})
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {kanbanProspectos.filter(p => p.status === 'Propuesta Rechazada').map(p => (
+                  <div key={p.id} className="bg-white rounded-md border border-red-200 px-3 py-2 text-xs cursor-pointer hover:shadow-sm"
+                    onClick={() => { setSelectedProspecto(p); setMostrarDetallesProspecto(true); }}>
+                    <span className="font-medium text-[#1c2c4a]">{p.empresa}</span>
+                    <span className="text-red-500 ml-2">{p.motivoRechazo || 'Sin motivo'}</span>
+                  </div>
+                ))}
               </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* FUNNEL VIEW */}
+      {pipelineViewMode === 'funnel' && (
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Nivo Funnel Chart */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Embudo de Ventas</h3>
+            <div style={{ height: 400 }}>
+              {funnelData.length > 0 && (
+                <ResponsiveFunnel
+                  data={funnelData}
+                  margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                  direction="horizontal"
+                  valueFormat=">-.0f"
+                  colors={KANBAN_STAGES.filter(s => kanbanProspectos.some(p => p.status === s.id)).map(s => s.color)}
+                  borderWidth={0}
+                  labelColor={{ from: 'color', modifiers: [['darker', 3]] }}
+                  beforeSeparatorLength={40}
+                  beforeSeparatorOffset={10}
+                  afterSeparatorLength={40}
+                  afterSeparatorOffset={10}
+                  currentPartSizeExtension={10}
+                  currentBorderWidth={0}
+                  motionConfig="wobbly"
+                />
+              )}
+            </div>
           </div>
-  );
+
+          {/* Bar Chart Comparison */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Valor por Stage</h3>
+            <div style={{ height: 400 }}>
+              <ResponsiveBar
+                data={barData}
+                keys={['Cantidad']}
+                indexBy="stage"
+                margin={{ top: 20, right: 30, bottom: 60, left: 60 }}
+                padding={0.3}
+                colors={({ data }) => {
+                  const stage = KANBAN_STAGES.find(s => s.label === data.stage);
+                  return stage?.color || '#6b7280';
+                }}
+                borderRadius={4}
+                axisBottom={{
+                  tickSize: 0,
+                  tickPadding: 8,
+                  tickRotation: -25,
+                }}
+                axisLeft={{
+                  tickSize: 0,
+                  tickPadding: 8,
+                }}
+                labelTextColor="#ffffff"
+                theme={{
+                  axis: { ticks: { text: { fill: '#6b7280', fontSize: 11 } } },
+                  grid: { line: { stroke: '#e5e7eb' } },
+                }}
+                motionConfig="gentle"
+              />
+            </div>
+          </div>
+
+          {/* Conversion Rates */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6 lg:col-span-2">
+            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Tasas de Conversión por Stage</h3>
+            <div className="flex items-center gap-2">
+              {KANBAN_STAGES.map((stage, idx) => {
+                const count = kanbanProspectos.filter(p => p.status === stage.id).length;
+                const prevCount = idx > 0 ? kanbanProspectos.filter(p => p.status === KANBAN_STAGES[idx - 1].id).length : count;
+                const convRate = prevCount > 0 ? ((count / prevCount) * 100).toFixed(0) : '—';
+
+                return (
+                  <React.Fragment key={stage.id}>
+                    <div className="flex-1 text-center p-4 rounded-lg border border-[#e5e7eb]" style={{ borderTopColor: stage.color, borderTopWidth: 3 }}>
+                      <div className="text-2xl font-bold text-[#1c2c4a]">{count}</div>
+                      <div className="text-xs text-[#6b7280] mt-1">{stage.label}</div>
+                      <div className="text-xs font-medium mt-1" style={{ color: stage.color }}>{stage.prob} prob.</div>
+                    </div>
+                    {idx < KANBAN_STAGES.length - 1 && (
+                      <div className="flex flex-col items-center">
+                        <ArrowRight size={16} className="text-[#e5e7eb]" />
+                        <span className="text-xs font-semibold text-[#6b7280]">{convRate}%</span>
+                      </div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TABLE VIEW */}
+      {pipelineViewMode === 'tabla' && (
+        <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Empresa</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Industria</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Stage</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Ejecutivo</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-[#6b7280]">Valor</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-[#6b7280]">Prob.</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-[#6b7280]">Ponderado</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280]">Contacto</th>
+                </tr>
+              </thead>
+              <tbody>
+                {kanbanProspectos
+                  .filter(p => p.status !== 'Propuesta Rechazada')
+                  .sort((a, b) => {
+                    const stageOrder = KANBAN_STAGES.map(s => s.id);
+                    return stageOrder.indexOf(b.status) - stageOrder.indexOf(a.status);
+                  })
+                  .map(p => {
+                    const valor = p.propuesta?.ventaTotal || p.facturacionEstimada || 0;
+                    const prob = STAGE_PROBABILITY[p.status] || 0.05;
+                    const ponderado = valor * prob;
+                    const stage = KANBAN_STAGES.find(s => s.id === p.status);
+                    const ejecutivo = salesTeamData.find(e => e.codigo === p.ejecutivo);
+
+                    return (
+                      <tr key={p.id} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6] cursor-pointer"
+                        onClick={() => { setSelectedProspecto(p); setMostrarDetallesProspecto(true); }}>
+                        <td className="px-4 py-3">
+                          <div className="text-sm font-semibold text-[#1c2c4a]">{p.empresa}</div>
+                          {p.planta && <div className="text-xs text-[#6b7280]">{p.planta}</div>}
+                        </td>
+                        <td className="px-4 py-3 text-xs text-[#6b7280]">{p.industria}</td>
+                        <td className="px-4 py-3">
+                          <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full"
+                            style={{ backgroundColor: `${stage?.color}15`, color: stage?.color, border: `1px solid ${stage?.color}30` }}>
+                            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: stage?.color }}></span>
+                            {stage?.label || p.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-xs text-[#6b7280]">{ejecutivo?.name?.split(' ').slice(0, 2).join(' ') || p.ejecutivo}</td>
+                        <td className="px-4 py-3 text-sm font-semibold text-[#0D47A1] text-right">
+                          {valor > 0 ? `$${(valor / 1000000).toFixed(2)}M` : '—'}
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <span className="text-xs font-medium" style={{ color: stage?.color }}>{(prob * 100).toFixed(0)}%</span>
+                        </td>
+                        <td className="px-4 py-3 text-sm font-medium text-[#00a8a8] text-right">
+                          {ponderado > 0 ? `$${(ponderado / 1000000).toFixed(2)}M` : '—'}
+                        </td>
+                        <td className="px-4 py-3 text-xs text-[#6b7280]">{p.contacto?.nombre || '—'}</td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+              <tfoot className="bg-[#f3f4f6] border-t-2 border-[#e5e7eb]">
+                <tr>
+                  <td className="px-4 py-3 text-sm font-bold text-[#1c2c4a]" colSpan={4}>
+                    Total ({kanbanProspectos.filter(p => p.status !== 'Propuesta Rechazada').length} oportunidades)
+                  </td>
+                  <td className="px-4 py-3 text-sm font-bold text-[#0D47A1] text-right">
+                    ${(kanbanProspectos.filter(p => p.status !== 'Propuesta Rechazada').reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(1)}M
+                  </td>
+                  <td className="px-4 py-3"></td>
+                  <td className="px-4 py-3 text-sm font-bold text-[#00a8a8] text-right">
+                    ${(calcularWeightedPipeline(kanbanProspectos.filter(p => p.status !== 'Propuesta Rechazada')) / 1000000).toFixed(1)}M
+                  </td>
+                  <td className="px-4 py-3"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Stage Gate Modal */}
+      {showStageGateModal && pendingMove && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowStageGateModal(false)}>
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 m-4" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
+                <Lock className="text-orange-600" size={20} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-[#1c2c4a]">Candado de Calificación</h3>
+                <p className="text-sm text-[#6b7280]">No se puede mover a "{KANBAN_STAGES.find(s => s.id === pendingMove.toStage)?.label}"</p>
+              </div>
+            </div>
+
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-orange-800 font-medium mb-2">
+                {STAGE_GATES[pendingMove.toStage]?.requirement}
+              </p>
+              <p className="text-sm text-orange-700">
+                {STAGE_GATES[pendingMove.toStage]?.message(pendingMove.prospecto)}
+              </p>
+            </div>
+
+            <div className="bg-[#f3f4f6] rounded-lg p-3 mb-4">
+              <div className="text-sm font-semibold text-[#1c2c4a]">{pendingMove.prospecto.empresa}</div>
+              <div className="text-xs text-[#6b7280]">{pendingMove.prospecto.industria} • {pendingMove.prospecto.ejecutivo}</div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  // Force move (override gate)
+                  setKanbanProspectos(prev =>
+                    prev.map(p => p.id === pendingMove.prospecto.id ? { ...p, status: pendingMove.toStage } : p)
+                  );
+                  setShowStageGateModal(false);
+                  setPendingMove(null);
+                }}
+                className="flex-1 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+              >
+                <Unlock size={14} />
+                Forzar Movimiento
+              </button>
+              <button
+                onClick={() => { setShowStageGateModal(false); setPendingMove(null); }}
+                className="flex-1 px-4 py-2 bg-[#f3f4f6] hover:bg-[#e5e7eb] text-[#1c2c4a] rounded-lg text-sm font-medium transition-colors"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+    );
+  };
 
   // VISTA: CENTRO DE CONTROL DE KPIS
   const TeamControlView = () => (
