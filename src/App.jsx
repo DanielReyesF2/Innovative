@@ -5178,6 +5178,18 @@ const InnovativeDemo = () => {
     const presupuestoTotal = salesTeamData.reduce((s, m) => s + (m.presupuestoAnual2026 || 0), 0);
     const ventasReales = salesTeamData.reduce((s, m) => s + (m.ventasReales || 0), 0);
 
+    // Métricas de Vero
+    const presupuestoMesEquipo = salesTeamData.reduce((s, m) => s + (m.presupuestoMensual || 0), 0);
+    const proyeccionCierre = kanbanProspectos
+      .filter(p => ['Propuesta enviada', 'Negociación'].includes(p.status))
+      .reduce((s, p) => s + ((p.propuesta?.ventaTotal || p.facturacionEstimada || 0) * (STAGE_PROBABILITY[p.status] || 0)), 0);
+    const levantamientosActivos = kanbanProspectos.filter(p => p.status === 'Levantamiento');
+    const propuestasEnviadas = kanbanProspectos.filter(p => p.status === 'Propuesta enviada');
+    const montoPropuestas = propuestasEnviadas.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
+    const biodigestores = kanbanProspectos.filter(p => (p.servicios || []).includes('biodigestores'));
+    const biodigestoresPropuesta = biodigestores.filter(p => ['Propuesta enviada', 'Negociación'].includes(p.status));
+    const montoBiodigestores = biodigestores.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
+
     // Droppable Column component
     const DroppableColumn = ({ stageId, children }) => {
       const { isOver, setNodeRef } = useDroppable({ id: stageId });
@@ -5288,61 +5300,61 @@ const InnovativeDemo = () => {
         </button>
       </div>
 
-      {/* KPI CARDS */}
+      {/* KPI CARDS - Métricas de Vero */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-        {/* Card 1: Pipeline Ponderado */}
+        {/* Card 1: Presupuesto Mes vs Proyección Cierre */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#00a8a8]"></div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Pipeline Ponderado</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">${(weightedPipeline / 1000000).toFixed(1)}M</div>
-              <div className="text-xs text-[#6b7280] mt-1">Valor ajustado por probabilidad</div>
+              <div className="text-sm text-[#6b7280] mb-1">Presupuesto Mes</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">${(presupuestoMesEquipo / 1000000).toFixed(1)}M</div>
+              <div className="text-xs text-[#6b7280] mt-1">Proyecci&oacute;n cierre: <span className="font-semibold text-[#00a8a8]">${(proyeccionCierre / 1000000).toFixed(1)}M</span></div>
             </div>
             <div className="w-10 h-10 rounded-lg bg-[#00a8a8]/10 flex items-center justify-center">
               <DollarSign className="text-[#00a8a8]" size={20} />
             </div>
           </div>
         </div>
-        {/* Card 2: Oportunidades Activas */}
+        {/* Card 2: Levantamientos Activos */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D47A1]"></div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Oportunidades Activas</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">{oportunidadesActivas}</div>
-              <div className="text-xs text-[#6b7280] mt-1">{kanbanProspectos.filter(p => p.status === 'Propuesta Rechazada').length} rechazadas</div>
+              <div className="text-sm text-[#6b7280] mb-1">Levantamientos Activos</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{levantamientosActivos.length}</div>
+              <div className="text-xs text-[#6b7280] mt-1">En proceso de diagn&oacute;stico</div>
             </div>
             <div className="w-10 h-10 rounded-lg bg-[#0D47A1]/10 flex items-center justify-center">
-              <Briefcase className="text-[#0D47A1]" size={20} />
+              <ClipboardList className="text-[#0D47A1]" size={20} />
             </div>
           </div>
         </div>
-        {/* Card 3: Win Rate */}
+        {/* Card 3: Propuestas Enviadas */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#2E7D32]"></div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Win Rate</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">{winRate.toFixed(0)}%</div>
-              <div className="text-xs text-[#6b7280] mt-1">Propuestas aceptadas vs total</div>
+              <div className="text-sm text-[#6b7280] mb-1">Propuestas Enviadas</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{propuestasEnviadas.length}</div>
+              <div className="text-xs text-[#6b7280] mt-1">Monto total: <span className="font-semibold text-[#2E7D32]">${(montoPropuestas / 1000000).toFixed(1)}M</span></div>
             </div>
             <div className="w-10 h-10 rounded-lg bg-[#2E7D32]/10 flex items-center justify-center">
-              <Award className="text-[#2E7D32]" size={20} />
+              <FileText className="text-[#2E7D32]" size={20} />
             </div>
           </div>
         </div>
-        {/* Card 4: Presupuesto vs Real */}
+        {/* Card 4: Cierre Biodigestores */}
         <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-[#F57C00]"></div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Presupuesto 2026</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">{presupuestoTotal > 0 ? `${((ventasReales / presupuestoTotal) * 100).toFixed(0)}%` : '—'}</div>
-              <div className="text-xs text-[#6b7280] mt-1">${(ventasReales / 1000000).toFixed(1)}M / ${(presupuestoTotal / 1000000).toFixed(1)}M</div>
+              <div className="text-sm text-[#6b7280] mb-1">Cierre Biodigestores</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{biodigestores.length}</div>
+              <div className="text-xs text-[#6b7280] mt-1">{biodigestoresPropuesta.length} en propuesta &bull; <span className="font-semibold text-[#F57C00]">${(montoBiodigestores / 1000000).toFixed(1)}M</span></div>
             </div>
             <div className="w-10 h-10 rounded-lg bg-[#F57C00]/10 flex items-center justify-center">
-              <Target className="text-[#F57C00]" size={20} />
+              <Recycle className="text-[#F57C00]" size={20} />
             </div>
           </div>
         </div>
@@ -5352,25 +5364,50 @@ const InnovativeDemo = () => {
       <div className="mt-4 bg-white rounded-lg border border-[#e5e7eb] card-modern p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold text-[#1c2c4a]">Presupuesto por Ejecutivo</h3>
+          <span className="text-xs text-[#6b7280]">Mensual / Anual</span>
         </div>
         <div className="flex gap-3 overflow-x-auto">
-          {salesTeamData.filter(m => m.presupuestoAnual2026 > 0 && m.codigo !== 'VA').map(member => {
-            const pct = member.presupuestoAnual2026 > 0 ? ((member.ventasReales / member.presupuestoAnual2026) * 100) : 0;
-            return (
+          {salesTeamData.filter(m => m.presupuestoAnual2026 > 0 && m.codigo !== 'VA').map(member => (
               <div key={member.codigo} className="flex-shrink-0 flex items-center gap-2 bg-[#f3f4f6] rounded-lg px-3 py-2">
                 <div className="w-7 h-7 rounded-full bg-[#00a8a8] flex items-center justify-center text-white text-xs font-bold">{member.codigo}</div>
                 <div>
                   <div className="text-xs font-medium text-[#1c2c4a]">{member.name.split(' ')[0]}</div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-16 h-1.5 bg-[#e5e7eb] rounded-full overflow-hidden">
-                      <div className="h-full rounded-full" style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: pct >= 80 ? '#2E7D32' : pct >= 50 ? '#F57C00' : '#ef4444' }}></div>
-                    </div>
-                    <span className="text-[10px] font-medium text-[#6b7280]">{pct.toFixed(0)}%</span>
+                  <div className="text-sm font-bold text-[#0D47A1]">${(member.presupuestoMensual / 1000000).toFixed(1)}M<span className="text-[10px] font-normal text-[#6b7280]">/mes</span></div>
+                  <div className="text-[10px] text-[#6b7280]">Anual: ${(member.presupuestoAnual2026 / 1000000).toFixed(1)}M</div>
+                </div>
+              </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Distribución de Pipeline por Ejecutivo */}
+      <div className="mt-4 bg-white rounded-lg border border-[#e5e7eb] card-modern p-4">
+        <h3 className="text-sm font-semibold text-[#1c2c4a] mb-3">Distribución de Pipeline por Ejecutivo</h3>
+        <div className="space-y-3">
+          {salesTeamData.map(member => {
+            const memberProspectos = kanbanProspectos.filter(p => p.ejecutivo === member.codigo);
+            const memberPipeline = memberProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
+            const pctProspectos = kanbanProspectos.length > 0 ? (memberProspectos.length / kanbanProspectos.length * 100) : 0;
+            if (memberProspectos.length === 0) return null;
+            return (
+              <div key={member.codigo} className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-full bg-[#00a8a8] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">{member.codigo}</div>
+                <div className="flex-1">
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="font-medium text-[#1c2c4a]">{member.name.split(' ')[0]} — {memberProspectos.length} prospectos</span>
+                    <span className="font-bold text-[#0D47A1]">${(memberPipeline / 1000000).toFixed(1)}M</span>
+                  </div>
+                  <div className="w-full h-2 bg-[#e5e7eb] rounded-full overflow-hidden">
+                    <div className="h-full bg-[#00a8a8] rounded-full transition-all" style={{ width: `${pctProspectos}%` }}></div>
                   </div>
                 </div>
               </div>
             );
-          })}
+          }).filter(Boolean)}
+          <div className="flex justify-between text-xs text-[#6b7280] pt-2 border-t border-[#e5e7eb]">
+            <span>Total: {kanbanProspectos.length} prospectos</span>
+            <span className="font-bold text-[#1c2c4a]">${(kanbanProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(1)}M pipeline total</span>
+          </div>
         </div>
       </div>
 
