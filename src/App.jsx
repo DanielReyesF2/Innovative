@@ -4763,38 +4763,38 @@ const InnovativeDemo = () => {
     };
 
     return (
-    <div className={`bg-white h-screen transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-20'} flex flex-col border-r border-[#e5e7eb] relative overflow-hidden`}>
+    <div className={`bg-white h-screen transition-all duration-300 ${sidebarOpen ? 'w-56' : 'w-[60px]'} flex flex-col border-r border-[#e5e7eb] relative overflow-hidden`}>
       {/* Logo */}
-      <div className="px-5 py-4 flex items-center justify-between">
+      <div className="px-4 py-3 flex items-center justify-between">
         {sidebarOpen ? (
-          <img src="/IGMexico-V-Color-Logo.png" alt="Innovative Group" className="h-10 object-contain" />
+          <img src="/IGMexico-V-Color-Logo.png" alt="Innovative Group" className="h-8 object-contain" />
         ) : (
-          <div className="w-8 h-8 rounded-lg bg-[#00a8a8] flex items-center justify-center text-white text-xs font-bold">IG</div>
+          <div className="w-7 h-7 rounded-md bg-[#00a8a8] flex items-center justify-center text-white text-[10px] font-bold">IG</div>
         )}
-        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-[#6b7280] hover:text-[#1c2c4a] transition-colors p-1.5 rounded-md hover:bg-[#f3f4f6]">
-          {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
+        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-[#6b7280] hover:text-[#1c2c4a] transition-colors p-1 rounded-md hover:bg-[#f3f4f6]">
+          {sidebarOpen ? <X size={16} /> : <Menu size={16} />}
         </button>
       </div>
 
       {/* Search bar */}
       {sidebarOpen && (
-        <div className="px-4 pb-3">
-          <div className="flex items-center gap-2 px-3 py-2 bg-[#f3f4f6]/50 border border-[#e5e7eb]/50 rounded-md text-[#6b7280] text-sm cursor-pointer hover:border-[#e5e7eb] transition-colors">
-            <Search size={14} />
-            <span className="text-[13px]">Buscar...</span>
-            <kbd className="ml-auto text-[10px] bg-white px-1.5 py-0.5 rounded border border-[#e5e7eb] font-mono">⌘K</kbd>
+        <div className="px-3 pb-2">
+          <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#f3f4f6]/50 border border-[#e5e7eb]/50 rounded-md text-[#6b7280] cursor-pointer hover:border-[#e5e7eb] transition-colors">
+            <Search size={13} />
+            <span className="text-[12px]">Buscar...</span>
+            <kbd className="ml-auto text-[9px] bg-white px-1 py-0.5 rounded border border-[#e5e7eb] font-mono">⌘K</kbd>
           </div>
         </div>
       )}
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 overflow-y-auto scrollbar-hide">
+      <nav className="flex-1 px-2 overflow-y-auto scrollbar-hide">
         {sidebarNavItems.map((navItem, idx) => {
           // --- Category label (Notion-style) ---
           if (navItem.type === 'category') {
             if (!sidebarOpen) return null;
             return (
-              <div key={navItem.label} className="text-[10px] uppercase tracking-widest font-semibold text-[#6b7280]/40 px-3 pt-6 pb-1">
+              <div key={navItem.label} className="text-[9px] uppercase tracking-widest font-semibold text-[#6b7280]/40 px-2.5 pt-4 pb-0.5">
                 {navItem.label}
               </div>
             );
@@ -4809,31 +4809,30 @@ const InnovativeDemo = () => {
                   setSelectedClient(null);
                   setSelectedTeamMember(null);
                 }}
-                className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-3' : 'justify-center'} px-3 py-2 rounded-md mb-0.5 transition-all text-sm ${
+                className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-2.5' : 'justify-center'} px-2.5 py-1.5 rounded-md mb-px transition-all text-[13px] ${
                   currentView === navItem.id
                     ? 'bg-[#00a8a8]/10 text-[#00a8a8] font-semibold'
                     : 'text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#1c2c4a] font-medium'
                 }`}
               >
-                <navItem.icon size={18} className="flex-shrink-0" />
+                <navItem.icon size={16} className="flex-shrink-0" />
                 {sidebarOpen && <span className="flex-1 text-left">{navItem.label}</span>}
               </button>
             );
           }
 
-          // --- Collapsible section (Comercial, Operación, Subproductos) ---
+          // --- Collapsible section ---
           const isExpanded = expandedSections[navItem.key];
           const isActive = isSectionActive(navItem.key);
 
           return (
-            <div key={navItem.key} className={`${idx > 0 ? 'mt-1' : ''}`}>
-              {/* Section header - clickable to expand/collapse */}
+            <div key={navItem.key}>
+              {/* Section header */}
               <button
                 onClick={() => {
                   if (sidebarOpen) {
                     toggleSection(navItem.key);
                   } else {
-                    // collapsed sidebar: click goes to main view of section
                     const mainItem = navItem.items[0];
                     if (mainItem) {
                       setCurrentView(mainItem.id);
@@ -4842,24 +4841,24 @@ const InnovativeDemo = () => {
                     }
                   }
                 }}
-                className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-3' : 'justify-center'} px-3 py-2 rounded-md mb-0.5 transition-all text-sm ${
+                className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-2.5' : 'justify-center'} px-2.5 py-1.5 rounded-md mb-px transition-all text-[13px] ${
                   isActive
                     ? 'bg-[#00a8a8]/5 text-[#00a8a8] font-semibold'
                     : 'text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#1c2c4a] font-medium'
                 }`}
               >
-                <navItem.icon size={18} className="flex-shrink-0" />
+                <navItem.icon size={16} className="flex-shrink-0" />
                 {sidebarOpen && (
                   <>
                     <span className="flex-1 text-left">{navItem.label}</span>
-                    <ChevronDown size={14} className={`transition-transform duration-200 ${isExpanded ? '' : '-rotate-90'} ${isActive ? 'text-[#00a8a8]' : 'text-[#6b7280]/50'}`} />
+                    <ChevronDown size={12} className={`transition-transform duration-200 ${isExpanded ? '' : '-rotate-90'} ${isActive ? 'text-[#00a8a8]' : 'text-[#6b7280]/50'}`} />
                   </>
                 )}
               </button>
 
               {/* Sub-items */}
               {sidebarOpen && isExpanded && (
-                <div className="ml-4 border-l-2 border-[#e5e7eb] pl-2">
+                <div className="ml-3.5 border-l border-[#e5e7eb] pl-2">
                   {navItem.items.map(subItem => (
                     <button
                       key={subItem.id}
@@ -4868,13 +4867,13 @@ const InnovativeDemo = () => {
                         setSelectedClient(null);
                         setSelectedTeamMember(null);
                       }}
-                      className={`w-full flex items-center gap-2.5 px-3 py-1.5 rounded-md mb-0.5 transition-all text-[13px] ${
+                      className={`w-full flex items-center gap-2 px-2.5 py-1 rounded-md mb-px transition-all text-[12px] ${
                         currentView === subItem.id
                           ? 'bg-[#00a8a8]/10 text-[#00a8a8] font-semibold'
                           : 'text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#1c2c4a] font-medium'
                       }`}
                     >
-                      <subItem.icon size={15} className="flex-shrink-0" />
+                      <subItem.icon size={13} className="flex-shrink-0" />
                       <span className="flex-1 text-left">{subItem.label}</span>
                     </button>
                   ))}
@@ -4886,12 +4885,12 @@ const InnovativeDemo = () => {
       </nav>
 
       {/* Logout */}
-      <div className="px-3 py-3 border-t border-[#e5e7eb]">
+      <div className="px-2 py-2 border-t border-[#e5e7eb]">
         <button
           onClick={() => { localStorage.removeItem('innovative_session'); setCurrentView('login'); setLoginEmail(''); setLoginPassword(''); }}
-          className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-3' : 'justify-center'} px-3 py-2 text-[#6b7280] hover:bg-red-500/10 hover:text-red-600 rounded-md text-sm font-medium transition-all`}
+          className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-2.5' : 'justify-center'} px-2.5 py-1.5 text-[#6b7280] hover:bg-red-500/10 hover:text-red-600 rounded-md text-[13px] font-medium transition-all`}
         >
-          <LogOut size={18} className="flex-shrink-0" />
+          <LogOut size={16} className="flex-shrink-0" />
           {sidebarOpen && <span className="flex-1 text-left">Cerrar sesión</span>}
         </button>
       </div>
@@ -4979,13 +4978,13 @@ const InnovativeDemo = () => {
     const alertasActivas = alertas.slice(0, 4);
 
     return (
-    <div className="p-8 bg-[#faf7f2] min-h-screen">
+    <div className="p-6 bg-[#faf7f2] min-h-screen">
       <Header title="Dashboard" />
 
       {/* ROW 1: KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
         {/* Pipeline Ponderado */}
-        <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-6" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
+        <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-5" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[13px] font-medium text-[#6b7280] mb-1">Pipeline Ponderado</div>
@@ -4998,7 +4997,7 @@ const InnovativeDemo = () => {
         </div>
 
         {/* Oportunidades Activas */}
-        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[13px] font-medium text-[#6b7280] mb-1">Oportunidades Activas</div>
@@ -5011,7 +5010,7 @@ const InnovativeDemo = () => {
         </div>
 
         {/* Win Rate */}
-        <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-6" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
+        <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-5" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[13px] font-medium text-[#6b7280] mb-1">Win Rate</div>
@@ -5024,7 +5023,7 @@ const InnovativeDemo = () => {
         </div>
 
         {/* Pipeline Velocity */}
-        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[13px] font-medium text-[#6b7280] mb-1">Velocity</div>
@@ -5040,7 +5039,7 @@ const InnovativeDemo = () => {
       {/* ROW 2: Mini Funnel + Presupuesto vs Real */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         {/* Mini Pipeline Funnel */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+        <div className="lg:col-span-2 bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-[#1c2c4a]">Pipeline por Stage</h3>
             <button
@@ -5086,7 +5085,7 @@ const InnovativeDemo = () => {
         </div>
 
         {/* Presupuesto Resumen */}
-        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-[#1c2c4a]">Presupuesto 2026</h3>
             <button
@@ -5134,7 +5133,7 @@ const InnovativeDemo = () => {
       {/* ROW 3: Top 5 Deals + Alertas + Equipo Snapshot */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         {/* Top 5 Deals */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+        <div className="lg:col-span-2 bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-[#1c2c4a]">Top 5 Oportunidades</h3>
             <span className="text-xs text-[#6b7280]">Por valor de pipeline</span>
@@ -5168,7 +5167,7 @@ const InnovativeDemo = () => {
         </div>
 
         {/* Alertas y Acciones */}
-        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-[#1c2c4a]">Alertas</h3>
             <span className="w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold">
@@ -5218,7 +5217,7 @@ const InnovativeDemo = () => {
       </div>
 
       {/* ROW 4: Equipo Snapshot (compacto) */}
-      <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+      <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-semibold text-[#1c2c4a]">Equipo Comercial</h3>
           <button
@@ -5387,7 +5386,7 @@ const InnovativeDemo = () => {
     const activeCard = activeKanbanId ? kanbanProspectos.find(p => p.id === activeKanbanId) : null;
 
     return (
-    <div className="p-8 bg-[#faf7f2] min-h-screen">
+    <div className="p-6 bg-[#faf7f2] min-h-screen">
       <div className="flex items-center justify-between">
         <Header title="Comercial" />
         <div className="flex items-center gap-2">
@@ -5409,9 +5408,9 @@ const InnovativeDemo = () => {
       </div>
 
       {/* KPI CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
         {/* Card 1: Presupuesto Mes */}
-        <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-6" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
+        <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-5" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[13px] font-medium text-[#6b7280] mb-1">Presupuesto Mes</div>
@@ -5423,7 +5422,7 @@ const InnovativeDemo = () => {
           </div>
         </div>
         {/* Card 2: Levantamientos Activos */}
-        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[13px] font-medium text-[#6b7280] mb-1">Levantamientos Activos</div>
@@ -5435,7 +5434,7 @@ const InnovativeDemo = () => {
           </div>
         </div>
         {/* Card 3: Propuestas Enviadas */}
-        <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-6" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
+        <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-5" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[13px] font-medium text-[#6b7280] mb-1">Propuestas Enviadas</div>
@@ -5447,7 +5446,7 @@ const InnovativeDemo = () => {
           </div>
         </div>
         {/* Card 4: Cierre Biodigestores */}
-        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[13px] font-medium text-[#6b7280] mb-1">Cierre Biodigestores</div>
@@ -5682,7 +5681,7 @@ const InnovativeDemo = () => {
       {pipelineViewMode === 'funnel' && (
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Nivo Funnel Chart */}
-          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Embudo de Ventas</h3>
             <div style={{ height: 400 }}>
               {funnelData.length > 0 && (
@@ -5707,7 +5706,7 @@ const InnovativeDemo = () => {
           </div>
 
           {/* Bar Chart Comparison */}
-          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Valor por Stage</h3>
             <div style={{ height: 400 }}>
               <ResponsiveBar
@@ -6101,7 +6100,7 @@ const InnovativeDemo = () => {
     }));
 
     return (
-      <div className="p-8 bg-[#faf7f2] min-h-screen">
+      <div className="p-6 bg-[#faf7f2] min-h-screen">
         <div className="flex items-center justify-between">
           <Header title="Operación" />
           <button
@@ -6114,8 +6113,8 @@ const InnovativeDemo = () => {
         </div>
 
         {/* MÉTRICAS RESUMEN */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
-          <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-6" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+          <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-5" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[13px] font-medium text-[#6b7280] mb-1">Total Levantamientos</div>
@@ -6126,7 +6125,7 @@ const InnovativeDemo = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[13px] font-medium text-[#6b7280] mb-1">Total Propuestas</div>
@@ -6137,7 +6136,7 @@ const InnovativeDemo = () => {
               </div>
             </div>
           </div>
-          <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-6" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
+          <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-5" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[13px] font-medium text-[#6b7280] mb-1">Valor Total Estimado</div>
@@ -6148,7 +6147,7 @@ const InnovativeDemo = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[13px] font-medium text-[#6b7280] mb-1">Sin Reporte</div>
@@ -6163,7 +6162,7 @@ const InnovativeDemo = () => {
 
         {/* CHARTS ROW */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <h3 className="text-sm font-semibold text-[#1c2c4a] mb-4">Levantamientos por Ejecutivo</h3>
             <div style={{ height: 200 }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -6178,7 +6177,7 @@ const InnovativeDemo = () => {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <h3 className="text-sm font-semibold text-[#1c2c4a] mb-4">Distribución por Status</h3>
             <div style={{ height: 200 }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -6227,7 +6226,7 @@ const InnovativeDemo = () => {
         
         {/* PANEL DE FILTROS */}
         {mostrarFiltros && (
-          <div className="mb-6 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="mb-6 bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Filter className="text-[#00a8a8]" size={20} />
@@ -6532,13 +6531,13 @@ const InnovativeDemo = () => {
     };
 
     return (
-      <div className="p-8 bg-[#faf7f2] min-h-screen">
+      <div className="p-6 bg-[#faf7f2] min-h-screen">
         <Header title="Trazabilidad" />
 
         {/* INDICADORES CLAVE */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
           {/* Total Prospectos Activos */}
-          <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-6" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
+          <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-5" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[13px] font-medium text-[#6b7280] mb-1">Prospectos Activos</div>
@@ -6551,7 +6550,7 @@ const InnovativeDemo = () => {
           </div>
 
           {/* Pipeline Total */}
-          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[13px] font-medium text-[#6b7280] mb-1">Pipeline Total</div>
@@ -6564,7 +6563,7 @@ const InnovativeDemo = () => {
           </div>
 
           {/* Tiempo Promedio del Ciclo */}
-          <div className="rounded-xl border border-[#F57C00]/10 card-modern p-6" style={{ backgroundColor: 'rgba(245,124,0,0.04)' }}>
+          <div className="rounded-xl border border-[#F57C00]/10 card-modern p-5" style={{ backgroundColor: 'rgba(245,124,0,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[13px] font-medium text-[#6b7280] mb-1">Tiempo Promedio</div>
@@ -6579,7 +6578,7 @@ const InnovativeDemo = () => {
           </div>
 
           {/* Estancados */}
-          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[13px] font-medium text-[#6b7280] mb-1">Estancados (&gt;30 días)</div>
@@ -6593,7 +6592,7 @@ const InnovativeDemo = () => {
         </div>
 
         {/* CONVERSIÓN ENTRE ETAPAS — Funnel horizontal */}
-        <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+        <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
           <h3 className="text-sm font-semibold text-[#1c2c4a] mb-4">Flujo de Conversión entre Etapas</h3>
           <div className="flex items-center justify-between overflow-x-auto gap-1">
             {metricasPorEtapa.map((etapa, idx) => (
@@ -6626,7 +6625,7 @@ const InnovativeDemo = () => {
         </div>
 
         {/* VELOCIDAD DEL PIPELINE — Full width */}
-        <div className="mt-4 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+        <div className="mt-4 bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
           <h3 className="text-sm font-semibold text-[#1c2c4a] mb-1">Velocidad del Pipeline</h3>
           <ResponsiveContainer width="100%" height={400}>
             <ComposedChart data={metricasPorEtapa.filter(m => m.count > 0)} margin={{ top: 10, right: 50, bottom: 10, left: 10 }}>
@@ -6923,7 +6922,7 @@ const InnovativeDemo = () => {
     const aguaAhorrada = Math.round(toneladasCirculares * 26000);
 
     return (
-      <div className="p-8 bg-[#faf7f2] min-h-screen">
+      <div className="p-6 bg-[#faf7f2] min-h-screen">
         <div className="flex items-center justify-between">
           <Header title="Subproductos" />
           <button
@@ -6936,8 +6935,8 @@ const InnovativeDemo = () => {
         </div>
 
         {/* KPI CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-          <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-6" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-5" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[13px] font-medium text-[#6b7280] mb-1">Toneladas Circulares</div>
@@ -6948,7 +6947,7 @@ const InnovativeDemo = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[13px] font-medium text-[#6b7280] mb-1">Tasa de Desviación</div>
@@ -6959,7 +6958,7 @@ const InnovativeDemo = () => {
               </div>
             </div>
           </div>
-          <div className="rounded-xl border border-[#0D47A1]/10 card-modern p-6" style={{ backgroundColor: 'rgba(13,71,161,0.04)' }}>
+          <div className="rounded-xl border border-[#0D47A1]/10 card-modern p-5" style={{ backgroundColor: 'rgba(13,71,161,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[13px] font-medium text-[#6b7280] mb-1">Clientes Activos</div>
@@ -6970,7 +6969,7 @@ const InnovativeDemo = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-[13px] font-medium text-[#6b7280] mb-1">CO2 Evitado</div>
@@ -7184,7 +7183,7 @@ const InnovativeDemo = () => {
           </div>
         )}
         {clienteActual && datosSankey && (
-          <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-base font-semibold text-[#1c2c4a] mb-1">Flujo de Materiales</h3>
@@ -7627,12 +7626,12 @@ const InnovativeDemo = () => {
 
   // VISTA: ADMINISTRACIÓN
   const AdminView = () => (
-    <div className="p-8 bg-[#faf7f2] min-h-screen">
+    <div className="p-6 bg-[#faf7f2] min-h-screen">
       <Header title="Administración" />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         {/* Usuarios del Sistema */}
-        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
           <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
             <Users size={18} className="text-[#00a8a8]" />
             Usuarios del Sistema
@@ -7664,7 +7663,7 @@ const InnovativeDemo = () => {
         {/* Configuración General */}
         <div className="space-y-6">
           {/* Servicios */}
-          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
               <Settings size={18} className="text-[#00a8a8]" />
               Servicios Innovative
@@ -7679,7 +7678,7 @@ const InnovativeDemo = () => {
           </div>
 
           {/* Metas KPI */}
-          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
               <Target size={18} className="text-[#00a8a8]" />
               Metas de KPIs
@@ -7701,7 +7700,7 @@ const InnovativeDemo = () => {
           </div>
 
           {/* Info del Sistema */}
-          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
             <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
               <AlertCircle size={18} className="text-[#00a8a8]" />
               Sistema
