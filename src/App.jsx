@@ -4884,8 +4884,25 @@ const InnovativeDemo = () => {
         })}
       </nav>
 
-      {/* Logout */}
+      {/* Usuario + Logout */}
       <div className="px-2 py-2 border-t border-[#e5e7eb]">
+        {sidebarOpen ? (
+          <div className="flex items-center gap-2.5 px-2.5 py-1.5 mb-1">
+            <div className="w-7 h-7 rounded-full bg-[#00a8a8] flex items-center justify-center text-[11px] font-semibold text-white flex-shrink-0">
+              {(USUARIOS_AUTORIZADOS.find(u => u.email.toLowerCase() === loginEmail.toLowerCase())?.nombre || 'U').charAt(0)}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[13px] font-medium text-[#1c2c4a] truncate">{USUARIOS_AUTORIZADOS.find(u => u.email.toLowerCase() === loginEmail.toLowerCase())?.nombre || 'Usuario'}</div>
+              <div className="text-[10px] text-[#6b7280] truncate">{loginEmail}</div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-center py-1.5 mb-1">
+            <div className="w-7 h-7 rounded-full bg-[#00a8a8] flex items-center justify-center text-[11px] font-semibold text-white">
+              {(USUARIOS_AUTORIZADOS.find(u => u.email.toLowerCase() === loginEmail.toLowerCase())?.nombre || 'U').charAt(0)}
+            </div>
+          </div>
+        )}
         <button
           onClick={() => { localStorage.removeItem('innovative_session'); setCurrentView('login'); setLoginEmail(''); setLoginPassword(''); }}
           className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-2.5' : 'justify-center'} px-2.5 py-1.5 text-[#6b7280] hover:bg-red-500/10 hover:text-red-600 rounded-md text-[13px] font-medium transition-all`}
@@ -4897,54 +4914,6 @@ const InnovativeDemo = () => {
     </div>
     );
   };
-
-  // Header - Sticky con blur estilo Apple
-  const usuarioActual = USUARIOS_AUTORIZADOS.find(u => u.email.toLowerCase() === loginEmail.toLowerCase());
-  const nombreUsuario = usuarioActual?.nombre || 'Usuario';
-  const inicialUsuario = nombreUsuario.charAt(0).toUpperCase();
-
-  const Header = ({ title }) => (
-    <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-[#e5e7eb] px-6 py-3 flex justify-between items-center">
-      <h1 className="text-lg font-semibold text-[#1c2c4a]">{title}</h1>
-      <div className="flex items-center gap-3">
-        <div className="relative">
-          <button
-            onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
-            className="relative text-[#6b7280] hover:text-[#00a8a8] p-2 rounded-md hover:bg-[#f3f4f6] transition-colors"
-          >
-            <Bell size={18} />
-            {alertas.length > 0 && (
-              <span className="absolute top-1 right-1 bg-[#00a8a8] text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-semibold">
-                {alertas.length}
-              </span>
-            )}
-          </button>
-          {mostrarNotificaciones && (
-            <NotificationsPanel
-              alertas={alertas}
-              onClose={() => setMostrarNotificaciones(false)}
-              onAction={(alerta) => {
-                if (alerta.tipo === 'seguimiento_propuesta') {
-                  setSelectedProspecto(alerta.prospecto);
-                  setMostrarDetallesProspecto(true);
-                } else if (alerta.tipo === 'levantamiento_sin_reporte') {
-                  setSelectedLevantamientoDetalle(levantamientosDetallados.find(l => l.cliente === alerta.levantamiento.cliente));
-                  setCurrentView('operacion');
-                }
-                setMostrarNotificaciones(false);
-              }}
-            />
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-[#00a8a8] flex items-center justify-center text-xs font-semibold text-white">
-            {inicialUsuario}
-          </div>
-          <span className="text-sm font-medium text-[#1c2c4a] hidden sm:inline">{nombreUsuario.split(' ')[0]}</span>
-        </div>
-      </div>
-    </div>
-  );
 
   // DASHBOARD PRINCIPAL
   // DASHBOARD EJECUTIVO - Resumen para Dirección
@@ -4979,7 +4948,7 @@ const InnovativeDemo = () => {
 
     return (
     <div className="p-6 bg-[#faf7f2] min-h-screen">
-      <Header title="Dashboard" />
+
 
       {/* ROW 1: KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
@@ -5388,7 +5357,7 @@ const InnovativeDemo = () => {
     return (
     <div className="p-6 bg-[#faf7f2] min-h-screen">
       <div className="flex items-center justify-between">
-        <Header title="Comercial" />
+
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowNuevoLead(true)}
@@ -6102,7 +6071,7 @@ const InnovativeDemo = () => {
     return (
       <div className="p-6 bg-[#faf7f2] min-h-screen">
         <div className="flex items-center justify-between">
-          <Header title="Operación" />
+
           <button
             onClick={() => { setKpiPanelArea('operacion'); setShowKpiPanel(true); }}
             className="flex items-center gap-2 px-4 py-2.5 bg-[#F57C00] hover:bg-[#E65100] text-white rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md"
@@ -6532,7 +6501,7 @@ const InnovativeDemo = () => {
 
     return (
       <div className="p-6 bg-[#faf7f2] min-h-screen">
-        <Header title="Trazabilidad" />
+
 
         {/* INDICADORES CLAVE */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
@@ -6924,7 +6893,7 @@ const InnovativeDemo = () => {
     return (
       <div className="p-6 bg-[#faf7f2] min-h-screen">
         <div className="flex items-center justify-between">
-          <Header title="Subproductos" />
+
           <button
             onClick={() => { setKpiPanelArea('subproductos'); setShowKpiPanel(true); }}
             className="flex items-center gap-2 px-4 py-2.5 bg-[#2E7D32] hover:bg-[#1B5E20] text-white rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md"
@@ -7627,7 +7596,7 @@ const InnovativeDemo = () => {
   // VISTA: ADMINISTRACIÓN
   const AdminView = () => (
     <div className="p-6 bg-[#faf7f2] min-h-screen">
-      <Header title="Administración" />
+
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         {/* Usuarios del Sistema */}
