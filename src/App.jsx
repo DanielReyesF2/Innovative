@@ -4988,11 +4988,11 @@ const InnovativeDemo = () => {
         <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-6" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Pipeline Ponderado</div>
-              <div className="text-3xl font-extrabold text-[#1c2c4a]">${(pipelinePonderado / 1000000).toFixed(1)}M</div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-1">Pipeline Ponderado</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">${(pipelinePonderado / 1000000).toFixed(1)}M</div>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
-              <DollarSign className="text-[#00a8a8]" size={22} />
+            <div className="w-10 h-10 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
+              <DollarSign className="text-[#00a8a8]" size={20} />
             </div>
           </div>
         </div>
@@ -5001,11 +5001,11 @@ const InnovativeDemo = () => {
         <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Oportunidades Activas</div>
-              <div className="text-3xl font-extrabold text-[#1c2c4a]">{leadsActivos.length}</div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-1">Oportunidades Activas</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{leadsActivos.length}</div>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
-              <Target className="text-[#0D47A1]" size={22} />
+            <div className="w-10 h-10 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
+              <Target className="text-[#0D47A1]" size={20} />
             </div>
           </div>
         </div>
@@ -5014,11 +5014,11 @@ const InnovativeDemo = () => {
         <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-6" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Win Rate</div>
-              <div className="text-3xl font-extrabold text-[#1c2c4a]">{winRate.toFixed(0)}%</div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-1">Win Rate</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{winRate.toFixed(0)}%</div>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center">
-              <Award className="text-[#2E7D32]" size={22} />
+            <div className="w-10 h-10 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center">
+              <Award className="text-[#2E7D32]" size={20} />
             </div>
           </div>
         </div>
@@ -5027,11 +5027,11 @@ const InnovativeDemo = () => {
         <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Velocity</div>
-              <div className="text-3xl font-extrabold text-[#1c2c4a]">${(velocity / 1000000).toFixed(1)}M</div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-1">Velocity</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">${(velocity / 1000000).toFixed(1)}M</div>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
-              <TrendingUp className="text-[#F57C00]" size={22} />
+            <div className="w-10 h-10 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
+              <TrendingUp className="text-[#F57C00]" size={20} />
             </div>
           </div>
         </div>
@@ -5414,11 +5414,11 @@ const InnovativeDemo = () => {
         <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-6" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Presupuesto Mes</div>
-              <div className="text-3xl font-extrabold text-[#1c2c4a]">${(presupuestoMesEquipo / 1000000).toFixed(1)}M</div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-1">Presupuesto Mes</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">${(presupuestoMesEquipo / 1000000).toFixed(1)}M</div>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
-              <DollarSign className="text-[#00a8a8]" size={22} />
+            <div className="w-10 h-10 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
+              <DollarSign className="text-[#00a8a8]" size={20} />
             </div>
           </div>
         </div>
@@ -5426,11 +5426,11 @@ const InnovativeDemo = () => {
         <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Levantamientos Activos</div>
-              <div className="text-3xl font-extrabold text-[#1c2c4a]">{levantamientosActivos.length}</div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-1">Levantamientos Activos</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{levantamientosActivos.length}</div>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
-              <ClipboardList className="text-[#0D47A1]" size={22} />
+            <div className="w-10 h-10 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
+              <ClipboardList className="text-[#0D47A1]" size={20} />
             </div>
           </div>
         </div>
@@ -5438,11 +5438,11 @@ const InnovativeDemo = () => {
         <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-6" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Propuestas Enviadas</div>
-              <div className="text-3xl font-extrabold text-[#1c2c4a]">{propuestasEnviadas.length}</div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-1">Propuestas Enviadas</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{propuestasEnviadas.length}</div>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center">
-              <FileText className="text-[#2E7D32]" size={22} />
+            <div className="w-10 h-10 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center">
+              <FileText className="text-[#2E7D32]" size={20} />
             </div>
           </div>
         </div>
@@ -5450,11 +5450,11 @@ const InnovativeDemo = () => {
         <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Cierre Biodigestores</div>
-              <div className="text-3xl font-extrabold text-[#1c2c4a]">{biodigestores.length}</div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-1">Cierre Biodigestores</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{biodigestores.length}</div>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
-              <Recycle className="text-[#F57C00]" size={22} />
+            <div className="w-10 h-10 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
+              <Recycle className="text-[#F57C00]" size={20} />
             </div>
           </div>
         </div>
@@ -6118,44 +6118,44 @@ const InnovativeDemo = () => {
           <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-6" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Total Levantamientos</div>
-                <div className="text-3xl font-extrabold text-[#1c2c4a]">{totalLevantamientos}</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-1">Total Levantamientos</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{totalLevantamientos}</div>
               </div>
-              <div className="w-12 h-12 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
-                <ClipboardList className="text-[#00a8a8]" size={22} />
+              <div className="w-10 h-10 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
+                <ClipboardList className="text-[#00a8a8]" size={20} />
               </div>
             </div>
           </div>
           <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Total Propuestas</div>
-                <div className="text-3xl font-extrabold text-[#1c2c4a]">{totalPropuestas}</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-1">Total Propuestas</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{totalPropuestas}</div>
               </div>
-              <div className="w-12 h-12 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
-                <FileText className="text-[#0D47A1]" size={22} />
+              <div className="w-10 h-10 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
+                <FileText className="text-[#0D47A1]" size={20} />
               </div>
             </div>
           </div>
           <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-6" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Valor Total Estimado</div>
-                <div className="text-3xl font-extrabold text-[#1c2c4a]">${(totalValor / 1000000).toFixed(1)}M</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-1">Valor Total Estimado</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">${(totalValor / 1000000).toFixed(1)}M</div>
               </div>
-              <div className="w-12 h-12 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center">
-                <DollarSign className="text-[#2E7D32]" size={22} />
+              <div className="w-10 h-10 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center">
+                <DollarSign className="text-[#2E7D32]" size={20} />
               </div>
             </div>
           </div>
           <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Sin Reporte</div>
-                <div className="text-3xl font-extrabold text-[#1c2c4a]">{completadosSinReporte.length}</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-1">Sin Reporte</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{completadosSinReporte.length}</div>
               </div>
-              <div className="w-12 h-12 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
-                <AlertCircle className="text-[#F57C00]" size={22} />
+              <div className="w-10 h-10 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
+                <AlertCircle className="text-[#F57C00]" size={20} />
               </div>
             </div>
           </div>
@@ -6541,11 +6541,11 @@ const InnovativeDemo = () => {
           <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-6" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Prospectos Activos</div>
-                <div className="text-3xl font-extrabold text-[#1c2c4a]">{totalProspectos}</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-1">Prospectos Activos</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{totalProspectos}</div>
               </div>
-              <div className="w-12 h-12 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
-                <Users className="text-[#00a8a8]" size={22} />
+              <div className="w-10 h-10 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
+                <Users className="text-[#00a8a8]" size={20} />
               </div>
             </div>
           </div>
@@ -6554,11 +6554,11 @@ const InnovativeDemo = () => {
           <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Pipeline Total</div>
-                <div className="text-3xl font-extrabold text-[#1c2c4a]">${(totalPipeline / 1000000).toFixed(1)}M</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-1">Pipeline Total</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">${(totalPipeline / 1000000).toFixed(1)}M</div>
               </div>
-              <div className="w-12 h-12 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
-                <DollarSign className="text-[#0D47A1]" size={22} />
+              <div className="w-10 h-10 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
+                <DollarSign className="text-[#0D47A1]" size={20} />
               </div>
             </div>
           </div>
@@ -6567,13 +6567,13 @@ const InnovativeDemo = () => {
           <div className="rounded-xl border border-[#F57C00]/10 card-modern p-6" style={{ backgroundColor: 'rgba(245,124,0,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Tiempo Promedio</div>
-                <div className="text-3xl font-extrabold text-[#1c2c4a]">
+                <div className="text-[13px] font-medium text-[#6b7280] mb-1">Tiempo Promedio</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">
                   {metricasPorEtapa.length > 0 ? Math.round(metricasPorEtapa.reduce((s, m) => s + m.diasPromedio, 0) / metricasPorEtapa.filter(m => m.count > 0).length || 1) : 0} <span className="text-lg">días</span>
                 </div>
               </div>
-              <div className="w-12 h-12 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
-                <Calendar className="text-[#F57C00]" size={22} />
+              <div className="w-10 h-10 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
+                <Calendar className="text-[#F57C00]" size={20} />
               </div>
             </div>
           </div>
@@ -6582,11 +6582,11 @@ const InnovativeDemo = () => {
           <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Estancados (&gt;30 días)</div>
-                <div className="text-3xl font-extrabold" style={{ color: estancados.length > 5 ? '#EF4444' : '#1c2c4a' }}>{estancados.length}</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-1">Estancados (&gt;30 días)</div>
+                <div className="text-2xl font-bold" style={{ color: estancados.length > 5 ? '#EF4444' : '#1c2c4a' }}>{estancados.length}</div>
               </div>
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: estancados.length > 5 ? '#EF444410' : '#2E7D3210' }}>
-                <AlertCircle size={22} style={{ color: estancados.length > 5 ? '#EF4444' : '#2E7D32' }} />
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: estancados.length > 5 ? '#EF444410' : '#2E7D3210' }}>
+                <AlertCircle size={20} style={{ color: estancados.length > 5 ? '#EF4444' : '#2E7D32' }} />
               </div>
             </div>
           </div>
@@ -6940,44 +6940,44 @@ const InnovativeDemo = () => {
           <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-6" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Toneladas Circulares</div>
-                <div className="text-3xl font-extrabold text-[#1c2c4a]">{toneladasCirculares.toFixed(1)}</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-1">Toneladas Circulares</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{toneladasCirculares.toFixed(1)}</div>
               </div>
-              <div className="w-12 h-12 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center">
-                <Recycle className="text-[#2E7D32]" size={22} />
+              <div className="w-10 h-10 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center">
+                <Recycle className="text-[#2E7D32]" size={20} />
               </div>
             </div>
           </div>
           <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Tasa de Desviación</div>
-                <div className="text-3xl font-extrabold text-[#1c2c4a]">{porcentajeDesviacion}%</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-1">Tasa de Desviación</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{porcentajeDesviacion}%</div>
               </div>
-              <div className="w-12 h-12 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
-                <TrendingUp className="text-[#00a8a8]" size={22} />
+              <div className="w-10 h-10 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
+                <TrendingUp className="text-[#00a8a8]" size={20} />
               </div>
             </div>
           </div>
           <div className="rounded-xl border border-[#0D47A1]/10 card-modern p-6" style={{ backgroundColor: 'rgba(13,71,161,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Clientes Activos</div>
-                <div className="text-3xl font-extrabold text-[#1c2c4a]">{clientesConReportes.length}</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-1">Clientes Activos</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{clientesConReportes.length}</div>
               </div>
-              <div className="w-12 h-12 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
-                <Building2 className="text-[#0D47A1]" size={22} />
+              <div className="w-10 h-10 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
+                <Building2 className="text-[#0D47A1]" size={20} />
               </div>
             </div>
           </div>
           <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[13px] font-medium text-[#6b7280] mb-2">CO2 Evitado</div>
-                <div className="text-3xl font-extrabold text-[#1c2c4a]">{co2Evitado} <span className="text-lg">ton</span></div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-1">CO2 Evitado</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{co2Evitado} <span className="text-lg">ton</span></div>
               </div>
-              <div className="w-12 h-12 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
-                <Leaf className="text-[#F57C00]" size={22} />
+              <div className="w-10 h-10 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
+                <Leaf className="text-[#F57C00]" size={20} />
               </div>
             </div>
           </div>
