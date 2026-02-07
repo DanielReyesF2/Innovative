@@ -4135,11 +4135,24 @@ const calcularDiasHabiles = (fechaInicio) => {
 };
 
 const InnovativeDemo = () => {
-  const [currentView, setCurrentView] = useState('login');
-  const [loginEmail, setLoginEmail] = useState('');
+  // Auto-login: leer sesión guardada de localStorage
+  const savedSession = (() => {
+    try {
+      const s = localStorage.getItem('innovative_session');
+      if (s) {
+        const parsed = JSON.parse(s);
+        if (parsed.email && parsed.loggedIn) return parsed;
+      }
+    } catch (e) { /* ignore */ }
+    return null;
+  })();
+
+  const [currentView, setCurrentView] = useState(savedSession ? 'dashboard' : 'login');
+  const [loginEmail, setLoginEmail] = useState(savedSession?.email || '');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [selectedTeamMember, setSelectedTeamMember] = useState(null);
   const [selectedClient, setSelectedClient] = useState(null);
   const [selectedLevantamiento, setSelectedLevantamiento] = useState(null);
@@ -4505,6 +4518,10 @@ const InnovativeDemo = () => {
       return;
     }
     setLoginError('');
+    setLoginEmail(usuario.email);
+    if (rememberMe) {
+      localStorage.setItem('innovative_session', JSON.stringify({ email: usuario.email, loggedIn: true }));
+    }
     setCurrentView('dashboard');
   };
 
@@ -4589,30 +4606,12 @@ const InnovativeDemo = () => {
           <div className="absolute bottom-40 right-10 w-32 h-32 rounded-full border-2 border-white"></div>
         </div>
 
-        <div className="flex flex-col items-center justify-center w-full px-12 relative z-10">
-          {/* Logo blanco */}
+        <div className="flex items-center justify-center w-full relative z-10">
           <img
             src="/IGMexico-Blanco.png"
             alt="Innovative Group México"
-            className="w-72 mb-12 drop-shadow-lg"
+            className="w-80 drop-shadow-lg"
           />
-
-          <div className="text-center">
-            <h2 className="text-white text-2xl font-semibold mb-4">Hub Digital</h2>
-            <p className="text-white/80 text-base leading-relaxed max-w-md">
-              Gestión integral de pipeline comercial, operaciones,
-              trazabilidad y KPIs del equipo.
-            </p>
-          </div>
-
-          {/* Feature pills */}
-          <div className="mt-12 flex flex-wrap gap-3 justify-center max-w-md">
-            {['Pipeline Comercial', 'Kanban Board', 'Trazabilidad', 'KPIs en Tiempo Real', 'Economía Circular'].map(feat => (
-              <span key={feat} className="px-4 py-2 rounded-full border border-white/30 text-white/90 text-sm font-medium backdrop-blur-sm">
-                {feat}
-              </span>
-            ))}
-          </div>
         </div>
       </div>
 
@@ -4688,12 +4687,14 @@ const InnovativeDemo = () => {
             {/* Remember + Forgot */}
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="w-4 h-4 rounded border-[#e5e7eb] text-[#2E7D32] focus:ring-[#2E7D32]" />
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-[#e5e7eb] text-[#2E7D32] focus:ring-[#2E7D32] accent-[#2E7D32]"
+                />
                 <span className="text-sm text-[#6b7280]">Recordarme</span>
               </label>
-              <button type="button" className="text-sm text-[#2E7D32] hover:text-[#1B5E20] font-medium transition-colors">
-                Olvidé mi contraseña
-              </button>
             </div>
 
             {/* Submit */}
@@ -4869,7 +4870,7 @@ const InnovativeDemo = () => {
       {/* Logout */}
       <div className="px-3 py-3 border-t border-[#e5e7eb]">
         <button
-          onClick={() => { setCurrentView('login'); setLoginEmail(''); setLoginPassword(''); }}
+          onClick={() => { localStorage.removeItem('innovative_session'); setCurrentView('login'); setLoginEmail(''); setLoginPassword(''); }}
           className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-3' : 'justify-center'} px-3 py-2 text-[#6b7280] hover:bg-red-500/10 hover:text-red-600 rounded-md text-sm font-medium transition-all`}
         >
           <LogOut size={18} className="flex-shrink-0" />
