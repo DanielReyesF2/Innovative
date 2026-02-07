@@ -4477,11 +4477,24 @@ const InnovativeDemo = () => {
   };
 
   // Login Screen
+  const USUARIOS_AUTORIZADOS = [
+    { email: 'daniel@econova.com.mx', password: 'Innovative2026!', nombre: 'Daniel Reyes', role: 'admin' },
+    { email: 'vero@innovative.com.mx', password: 'Innovative2026!', nombre: 'Veronica Arias', role: 'director' },
+  ];
+
   const handleLogin = (e) => {
     e.preventDefault();
-    // Demo: accept any non-empty credentials
     if (!loginEmail || !loginPassword) {
       setLoginError('Por favor ingresa tu correo y contraseña');
+      return;
+    }
+    const usuario = USUARIOS_AUTORIZADOS.find(u => u.email.toLowerCase() === loginEmail.toLowerCase());
+    if (!usuario) {
+      setLoginError('Correo no registrado en el sistema');
+      return;
+    }
+    if (usuario.password !== loginPassword) {
+      setLoginError('Contraseña incorrecta');
       return;
     }
     setLoginError('');
