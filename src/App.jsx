@@ -4727,15 +4727,12 @@ const InnovativeDemo = () => {
   };
 
   const sidebarNavItems = [
+    { type: 'category', label: 'PRINCIPAL' },
     { type: 'item', id: 'dashboard', icon: Home, label: 'Dashboard' },
-    { type: 'section', key: 'comercial', icon: TrendingUp, label: 'Comercial',
+    { type: 'category', label: 'COMERCIAL' },
+    { type: 'section', key: 'comercial', icon: TrendingUp, label: 'Ventas',
       items: [
         { id: 'comercial', icon: Briefcase, label: 'Pipeline & Prospectos' },
-      ]
-    },
-    { type: 'section', key: 'operacion', icon: Truck, label: 'Operación',
-      items: [
-        { id: 'operacion', icon: ClipboardList, label: 'Levantamientos' },
       ]
     },
     { type: 'section', key: 'trazabilidad', icon: BarChart3, label: 'Trazabilidad',
@@ -4743,11 +4740,18 @@ const InnovativeDemo = () => {
         { id: 'trazabilidad', icon: Target, label: 'Pipeline General' },
       ]
     },
+    { type: 'category', label: 'OPERACIONES' },
+    { type: 'section', key: 'operacion', icon: Truck, label: 'Operación',
+      items: [
+        { id: 'operacion', icon: ClipboardList, label: 'Levantamientos' },
+      ]
+    },
     { type: 'section', key: 'subproductos', icon: Recycle, label: 'Subproductos',
       items: [
         { id: 'subproductos', icon: Leaf, label: 'Economía Circular' },
       ]
     },
+    { type: 'category', label: 'SISTEMA' },
     { type: 'item', id: 'admin', icon: Settings, label: 'Administración' },
   ];
 
@@ -4784,8 +4788,17 @@ const InnovativeDemo = () => {
       )}
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 overflow-y-auto">
+      <nav className="flex-1 px-3 overflow-y-auto scrollbar-hide">
         {sidebarNavItems.map((navItem, idx) => {
+          // --- Category label (Notion-style) ---
+          if (navItem.type === 'category') {
+            if (!sidebarOpen) return null;
+            return (
+              <div key={navItem.label} className="text-[10px] uppercase tracking-widest font-semibold text-[#6b7280]/40 px-3 pt-6 pb-1">
+                {navItem.label}
+              </div>
+            );
+          }
           // --- Single item (Dashboard, Admin) ---
           if (navItem.type === 'item') {
             return (
@@ -4886,13 +4899,14 @@ const InnovativeDemo = () => {
     );
   };
 
-  // Header - Sticky con blur estilo kpis-orsega
-  const Header = ({ title, subtitle }) => (
+  // Header - Sticky con blur estilo Apple
+  const usuarioActual = USUARIOS_AUTORIZADOS.find(u => u.email.toLowerCase() === loginEmail.toLowerCase());
+  const nombreUsuario = usuarioActual?.nombre || 'Usuario';
+  const inicialUsuario = nombreUsuario.charAt(0).toUpperCase();
+
+  const Header = ({ title }) => (
     <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-[#e5e7eb] px-6 py-3 flex justify-between items-center">
-      <div>
-        <h1 className="text-lg font-semibold text-[#1c2c4a]">{title}</h1>
-        {subtitle && <p className="text-[#6b7280] text-xs">{subtitle}</p>}
-      </div>
+      <h1 className="text-lg font-semibold text-[#1c2c4a]">{title}</h1>
       <div className="flex items-center gap-3">
         <div className="relative">
           <button
@@ -4925,9 +4939,9 @@ const InnovativeDemo = () => {
         </div>
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full bg-[#00a8a8] flex items-center justify-center text-xs font-semibold text-white">
-            E
+            {inicialUsuario}
           </div>
-          <span className="text-sm font-medium text-[#1c2c4a] hidden sm:inline">Econova</span>
+          <span className="text-sm font-medium text-[#1c2c4a] hidden sm:inline">{nombreUsuario.split(' ')[0]}</span>
         </div>
       </div>
     </div>
@@ -4966,66 +4980,58 @@ const InnovativeDemo = () => {
 
     return (
     <div className="p-8 bg-[#faf7f2] min-h-screen">
-      <Header title="Dashboard Ejecutivo" subtitle="Resumen integral para Dirección Comercial" />
+      <Header title="Dashboard" />
 
       {/* ROW 1: KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
         {/* Pipeline Ponderado */}
-        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-[#00a8a8]"></div>
+        <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-6" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Pipeline Ponderado</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">${(pipelinePonderado / 1000000).toFixed(1)}M</div>
-              <div className="text-xs text-[#6b7280] mt-1">Bruto: ${(pipelineBruto / 1000000).toFixed(0)}M</div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Pipeline Ponderado</div>
+              <div className="text-3xl font-extrabold text-[#1c2c4a]">${(pipelinePonderado / 1000000).toFixed(1)}M</div>
             </div>
-            <div className="w-10 h-10 rounded-lg bg-[#00a8a8]/10 flex items-center justify-center">
-              <DollarSign className="text-[#00a8a8]" size={20} />
+            <div className="w-12 h-12 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
+              <DollarSign className="text-[#00a8a8]" size={22} />
             </div>
           </div>
         </div>
 
         {/* Oportunidades Activas */}
-        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D47A1]"></div>
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Oportunidades Activas</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">{leadsActivos.length}</div>
-              <div className="text-xs text-[#6b7280] mt-1">{propuestasEnviadas.length} en propuesta • {ganadas.length} ganadas</div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Oportunidades Activas</div>
+              <div className="text-3xl font-extrabold text-[#1c2c4a]">{leadsActivos.length}</div>
             </div>
-            <div className="w-10 h-10 rounded-lg bg-[#0D47A1]/10 flex items-center justify-center">
-              <Target className="text-[#0D47A1]" size={20} />
+            <div className="w-12 h-12 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
+              <Target className="text-[#0D47A1]" size={22} />
             </div>
           </div>
         </div>
 
         {/* Win Rate */}
-        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-[#2E7D32]"></div>
+        <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-6" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Win Rate</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">{winRate.toFixed(0)}%</div>
-              <div className="text-xs text-[#6b7280] mt-1">{ganadas.length}W / {rechazadas.length}L</div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Win Rate</div>
+              <div className="text-3xl font-extrabold text-[#1c2c4a]">{winRate.toFixed(0)}%</div>
             </div>
-            <div className="w-10 h-10 rounded-lg bg-[#2E7D32]/10 flex items-center justify-center">
-              <Award className="text-[#2E7D32]" size={20} />
+            <div className="w-12 h-12 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center">
+              <Award className="text-[#2E7D32]" size={22} />
             </div>
           </div>
         </div>
 
         {/* Pipeline Velocity */}
-        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-[#F57C00]"></div>
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Velocity</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">${(velocity / 1000000).toFixed(1)}M</div>
-              <div className="text-xs text-[#6b7280] mt-1">MXN/día</div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Velocity</div>
+              <div className="text-3xl font-extrabold text-[#1c2c4a]">${(velocity / 1000000).toFixed(1)}M</div>
             </div>
-            <div className="w-10 h-10 rounded-lg bg-[#F57C00]/10 flex items-center justify-center">
-              <TrendingUp className="text-[#F57C00]" size={20} />
+            <div className="w-12 h-12 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
+              <TrendingUp className="text-[#F57C00]" size={22} />
             </div>
           </div>
         </div>
@@ -5034,7 +5040,7 @@ const InnovativeDemo = () => {
       {/* ROW 2: Mini Funnel + Presupuesto vs Real */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         {/* Mini Pipeline Funnel */}
-        <div className="lg:col-span-2 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+        <div className="lg:col-span-2 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-[#1c2c4a]">Pipeline por Stage</h3>
             <button
@@ -5080,7 +5086,7 @@ const InnovativeDemo = () => {
         </div>
 
         {/* Presupuesto Resumen */}
-        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-[#1c2c4a]">Presupuesto 2026</h3>
             <button
@@ -5128,7 +5134,7 @@ const InnovativeDemo = () => {
       {/* ROW 3: Top 5 Deals + Alertas + Equipo Snapshot */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         {/* Top 5 Deals */}
-        <div className="lg:col-span-2 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+        <div className="lg:col-span-2 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-[#1c2c4a]">Top 5 Oportunidades</h3>
             <span className="text-xs text-[#6b7280]">Por valor de pipeline</span>
@@ -5162,7 +5168,7 @@ const InnovativeDemo = () => {
         </div>
 
         {/* Alertas y Acciones */}
-        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-[#1c2c4a]">Alertas</h3>
             <span className="w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold">
@@ -5212,7 +5218,7 @@ const InnovativeDemo = () => {
       </div>
 
       {/* ROW 4: Equipo Snapshot (compacto) */}
-      <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+      <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-semibold text-[#1c2c4a]">Equipo Comercial</h3>
           <button
@@ -5383,7 +5389,7 @@ const InnovativeDemo = () => {
     return (
     <div className="p-8 bg-[#faf7f2] min-h-screen">
       <div className="flex items-center justify-between">
-        <Header title="Comercial" subtitle={`${kanbanProspectos.length} oportunidades en pipeline • Equipo de ${salesTeamData.length} ejecutivos`} />
+        <Header title="Comercial" />
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowNuevoLead(true)}
@@ -5402,68 +5408,60 @@ const InnovativeDemo = () => {
         </div>
       </div>
 
-      {/* KPI CARDS - Métricas de Vero */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-        {/* Card 1: Presupuesto Mes vs Proyección Cierre */}
-        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-[#00a8a8]"></div>
+      {/* KPI CARDS */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+        {/* Card 1: Presupuesto Mes */}
+        <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-6" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Presupuesto Mes</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">${(presupuestoMesEquipo / 1000000).toFixed(1)}M</div>
-              <div className="text-xs text-[#6b7280] mt-1">Proyecci&oacute;n cierre: <span className="font-semibold text-[#00a8a8]">${(proyeccionCierre / 1000000).toFixed(1)}M</span></div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Presupuesto Mes</div>
+              <div className="text-3xl font-extrabold text-[#1c2c4a]">${(presupuestoMesEquipo / 1000000).toFixed(1)}M</div>
             </div>
-            <div className="w-10 h-10 rounded-lg bg-[#00a8a8]/10 flex items-center justify-center">
-              <DollarSign className="text-[#00a8a8]" size={20} />
+            <div className="w-12 h-12 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
+              <DollarSign className="text-[#00a8a8]" size={22} />
             </div>
           </div>
         </div>
         {/* Card 2: Levantamientos Activos */}
-        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D47A1]"></div>
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Levantamientos Activos</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">{levantamientosActivos.length}</div>
-              <div className="text-xs text-[#6b7280] mt-1">En proceso de diagn&oacute;stico</div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Levantamientos Activos</div>
+              <div className="text-3xl font-extrabold text-[#1c2c4a]">{levantamientosActivos.length}</div>
             </div>
-            <div className="w-10 h-10 rounded-lg bg-[#0D47A1]/10 flex items-center justify-center">
-              <ClipboardList className="text-[#0D47A1]" size={20} />
+            <div className="w-12 h-12 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
+              <ClipboardList className="text-[#0D47A1]" size={22} />
             </div>
           </div>
         </div>
         {/* Card 3: Propuestas Enviadas */}
-        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-[#2E7D32]"></div>
+        <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-6" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Propuestas Enviadas</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">{propuestasEnviadas.length}</div>
-              <div className="text-xs text-[#6b7280] mt-1">Monto total: <span className="font-semibold text-[#2E7D32]">${(montoPropuestas / 1000000).toFixed(1)}M</span></div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Propuestas Enviadas</div>
+              <div className="text-3xl font-extrabold text-[#1c2c4a]">{propuestasEnviadas.length}</div>
             </div>
-            <div className="w-10 h-10 rounded-lg bg-[#2E7D32]/10 flex items-center justify-center">
-              <FileText className="text-[#2E7D32]" size={20} />
+            <div className="w-12 h-12 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center">
+              <FileText className="text-[#2E7D32]" size={22} />
             </div>
           </div>
         </div>
         {/* Card 4: Cierre Biodigestores */}
-        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-[#F57C00]"></div>
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-[#6b7280] mb-1">Cierre Biodigestores</div>
-              <div className="text-2xl font-bold text-[#1c2c4a]">{biodigestores.length}</div>
-              <div className="text-xs text-[#6b7280] mt-1">{biodigestoresPropuesta.length} en propuesta &bull; <span className="font-semibold text-[#F57C00]">${(montoBiodigestores / 1000000).toFixed(1)}M</span></div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-2">Cierre Biodigestores</div>
+              <div className="text-3xl font-extrabold text-[#1c2c4a]">{biodigestores.length}</div>
             </div>
-            <div className="w-10 h-10 rounded-lg bg-[#F57C00]/10 flex items-center justify-center">
-              <Recycle className="text-[#F57C00]" size={20} />
+            <div className="w-12 h-12 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
+              <Recycle className="text-[#F57C00]" size={22} />
             </div>
           </div>
         </div>
       </div>
 
       {/* Presupuesto por Ejecutivo (compact row) */}
-      <div className="mt-4 bg-white rounded-lg border border-[#e5e7eb] card-modern p-4">
+      <div className="mt-4 bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold text-[#1c2c4a]">Presupuesto por Ejecutivo</h3>
           <span className="text-xs text-[#6b7280]">Mensual / Anual</span>
@@ -5483,7 +5481,7 @@ const InnovativeDemo = () => {
       </div>
 
       {/* Distribución de Pipeline por Ejecutivo — Barras apiladas por etapa */}
-      <div className="mt-4 bg-white rounded-lg border border-[#e5e7eb] card-modern p-4">
+      <div className="mt-4 bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
         <h3 className="text-sm font-semibold text-[#1c2c4a] mb-3">Pipeline por Ejecutivo</h3>
         <div className="space-y-3">
           {salesTeamData.map(member => {
@@ -5684,7 +5682,7 @@ const InnovativeDemo = () => {
       {pipelineViewMode === 'funnel' && (
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Nivo Funnel Chart */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Embudo de Ventas</h3>
             <div style={{ height: 400 }}>
               {funnelData.length > 0 && (
@@ -5709,7 +5707,7 @@ const InnovativeDemo = () => {
           </div>
 
           {/* Bar Chart Comparison */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Valor por Stage</h3>
             <div style={{ height: 400 }}>
               <ResponsiveBar
@@ -5743,7 +5741,7 @@ const InnovativeDemo = () => {
           </div>
 
           {/* Conversion Rates */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6 lg:col-span-2">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6 lg:col-span-2">
             <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">Tasas de Conversión por Stage</h3>
             <div className="flex items-center gap-2">
               {KANBAN_STAGES.map((stage, idx) => {
@@ -5774,7 +5772,7 @@ const InnovativeDemo = () => {
 
       {/* TABLE VIEW */}
       {pipelineViewMode === 'tabla' && (
-        <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm overflow-hidden">
+        <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
@@ -6017,7 +6015,7 @@ const InnovativeDemo = () => {
     ].filter(Boolean).length;
 
     const renderTable = (items, showReporte = false) => (
-      <div className="bg-white rounded-lg card-modern overflow-hidden border border-[#e5e7eb]">
+      <div className="bg-white rounded-xl card-modern overflow-hidden border border-[#e5e7eb]">
         <table className="w-full">
           <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
             <tr>
@@ -6105,7 +6103,7 @@ const InnovativeDemo = () => {
     return (
       <div className="p-8 bg-[#faf7f2] min-h-screen">
         <div className="flex items-center justify-between">
-          <Header title="Operación" subtitle={`${totalLevantamientos} levantamientos • ${totalPropuestas} propuestas activas`} />
+          <Header title="Operación" />
           <button
             onClick={() => { setKpiPanelArea('operacion'); setShowKpiPanel(true); }}
             className="flex items-center gap-2 px-4 py-2.5 bg-[#F57C00] hover:bg-[#E65100] text-white rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md"
@@ -6115,65 +6113,57 @@ const InnovativeDemo = () => {
           </button>
         </div>
 
-        {/* MÉTRICAS RESUMEN - Con accent bars */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-[#00a8a8]"></div>
+        {/* MÉTRICAS RESUMEN */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
+          <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-6" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[#6b7280] mb-1">Total Levantamientos</div>
-                <div className="text-2xl font-bold text-[#1c2c4a]">{totalLevantamientos}</div>
-                <div className="text-xs text-[#6b7280] mt-1">Activos en el período</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Total Levantamientos</div>
+                <div className="text-3xl font-extrabold text-[#1c2c4a]">{totalLevantamientos}</div>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#00a8a8]/10 flex items-center justify-center">
-                <ClipboardList className="text-[#00a8a8]" size={20} />
+              <div className="w-12 h-12 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
+                <ClipboardList className="text-[#00a8a8]" size={22} />
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D47A1]"></div>
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[#6b7280] mb-1">Total Propuestas</div>
-                <div className="text-2xl font-bold text-[#1c2c4a]">{totalPropuestas}</div>
-                <div className="text-xs text-[#6b7280] mt-1">En seguimiento</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Total Propuestas</div>
+                <div className="text-3xl font-extrabold text-[#1c2c4a]">{totalPropuestas}</div>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#0D47A1]/10 flex items-center justify-center">
-                <FileText className="text-[#0D47A1]" size={20} />
+              <div className="w-12 h-12 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
+                <FileText className="text-[#0D47A1]" size={22} />
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-[#2E7D32]"></div>
+          <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-6" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[#6b7280] mb-1">Valor Total Estimado</div>
-                <div className="text-2xl font-bold text-[#1c2c4a]">${(totalValor / 1000000).toFixed(1)}M</div>
-                <div className="text-xs text-[#6b7280] mt-1">Oportunidades en operación</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Valor Total Estimado</div>
+                <div className="text-3xl font-extrabold text-[#1c2c4a]">${(totalValor / 1000000).toFixed(1)}M</div>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#2E7D32]/10 flex items-center justify-center">
-                <DollarSign className="text-[#2E7D32]" size={20} />
+              <div className="w-12 h-12 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center">
+                <DollarSign className="text-[#2E7D32]" size={22} />
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-[#F57C00]"></div>
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[#6b7280] mb-1">Sin Reporte</div>
-                <div className="text-2xl font-bold text-[#1c2c4a]">{completadosSinReporte.length}</div>
-                <div className="text-xs text-orange-600 mt-1">Requieren atención</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Sin Reporte</div>
+                <div className="text-3xl font-extrabold text-[#1c2c4a]">{completadosSinReporte.length}</div>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#F57C00]/10 flex items-center justify-center">
-                <AlertCircle className="text-[#F57C00]" size={20} />
+              <div className="w-12 h-12 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
+                <AlertCircle className="text-[#F57C00]" size={22} />
               </div>
             </div>
           </div>
         </div>
 
         {/* CHARTS ROW */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <h3 className="text-sm font-semibold text-[#1c2c4a] mb-4">Levantamientos por Ejecutivo</h3>
             <div style={{ height: 200 }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -6188,7 +6178,7 @@ const InnovativeDemo = () => {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <h3 className="text-sm font-semibold text-[#1c2c4a] mb-4">Distribución por Status</h3>
             <div style={{ height: 200 }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -6237,7 +6227,7 @@ const InnovativeDemo = () => {
         
         {/* PANEL DE FILTROS */}
         {mostrarFiltros && (
-          <div className="mb-6 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+          <div className="mb-6 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Filter className="text-[#00a8a8]" size={20} />
@@ -6387,7 +6377,7 @@ const InnovativeDemo = () => {
               </span>
             </div>
           </div>
-          <div className="bg-white rounded-lg card-modern overflow-hidden border border-[#e5e7eb]">
+          <div className="bg-white rounded-xl card-modern overflow-hidden border border-[#e5e7eb]">
           <table className="w-full">
               <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
                 <tr>
@@ -6543,75 +6533,67 @@ const InnovativeDemo = () => {
 
     return (
       <div className="p-8 bg-[#faf7f2] min-h-screen">
-        <Header title="Trazabilidad del Pipeline" subtitle="Vista general del flujo comercial — Solo lectura" />
+        <Header title="Trazabilidad" />
 
         {/* INDICADORES CLAVE */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
           {/* Total Prospectos Activos */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-[#00a8a8]"></div>
+          <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-6" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[#6b7280] mb-1">Prospectos Activos</div>
-                <div className="text-2xl font-bold text-[#1c2c4a]">{totalProspectos}</div>
-                <div className="text-xs text-[#6b7280] mt-1">En todas las etapas</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Prospectos Activos</div>
+                <div className="text-3xl font-extrabold text-[#1c2c4a]">{totalProspectos}</div>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#00a8a8]/10 flex items-center justify-center">
-                <Users className="text-[#00a8a8]" size={20} />
+              <div className="w-12 h-12 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
+                <Users className="text-[#00a8a8]" size={22} />
               </div>
             </div>
           </div>
 
           {/* Pipeline Total */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D47A1]"></div>
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[#6b7280] mb-1">Pipeline Total</div>
-                <div className="text-2xl font-bold text-[#1c2c4a]">${(totalPipeline / 1000000).toFixed(1)}M</div>
-                <div className="text-xs text-[#6b7280] mt-1">Valor acumulado</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Pipeline Total</div>
+                <div className="text-3xl font-extrabold text-[#1c2c4a]">${(totalPipeline / 1000000).toFixed(1)}M</div>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#0D47A1]/10 flex items-center justify-center">
-                <DollarSign className="text-[#0D47A1]" size={20} />
+              <div className="w-12 h-12 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
+                <DollarSign className="text-[#0D47A1]" size={22} />
               </div>
             </div>
           </div>
 
           {/* Tiempo Promedio del Ciclo */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-[#F57C00]"></div>
+          <div className="rounded-xl border border-[#F57C00]/10 card-modern p-6" style={{ backgroundColor: 'rgba(245,124,0,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[#6b7280] mb-1">Tiempo Promedio</div>
-                <div className="text-2xl font-bold text-[#1c2c4a]">
-                  {metricasPorEtapa.length > 0 ? Math.round(metricasPorEtapa.reduce((s, m) => s + m.diasPromedio, 0) / metricasPorEtapa.filter(m => m.count > 0).length || 1) : 0} días
+                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Tiempo Promedio</div>
+                <div className="text-3xl font-extrabold text-[#1c2c4a]">
+                  {metricasPorEtapa.length > 0 ? Math.round(metricasPorEtapa.reduce((s, m) => s + m.diasPromedio, 0) / metricasPorEtapa.filter(m => m.count > 0).length || 1) : 0} <span className="text-lg">días</span>
                 </div>
-                <div className="text-xs text-[#6b7280] mt-1">Promedio por etapa</div>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#F57C00]/10 flex items-center justify-center">
-                <Calendar className="text-[#F57C00]" size={20} />
+              <div className="w-12 h-12 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
+                <Calendar className="text-[#F57C00]" size={22} />
               </div>
             </div>
           </div>
 
           {/* Estancados */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: estancados.length > 5 ? '#EF4444' : '#2E7D32' }}></div>
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[#6b7280] mb-1">Estancados (&gt;30 días)</div>
-                <div className="text-2xl font-bold" style={{ color: estancados.length > 5 ? '#EF4444' : '#1c2c4a' }}>{estancados.length}</div>
-                <div className="text-xs text-[#6b7280] mt-1">Requieren atención</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Estancados (&gt;30 días)</div>
+                <div className="text-3xl font-extrabold" style={{ color: estancados.length > 5 ? '#EF4444' : '#1c2c4a' }}>{estancados.length}</div>
               </div>
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: estancados.length > 5 ? '#EF444415' : '#2E7D3215' }}>
-                <AlertCircle size={20} style={{ color: estancados.length > 5 ? '#EF4444' : '#2E7D32' }} />
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: estancados.length > 5 ? '#EF444410' : '#2E7D3210' }}>
+                <AlertCircle size={22} style={{ color: estancados.length > 5 ? '#EF4444' : '#2E7D32' }} />
               </div>
             </div>
           </div>
         </div>
 
         {/* CONVERSIÓN ENTRE ETAPAS — Funnel horizontal */}
-        <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] card-modern p-5">
+        <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <h3 className="text-sm font-semibold text-[#1c2c4a] mb-4">Flujo de Conversión entre Etapas</h3>
           <div className="flex items-center justify-between overflow-x-auto gap-1">
             {metricasPorEtapa.map((etapa, idx) => (
@@ -6644,9 +6626,8 @@ const InnovativeDemo = () => {
         </div>
 
         {/* VELOCIDAD DEL PIPELINE — Full width */}
-        <div className="mt-4 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+        <div className="mt-4 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <h3 className="text-sm font-semibold text-[#1c2c4a] mb-1">Velocidad del Pipeline</h3>
-          <p className="text-[11px] text-[#6b7280] mb-5">Prospectos por etapa vs tiempo promedio de permanencia</p>
           <ResponsiveContainer width="100%" height={400}>
             <ComposedChart data={metricasPorEtapa.filter(m => m.count > 0)} margin={{ top: 10, right: 50, bottom: 10, left: 10 }}>
               <defs>
@@ -6696,7 +6677,7 @@ const InnovativeDemo = () => {
 
         {/* ALERTAS — Estilo notificaciones */}
         {estancados.length > 0 && (
-          <div className="mt-3 bg-white rounded-lg border border-[#e5e7eb] card-modern px-4 py-3">
+          <div className="mt-3 bg-white rounded-xl border border-[#e5e7eb] card-modern px-4 py-3">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 flex-shrink-0">
                 <div className="relative">
@@ -6944,7 +6925,7 @@ const InnovativeDemo = () => {
     return (
       <div className="p-8 bg-[#faf7f2] min-h-screen">
         <div className="flex items-center justify-between">
-          <Header title="Subproductos" subtitle={`${clientesConReportes.length} clientes activos • Trazabilidad y economía circular`} />
+          <Header title="Subproductos" />
           <button
             onClick={() => { setKpiPanelArea('subproductos'); setShowKpiPanel(true); }}
             className="flex items-center gap-2 px-4 py-2.5 bg-[#2E7D32] hover:bg-[#1B5E20] text-white rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md"
@@ -6955,63 +6936,55 @@ const InnovativeDemo = () => {
         </div>
 
         {/* KPI CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-[#2E7D32]"></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+          <div className="rounded-xl border border-[#2E7D32]/10 card-modern p-6" style={{ backgroundColor: 'rgba(46,125,50,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[#6b7280] mb-1">Toneladas Circulares</div>
-                <div className="text-2xl font-bold text-[#1c2c4a]">{toneladasCirculares.toFixed(1)}</div>
-                <div className="text-xs text-[#2E7D32] mt-1">Reciclaje + Composta + Reuso</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Toneladas Circulares</div>
+                <div className="text-3xl font-extrabold text-[#1c2c4a]">{toneladasCirculares.toFixed(1)}</div>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#2E7D32]/10 flex items-center justify-center">
-                <Recycle className="text-[#2E7D32]" size={20} />
+              <div className="w-12 h-12 rounded-xl bg-[#2E7D32]/10 flex items-center justify-center">
+                <Recycle className="text-[#2E7D32]" size={22} />
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-[#00a8a8]"></div>
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[#6b7280] mb-1">Tasa de Desviación</div>
-                <div className="text-2xl font-bold text-[#1c2c4a]">{porcentajeDesviacion}%</div>
-                <div className="text-xs text-[#6b7280] mt-1">Evitado de relleno sanitario</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Tasa de Desviación</div>
+                <div className="text-3xl font-extrabold text-[#1c2c4a]">{porcentajeDesviacion}%</div>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#00a8a8]/10 flex items-center justify-center">
-                <TrendingUp className="text-[#00a8a8]" size={20} />
+              <div className="w-12 h-12 rounded-xl bg-[#00a8a8]/10 flex items-center justify-center">
+                <TrendingUp className="text-[#00a8a8]" size={22} />
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D47A1]"></div>
+          <div className="rounded-xl border border-[#0D47A1]/10 card-modern p-6" style={{ backgroundColor: 'rgba(13,71,161,0.04)' }}>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[#6b7280] mb-1">Clientes Activos</div>
-                <div className="text-2xl font-bold text-[#1c2c4a]">{clientesConReportes.length}</div>
-                <div className="text-xs text-[#6b7280] mt-1">Con reportes de trazabilidad</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-2">Clientes Activos</div>
+                <div className="text-3xl font-extrabold text-[#1c2c4a]">{clientesConReportes.length}</div>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#0D47A1]/10 flex items-center justify-center">
-                <Building2 className="text-[#0D47A1]" size={20} />
+              <div className="w-12 h-12 rounded-xl bg-[#0D47A1]/10 flex items-center justify-center">
+                <Building2 className="text-[#0D47A1]" size={22} />
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-[#F57C00]"></div>
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-[#6b7280] mb-1">CO2 Evitado</div>
-                <div className="text-2xl font-bold text-[#1c2c4a]">{co2Evitado} ton</div>
-                <div className="text-xs text-[#6b7280] mt-1">{arbolesSalvados.toLocaleString()} árboles equiv.</div>
+                <div className="text-[13px] font-medium text-[#6b7280] mb-2">CO2 Evitado</div>
+                <div className="text-3xl font-extrabold text-[#1c2c4a]">{co2Evitado} <span className="text-lg">ton</span></div>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#F57C00]/10 flex items-center justify-center">
-                <Leaf className="text-[#F57C00]" size={20} />
+              <div className="w-12 h-12 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
+                <Leaf className="text-[#F57C00]" size={22} />
               </div>
             </div>
           </div>
         </div>
 
         {/* BARRA SUPERIOR: CLIENTE Y ACCIONES */}
-        <div className="mt-8 bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+        <div className="mt-8 bg-white rounded-xl p-5 border border-[#e5e7eb] shadow-sm">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4 flex-1 min-w-[300px]">
               <label className="text-sm font-medium text-[#1c2c4a] whitespace-nowrap">Cliente:</label>
@@ -7117,7 +7090,7 @@ const InnovativeDemo = () => {
         
         {/* RESUMEN OPERATIVO DEL CLIENTE - VISTA SIMPLIFICADA */}
         {clienteActual && (
-          <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm">
+          <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] shadow-sm">
             <div className="p-4 flex items-center justify-between border-b border-[#e5e7eb]">
               <div className="flex items-center gap-3">
                 <div className="text-3xl">{clienteActual.logo}</div>
@@ -7165,7 +7138,7 @@ const InnovativeDemo = () => {
         
         {/* KPIs - Más compactos */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+          <div className="bg-white rounded-xl p-5 border border-[#e5e7eb] shadow-sm">
             <div className="flex items-center justify-between mb-2">
               <Recycle className="text-[#00a8a8]" size={18} />
               <span className="text-xs text-[#6b7280]">Circulares</span>
@@ -7174,7 +7147,7 @@ const InnovativeDemo = () => {
             <div className="text-xs text-[#6b7280] mt-1">ton</div>
           </div>
           
-          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+          <div className="bg-white rounded-xl p-5 border border-[#e5e7eb] shadow-sm">
             <div className="flex items-center justify-between mb-2">
               <Trash2 className="text-red-500" size={18} />
               <span className="text-xs text-[#6b7280]">Relleno</span>
@@ -7183,7 +7156,7 @@ const InnovativeDemo = () => {
             <div className="text-xs text-[#6b7280] mt-1">ton</div>
           </div>
           
-          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+          <div className="bg-white rounded-xl p-5 border border-[#e5e7eb] shadow-sm">
             <div className="flex items-center justify-between mb-2">
               <BarChart3 className="text-blue-500" size={18} />
               <span className="text-xs text-[#6b7280]">Total</span>
@@ -7192,7 +7165,7 @@ const InnovativeDemo = () => {
             <div className="text-xs text-[#6b7280] mt-1">ton</div>
           </div>
           
-          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+          <div className="bg-white rounded-xl p-5 border border-[#e5e7eb] shadow-sm">
             <div className="flex items-center justify-between mb-2">
               <TrendingUp className="text-[#00a8a8]" size={18} />
               <span className="text-xs text-[#6b7280]">Desviación</span>
@@ -7204,14 +7177,14 @@ const InnovativeDemo = () => {
 
         {/* DIAGRAMA SANKEY - FLUJO DE MATERIALES */}
         {clienteActual && !datosSankey && (
-          <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm p-8 text-center">
+          <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] shadow-sm p-8 text-center">
             <Recycle className="mx-auto text-[#6b7280] mb-4" size={48} />
             <h3 className="text-lg font-semibold text-[#1c2c4a] mb-2">No hay datos de trazabilidad</h3>
             <p className="text-sm text-[#6b7280]">Agrega datos en la tabla de trazabilidad para visualizar el flujo de materiales.</p>
           </div>
         )}
         {clienteActual && datosSankey && (
-          <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+          <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-base font-semibold text-[#1c2c4a] mb-1">Flujo de Materiales</h3>
@@ -7258,7 +7231,7 @@ const InnovativeDemo = () => {
               </div>
             </div>
 
-            <div ref={sankeyRef} className="h-[500px] bg-white rounded-lg border border-[#e5e7eb]">
+            <div ref={sankeyRef} className="h-[500px] bg-white rounded-xl border border-[#e5e7eb]">
               {(() => {
                 // Filtrar datos si hay un nodo seleccionado
                 let filteredNodes = datosSankey.nodes;
@@ -7398,7 +7371,7 @@ const InnovativeDemo = () => {
 
         {/* GRÁFICAS */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-6">
-          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+          <div className="bg-white rounded-xl p-5 border border-[#e5e7eb] shadow-sm">
             <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">
               Distribución por Destino
             </h3>
@@ -7417,7 +7390,7 @@ const InnovativeDemo = () => {
             </ResponsiveContainer>
           </div>
 
-          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+          <div className="bg-white rounded-xl p-5 border border-[#e5e7eb] shadow-sm">
             <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">
               Evolución % Desviación
             </h3>
@@ -7434,7 +7407,7 @@ const InnovativeDemo = () => {
         </div>
 
         {/* TABLA INTERACTIVA DE TRAZABILIDAD */}
-        <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm">
+        <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] shadow-sm">
           <div className="p-4 border-b border-[#e5e7eb] flex justify-between items-center">
             <h3 className="text-base font-semibold text-[#1c2c4a]">
               Datos de Trazabilidad
@@ -7655,11 +7628,11 @@ const InnovativeDemo = () => {
   // VISTA: ADMINISTRACIÓN
   const AdminView = () => (
     <div className="p-8 bg-[#faf7f2] min-h-screen">
-      <Header title="Administración" subtitle="Configuración del sistema y gestión de usuarios" />
+      <Header title="Administración" />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         {/* Usuarios del Sistema */}
-        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+        <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
           <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
             <Users size={18} className="text-[#00a8a8]" />
             Usuarios del Sistema
@@ -7691,7 +7664,7 @@ const InnovativeDemo = () => {
         {/* Configuración General */}
         <div className="space-y-6">
           {/* Servicios */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
               <Settings size={18} className="text-[#00a8a8]" />
               Servicios Innovative
@@ -7706,7 +7679,7 @@ const InnovativeDemo = () => {
           </div>
 
           {/* Metas KPI */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
               <Target size={18} className="text-[#00a8a8]" />
               Metas de KPIs
@@ -7728,7 +7701,7 @@ const InnovativeDemo = () => {
           </div>
 
           {/* Info del Sistema */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+          <div className="bg-white rounded-xl border border-[#e5e7eb] card-modern p-6">
             <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
               <AlertCircle size={18} className="text-[#00a8a8]" />
               Sistema
@@ -9857,7 +9830,7 @@ const InnovativeDemo = () => {
                             Descargar
                           </button>
                         </div>
-                        <div data-sankey-cliente className="h-[500px] bg-white rounded-lg border border-[#e5e7eb]">
+                        <div data-sankey-cliente className="h-[500px] bg-white rounded-xl border border-[#e5e7eb]">
                           <ResponsiveSankey
                             data={datosSankeyCliente}
                             margin={{ top: 20, right: 200, bottom: 20, left: 200 }}
