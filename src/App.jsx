@@ -4135,7 +4135,11 @@ const calcularDiasHabiles = (fechaInicio) => {
 };
 
 const InnovativeDemo = () => {
-  const [currentView, setCurrentView] = useState('welcome');
+  const [currentView, setCurrentView] = useState('login');
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [selectedTeamMember, setSelectedTeamMember] = useState(null);
   const [selectedClient, setSelectedClient] = useState(null);
   const [selectedLevantamiento, setSelectedLevantamiento] = useState(null);
@@ -4472,63 +4476,157 @@ const InnovativeDemo = () => {
     );
   };
 
-  // Welcome Screen
-  const WelcomeScreen = () => (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="text-center max-w-4xl px-8">
-        <div className="mb-16">
-          <div className="flex items-center justify-center gap-6 mb-6">
-            <div className="text-5xl">♻️</div>
+  // Login Screen
+  const handleLogin = (e) => {
+    e.preventDefault();
+    // Demo: accept any non-empty credentials
+    if (!loginEmail || !loginPassword) {
+      setLoginError('Por favor ingresa tu correo y contraseña');
+      return;
+    }
+    setLoginError('');
+    setCurrentView('dashboard');
+  };
+
+  const LoginScreen = () => (
+    <div className="min-h-screen flex">
+      {/* Left Panel - Branding */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#1B5E20] via-[#2E7D32] to-[#388E3C] relative overflow-hidden">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-20 left-10 w-40 h-40 rounded-full border-2 border-white"></div>
+          <div className="absolute top-40 right-20 w-60 h-60 rounded-full border border-white"></div>
+          <div className="absolute bottom-20 left-20 w-80 h-80 rounded-full border border-white"></div>
+          <div className="absolute bottom-40 right-10 w-32 h-32 rounded-full border-2 border-white"></div>
+        </div>
+
+        <div className="flex flex-col items-center justify-center w-full px-12 relative z-10">
+          {/* Logo blanco */}
+          <img
+            src="/IGMexico-Blanco.png"
+            alt="Innovative Group México"
+            className="w-72 mb-12 drop-shadow-lg"
+          />
+
+          <div className="text-center">
+            <h2 className="text-white text-2xl font-semibold mb-4">Hub Digital</h2>
+            <p className="text-white/80 text-base leading-relaxed max-w-md">
+              Gestión integral de pipeline comercial, operaciones,
+              trazabilidad y KPIs del equipo.
+            </p>
+          </div>
+
+          {/* Feature pills */}
+          <div className="mt-12 flex flex-wrap gap-3 justify-center max-w-md">
+            {['Pipeline Comercial', 'Kanban Board', 'Trazabilidad', 'KPIs en Tiempo Real', 'Economía Circular'].map(feat => (
+              <span key={feat} className="px-4 py-2 rounded-full border border-white/30 text-white/90 text-sm font-medium backdrop-blur-sm">
+                {feat}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Right Panel - Login Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center bg-[#faf7f2] px-8">
+        <div className="w-full max-w-md">
+          {/* Logo for mobile (hidden on desktop) */}
+          <div className="lg:hidden flex justify-center mb-8">
+            <img
+              src="/IGMexico-V-Color-Logo.png"
+              alt="Innovative Group México"
+              className="w-48"
+            />
+          </div>
+
+          {/* Welcome Text */}
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold text-[#1c2c4a] mb-2">Bienvenido</h1>
+            <p className="text-[#6b7280] text-sm">Ingresa tus credenciales para acceder al sistema</p>
+          </div>
+
+          {/* Login Form */}
+          <form onSubmit={handleLogin} className="space-y-5">
+            {/* Email */}
             <div>
-              <h1 className="text-6xl font-bold text-[#00a8a8] mb-3 tracking-tight">
-                INNOVATIVE GROUP
-              </h1>
-              <div className="text-xl text-[#6b7280] font-medium tracking-wide">
-                × ECONOVA TECH SOLUTIONS
+              <label className="block text-sm font-medium text-[#1c2c4a] mb-2">Correo electrónico</label>
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6b7280]">
+                  <Send size={16} />
+                </div>
+                <input
+                  type="email"
+                  value={loginEmail}
+                  onChange={(e) => { setLoginEmail(e.target.value); setLoginError(''); }}
+                  placeholder="nombre@innovative.com"
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-[#e5e7eb] rounded-lg text-sm text-[#1c2c4a] placeholder-[#6b7280]/50 focus:outline-none focus:ring-2 focus:ring-[#2E7D32]/30 focus:border-[#2E7D32] transition-all"
+                />
               </div>
             </div>
+
+            {/* Password */}
+            <div>
+              <label className="block text-sm font-medium text-[#1c2c4a] mb-2">Contraseña</label>
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6b7280]">
+                  <Lock size={16} />
+                </div>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={loginPassword}
+                  onChange={(e) => { setLoginPassword(e.target.value); setLoginError(''); }}
+                  placeholder="••••••••"
+                  className="w-full pl-10 pr-12 py-3 bg-white border border-[#e5e7eb] rounded-lg text-sm text-[#1c2c4a] placeholder-[#6b7280]/50 focus:outline-none focus:ring-2 focus:ring-[#2E7D32]/30 focus:border-[#2E7D32] transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6b7280] hover:text-[#1c2c4a] transition-colors"
+                >
+                  <Eye size={16} />
+                </button>
+              </div>
+            </div>
+
+            {/* Error */}
+            {loginError && (
+              <div className="flex items-center gap-2 text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                <AlertCircle size={16} />
+                {loginError}
+              </div>
+            )}
+
+            {/* Remember + Forgot */}
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" className="w-4 h-4 rounded border-[#e5e7eb] text-[#2E7D32] focus:ring-[#2E7D32]" />
+                <span className="text-sm text-[#6b7280]">Recordarme</span>
+              </label>
+              <button type="button" className="text-sm text-[#2E7D32] hover:text-[#1B5E20] font-medium transition-colors">
+                Olvidé mi contraseña
+              </button>
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              className="w-full py-3 bg-gradient-to-r from-[#1B5E20] to-[#2E7D32] hover:from-[#2E7D32] hover:to-[#388E3C] text-white rounded-lg font-semibold text-sm transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2"
+            >
+              Iniciar Sesión
+              <ChevronRight size={16} />
+            </button>
+          </form>
+
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <p className="text-xs text-[#6b7280]">
+              Innovative Group México © 2026
+            </p>
+            <p className="text-xs text-[#6b7280]/60 mt-1">
+              Powered by EcoNova Tech Solutions
+            </p>
           </div>
         </div>
-        
-        <div className="bg-white rounded-lg p-16 mb-12 border border-[#e5e7eb] shadow-sm">
-          <h2 className="text-3xl font-semibold text-[#1c2c4a] mb-6 leading-tight">
-            Sistema Integral de Gestión Comercial
-          </h2>
-          <p className="text-lg text-[#6b7280] mb-12 leading-relaxed max-w-2xl mx-auto">
-            Control total de levantamientos, propuestas, pipeline, presupuesto, KPIs 
-            y reportes de trazabilidad entregados para clientes.
-          </p>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-            <div className="bg-[#f3f4f6] rounded-lg p-8 border border-[#e5e7eb]">
-              <div className="text-4xl mb-4">📋</div>
-              <div className="text-sm font-semibold text-[#1c2c4a]">Levantamientos</div>
-              <div className="text-xs text-[#6b7280] mt-1">& Propuestas</div>
-            </div>
-            <div className="bg-[#f3f4f6] rounded-lg p-8 border border-[#e5e7eb]">
-              <div className="text-4xl mb-4">📊</div>
-              <div className="text-sm font-semibold text-[#1c2c4a]">Pipeline</div>
-              <div className="text-xs text-[#6b7280] mt-1">Embudo comercial</div>
-            </div>
-            <div className="bg-[#f3f4f6] rounded-lg p-8 border border-[#e5e7eb]">
-              <div className="text-4xl mb-4">💰</div>
-              <div className="text-sm font-semibold text-[#1c2c4a]">Presupuesto</div>
-              <div className="text-xs text-[#6b7280] mt-1">vs Real</div>
-            </div>
-            <div className="bg-[#f3f4f6] rounded-lg p-8 border border-[#e5e7eb]">
-              <div className="text-4xl mb-4">📧</div>
-              <div className="text-sm font-semibold text-[#1c2c4a]">Reportes Auto</div>
-              <div className="text-xs text-[#6b7280] mt-1">Mensuales</div>
-            </div>
-          </div>
-        </div>
-        
-        <button
-          onClick={() => setCurrentView('dashboard')}
-          className="bg-[#00a8a8] hover:bg-[#008080] text-white px-12 py-4 rounded-md text-lg font-semibold transition-all shadow-sm"
-        >
-          Acceder al Sistema
-        </button>
       </div>
     </div>
   );
@@ -4600,21 +4698,18 @@ const InnovativeDemo = () => {
               <button
                 key={navItem.id}
                 onClick={() => {
-                  if (navItem.id !== 'admin') {
-                    setCurrentView(navItem.id);
-                    setSelectedClient(null);
-                    setSelectedTeamMember(null);
-                  }
+                  setCurrentView(navItem.id);
+                  setSelectedClient(null);
+                  setSelectedTeamMember(null);
                 }}
                 className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-3' : 'justify-center'} px-3 py-2 rounded-md mb-0.5 transition-all text-sm ${
                   currentView === navItem.id
                     ? 'bg-[#00a8a8]/10 text-[#00a8a8] font-semibold'
-                    : navItem.id === 'admin' ? 'text-[#6b7280]/50 cursor-not-allowed' : 'text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#1c2c4a] font-medium'
+                    : 'text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#1c2c4a] font-medium'
                 }`}
               >
                 <navItem.icon size={18} className="flex-shrink-0" />
                 {sidebarOpen && <span className="flex-1 text-left">{navItem.label}</span>}
-                {sidebarOpen && navItem.id === 'admin' && <span className="text-[10px] bg-[#f3f4f6] text-[#6b7280] px-1.5 py-0.5 rounded-full">Pronto</span>}
               </button>
             );
           }
@@ -4685,7 +4780,10 @@ const InnovativeDemo = () => {
 
       {/* Logout */}
       <div className="px-3 py-3 border-t border-[#e5e7eb]">
-        <button className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-3' : 'justify-center'} px-3 py-2 text-[#6b7280] hover:bg-red-500/10 hover:text-red-600 rounded-md text-sm font-medium transition-all`}>
+        <button
+          onClick={() => { setCurrentView('login'); setLoginEmail(''); setLoginPassword(''); }}
+          className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-3' : 'justify-center'} px-3 py-2 text-[#6b7280] hover:bg-red-500/10 hover:text-red-600 rounded-md text-sm font-medium transition-all`}
+        >
           <LogOut size={18} className="flex-shrink-0" />
           {sidebarOpen && <span className="flex-1 text-left">Cerrar sesión</span>}
         </button>
@@ -5626,6 +5724,1502 @@ const InnovativeDemo = () => {
 
 
 
+
+
+  const LevantamientosView = () => {
+    // Estados para filtros
+    const [mostrarFiltros, setMostrarFiltros] = useState(false);
+    const [filtroTipo, setFiltroTipo] = useState('Todos');
+    const [filtroStatus, setFiltroStatus] = useState('Todos');
+    const [filtroEjecutivo, setFiltroEjecutivo] = useState('Todos');
+    const [filtroCliente, setFiltroCliente] = useState('');
+    const [filtroReporte, setFiltroReporte] = useState('Todos');
+
+    // Funciones de filtrado
+    const getFechaSemana = () => {
+      const hoy = new Date('2025-11-11');
+      const inicioSemana = new Date(hoy);
+      inicioSemana.setDate(hoy.getDate() - hoy.getDay());
+      return inicioSemana.toISOString().split('T')[0];
+    };
+
+    const getFechaMes = () => {
+      const hoy = new Date('2025-11-11');
+      return `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-01`;
+    };
+
+    const esEstaSemana = (fecha) => {
+      const fechaItem = new Date(fecha);
+      const inicioSemana = new Date(getFechaSemana());
+      const hoy = new Date('2025-11-11');
+      return fechaItem >= inicioSemana && fechaItem <= hoy;
+    };
+
+    const esEsteMes = (fecha) => {
+      const fechaItem = new Date(fecha);
+      const inicioMes = new Date(getFechaMes());
+      const hoy = new Date('2025-11-11');
+      return fechaItem >= inicioMes && fechaItem <= hoy;
+    };
+
+    // Función para aplicar filtros
+    const aplicarFiltros = (items) => {
+      return items.filter(item => {
+        // Filtro por tipo
+        if (filtroTipo !== 'Todos' && item.tipo !== filtroTipo) return false;
+        
+        // Filtro por status
+        if (filtroStatus !== 'Todos' && item.status !== filtroStatus) return false;
+        
+        // Filtro por ejecutivo
+        if (filtroEjecutivo !== 'Todos' && item.ejecutivo !== filtroEjecutivo) return false;
+        
+        // Filtro por cliente (búsqueda)
+        if (filtroCliente && !item.cliente.toLowerCase().includes(filtroCliente.toLowerCase())) return false;
+        
+        // Filtro por reporte
+        if (filtroReporte === 'Con Reporte' && !item.tieneReporte) return false;
+        if (filtroReporte === 'Sin Reporte' && item.tieneReporte) return false;
+        
+        return true;
+      });
+    };
+
+    // Obtener ejecutivos únicos
+    const ejecutivosUnicos = [...new Set(levantamientosActivos.map(l => l.ejecutivo))].sort();
+    
+    // Obtener estados únicos
+    const estadosUnicos = [...new Set(levantamientosActivos.map(l => l.status))].sort();
+
+    const levantamientosEstaSemana = aplicarFiltros(levantamientosActivos.filter(l => 
+      esEstaSemana(l.fecha) && l.tipo === 'Levantamiento'
+    ));
+    
+    const levantamientosEsteMes = aplicarFiltros(levantamientosActivos.filter(l => 
+      esEsteMes(l.fecha) && l.tipo === 'Levantamiento'
+    ));
+
+    const completadosSinReporte = aplicarFiltros(levantamientosActivos.filter(l => 
+      l.status === 'Completado' && !l.tieneReporte && l.tipo === 'Levantamiento'
+    ));
+
+    const levantamientosFiltrados = aplicarFiltros(levantamientosActivos);
+
+    const totalLevantamientos = aplicarFiltros(levantamientosActivos.filter(l => l.tipo === 'Levantamiento')).length;
+    const totalPropuestas = aplicarFiltros(levantamientosActivos.filter(l => l.tipo === 'Propuesta')).length;
+    const totalValor = aplicarFiltros(levantamientosActivos).reduce((sum, l) => sum + l.valorEstimado, 0);
+
+    // Función para limpiar filtros
+    const limpiarFiltros = () => {
+      setFiltroTipo('Todos');
+      setFiltroStatus('Todos');
+      setFiltroEjecutivo('Todos');
+      setFiltroCliente('');
+      setFiltroReporte('Todos');
+    };
+
+    // Contar filtros activos
+    const filtrosActivos = [
+      filtroTipo !== 'Todos',
+      filtroStatus !== 'Todos',
+      filtroEjecutivo !== 'Todos',
+      filtroCliente !== '',
+      filtroReporte !== 'Todos'
+    ].filter(Boolean).length;
+
+    const renderTable = (items, showReporte = false) => (
+      <div className="bg-white rounded-lg card-modern overflow-hidden border border-[#e5e7eb]">
+        <table className="w-full">
+          <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
+            <tr>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Cliente</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Ejecutivo</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Fecha</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Status</th>
+              {showReporte && (
+                <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Reporte</th>
+              )}
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Volumen Est.</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Valor Est.</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.length === 0 ? (
+              <tr>
+                <td colSpan={showReporte ? 8 : 7} className="px-6 py-8 text-center text-[#6b7280]">
+                  No hay registros en esta categoría
+                </td>
+              </tr>
+            ) : (
+              items.map(item => (
+                <tr key={item.id} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6]">
+                  <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">{item.cliente}</td>
+                  <td className="px-6 py-4 text-sm text-[#6b7280]">{item.ejecutivo}</td>
+                  <td className="px-6 py-4 text-sm font-medium text-[#1c2c4a]">{item.fecha}</td>
+                  <td className="px-6 py-4 text-sm">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      item.status === 'Completado' ? 'bg-green-50 text-green-700 border border-green-200' :
+                      item.status === 'Enviada' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                      item.status === 'En revisión' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
+                      item.status === 'Agendado' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
+                      'bg-gray-50 text-gray-700 border border-gray-200'
+                    }`}>
+                      {item.status}
+                    </span>
+                  </td>
+                  {showReporte && (
+                    <td className="px-6 py-4 text-sm">
+                      {item.tieneReporte ? (
+                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">
+                          ✓ Generado
+                        </span>
+                      ) : (
+                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-orange-50 text-orange-700 border border-orange-200">
+                          Pendiente
+                        </span>
+                      )}
+                    </td>
+                  )}
+                  <td className="px-6 py-4 text-sm font-semibold text-[#00a8a8]">{item.volumenEstimado}</td>
+                  <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">
+                    ${(item.valorEstimado / 1000).toFixed(0)}k
+                  </td>
+                  <td className="px-6 py-4 text-sm">
+                    <button 
+                      onClick={() => setSelectedLevantamiento(item)}
+                      className="text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1 text-sm"
+                    >
+                      Ver <ChevronRight size={14} />
+            </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+
+    // Datos para charts operativos
+    const levPorEjecutivo = ejecutivosUnicos.map(ej => ({
+      ejecutivo: ej.split(' ')[0],
+      completados: levantamientosActivos.filter(l => l.ejecutivo === ej && l.status === 'Completado').length,
+      pendientes: levantamientosActivos.filter(l => l.ejecutivo === ej && l.status !== 'Completado').length,
+    }));
+
+    const levPorStatus = estadosUnicos.map(s => ({
+      name: s,
+      value: levantamientosActivos.filter(l => l.status === s).length,
+    }));
+
+    return (
+      <div className="p-8 bg-[#faf7f2] min-h-screen">
+        <div className="flex items-center justify-between">
+          <Header title="Operación" subtitle={`${totalLevantamientos} levantamientos • ${totalPropuestas} propuestas activas`} />
+          <button
+            onClick={() => { setKpiPanelArea('operacion'); setShowKpiPanel(true); }}
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#F57C00] hover:bg-[#E65100] text-white rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md"
+          >
+            <Target size={16} />
+            KPIs del Equipo
+          </button>
+        </div>
+
+        {/* MÉTRICAS RESUMEN - Con accent bars */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-[#00a8a8]"></div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-[#6b7280] mb-1">Total Levantamientos</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{totalLevantamientos}</div>
+                <div className="text-xs text-[#6b7280] mt-1">Activos en el período</div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#00a8a8]/10 flex items-center justify-center">
+                <ClipboardList className="text-[#00a8a8]" size={20} />
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D47A1]"></div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-[#6b7280] mb-1">Total Propuestas</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{totalPropuestas}</div>
+                <div className="text-xs text-[#6b7280] mt-1">En seguimiento</div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#0D47A1]/10 flex items-center justify-center">
+                <FileText className="text-[#0D47A1]" size={20} />
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-[#2E7D32]"></div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-[#6b7280] mb-1">Valor Total Estimado</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">${(totalValor / 1000000).toFixed(1)}M</div>
+                <div className="text-xs text-[#6b7280] mt-1">Oportunidades en operación</div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#2E7D32]/10 flex items-center justify-center">
+                <DollarSign className="text-[#2E7D32]" size={20} />
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-[#F57C00]"></div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-[#6b7280] mb-1">Sin Reporte</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{completadosSinReporte.length}</div>
+                <div className="text-xs text-orange-600 mt-1">Requieren atención</div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#F57C00]/10 flex items-center justify-center">
+                <AlertCircle className="text-[#F57C00]" size={20} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CHARTS ROW */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5">
+            <h3 className="text-sm font-semibold text-[#1c2c4a] mb-4">Levantamientos por Ejecutivo</h3>
+            <div style={{ height: 200 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={levPorEjecutivo} barGap={2}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis dataKey="ejecutivo" tick={{ fontSize: 11, fill: '#6b7280' }} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: '#6b7280' }} tickLine={false} />
+                  <Tooltip contentStyle={{ backgroundColor: '#1c2c4a', border: '1px solid #00a8a8', borderRadius: '8px', color: '#fff', fontSize: '12px' }} />
+                  <Bar dataKey="completados" stackId="a" fill="#00a8a8" radius={[0, 0, 0, 0]} name="Completados" />
+                  <Bar dataKey="pendientes" stackId="a" fill="#F57C00" radius={[4, 4, 0, 0]} name="Pendientes" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5">
+            <h3 className="text-sm font-semibold text-[#1c2c4a] mb-4">Distribución por Status</h3>
+            <div style={{ height: 200 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={levPorStatus} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} innerRadius={45} paddingAngle={3}>
+                    {levPorStatus.map((entry, idx) => (
+                      <Cell key={idx} fill={['#00a8a8', '#0D47A1', '#F57C00', '#2E7D32', '#7C3AED', '#ef4444'][idx % 6]} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ backgroundColor: '#1c2c4a', border: '1px solid #00a8a8', borderRadius: '8px', color: '#fff', fontSize: '12px' }} />
+                  <Legend wrapperStyle={{ fontSize: '11px' }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
+        {/* ACCIONES */}
+        <div className="flex justify-between items-center mt-8 mb-6">
+          <div className="flex gap-3">
+            <button 
+              onClick={() => setMostrarFiltros(!mostrarFiltros)}
+              className={`flex items-center gap-2 px-4 py-2 border border-[#e5e7eb] rounded-md hover:bg-white font-medium text-sm transition-all ${
+                mostrarFiltros || filtrosActivos > 0
+                  ? 'bg-[#00a8a8] text-white border-[#00a8a8] hover:bg-[#008080]'
+                  : 'text-[#6b7280] hover:text-[#00a8a8]'
+              }`}
+            >
+              <Filter size={16} />
+              Filtrar
+              {filtrosActivos > 0 && (
+                <span className="bg-white text-[#00a8a8] text-xs font-bold px-2 py-0.5 rounded-full">
+                  {filtrosActivos}
+                </span>
+              )}
+            </button>
+          </div>
+          <button 
+            onClick={() => setMostrarNuevoLevantamiento(true)}
+            className="bg-[#00a8a8] hover:bg-[#1e4a37] text-white px-6 py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center gap-2 transition-all"
+          >
+            <ClipboardList size={18} />
+            Nuevo Levantamiento
+          </button>
+        </div>
+        
+        {/* PANEL DE FILTROS */}
+        {mostrarFiltros && (
+          <div className="mb-6 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Filter className="text-[#00a8a8]" size={20} />
+                <h3 className="text-lg font-semibold text-[#1c2c4a]">Filtros de Búsqueda</h3>
+                {filtrosActivos > 0 && (
+                  <span className="text-xs bg-[#00a8a8] text-white px-2 py-1 rounded-md font-medium">
+                    {filtrosActivos} activo{filtrosActivos !== 1 ? 's' : ''}
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={limpiarFiltros}
+                className="text-sm text-[#6b7280] hover:text-[#00a8a8] font-medium flex items-center gap-1"
+              >
+                <RotateCcw size={14} />
+                Limpiar filtros
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              {/* Filtro por Tipo */}
+              <div>
+                <label className="block text-xs font-medium text-[#6b7280] mb-2">Tipo</label>
+                <select
+                  value={filtroTipo}
+                  onChange={(e) => setFiltroTipo(e.target.value)}
+                  className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
+                >
+                  <option value="Todos">Todos</option>
+                  <option value="Levantamiento">Levantamiento</option>
+                  <option value="Propuesta">Propuesta</option>
+                </select>
+              </div>
+
+              {/* Filtro por Status */}
+              <div>
+                <label className="block text-xs font-medium text-[#6b7280] mb-2">Estado</label>
+                <select
+                  value={filtroStatus}
+                  onChange={(e) => setFiltroStatus(e.target.value)}
+                  className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
+                >
+                  <option value="Todos">Todos</option>
+                  {estadosUnicos.map(estado => (
+                    <option key={estado} value={estado}>{estado}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Filtro por Ejecutivo */}
+              <div>
+                <label className="block text-xs font-medium text-[#6b7280] mb-2">Ejecutivo</label>
+                <select
+                  value={filtroEjecutivo}
+                  onChange={(e) => setFiltroEjecutivo(e.target.value)}
+                  className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
+                >
+                  <option value="Todos">Todos</option>
+                  {ejecutivosUnicos.map(ejecutivo => (
+                    <option key={ejecutivo} value={ejecutivo}>{ejecutivo}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Filtro por Cliente (búsqueda) */}
+              <div>
+                <label className="block text-xs font-medium text-[#6b7280] mb-2">Cliente</label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6b7280]" size={16} />
+                  <input
+                    type="text"
+                    value={filtroCliente}
+                    onChange={(e) => setFiltroCliente(e.target.value)}
+                    placeholder="Buscar cliente..."
+                    className="w-full pl-10 pr-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
+                  />
+                </div>
+              </div>
+
+              {/* Filtro por Reporte */}
+              <div>
+                <label className="block text-xs font-medium text-[#6b7280] mb-2">Reporte</label>
+                <select
+                  value={filtroReporte}
+                  onChange={(e) => setFiltroReporte(e.target.value)}
+                  className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
+                >
+                  <option value="Todos">Todos</option>
+                  <option value="Con Reporte">Con Reporte</option>
+                  <option value="Sin Reporte">Sin Reporte</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* LEVANTAMIENTOS ESTA SEMANA */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Calendar className="text-[#00a8a8]" size={24} />
+              <h2 className="text-xl font-semibold text-[#1c2c4a]">Levantamientos Esta Semana</h2>
+              <span className="px-3 py-1 bg-[#00a8a8] text-white text-xs font-medium rounded-md">
+                {levantamientosEstaSemana.length}
+              </span>
+            </div>
+          </div>
+          {renderTable(levantamientosEstaSemana)}
+        </div>
+
+        {/* LEVANTAMIENTOS ESTE MES */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Calendar className="text-[#00a8a8]" size={24} />
+              <h2 className="text-xl font-semibold text-[#1c2c4a]">Levantamientos Este Mes</h2>
+              <span className="px-3 py-1 bg-[#008080] text-white text-xs font-medium rounded-md">
+                {levantamientosEsteMes.length}
+              </span>
+            </div>
+          </div>
+          {renderTable(levantamientosEsteMes)}
+        </div>
+
+        {/* COMPLETADOS SIN REPORTE */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="text-orange-500" size={24} />
+              <h2 className="text-xl font-semibold text-[#1c2c4a]">Completados Sin Reporte</h2>
+              <span className="px-3 py-1 bg-orange-500 text-white text-xs font-medium rounded-md">
+                {completadosSinReporte.length}
+              </span>
+            </div>
+          </div>
+          {renderTable(completadosSinReporte, true)}
+        </div>
+
+        {/* TODOS LOS LEVANTAMIENTOS Y PROPUESTAS */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Eye className="text-[#00a8a8]" size={24} />
+              <h2 className="text-xl font-semibold text-[#1c2c4a]">Vista Total - Todos los Registros</h2>
+              <span className="px-3 py-1 bg-[#f3f4f6] text-[#6b7280] text-xs font-medium rounded-md border border-[#e5e7eb]">
+                {levantamientosFiltrados.length} registro{levantamientosFiltrados.length !== 1 ? 's' : ''}
+              </span>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg card-modern overflow-hidden border border-[#e5e7eb]">
+          <table className="w-full">
+              <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
+                <tr>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Cliente</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Tipo</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Ejecutivo</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Fecha</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Status</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Volumen Est.</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Valor Est.</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {levantamientosFiltrados.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="px-6 py-8 text-center text-[#6b7280]">
+                    No se encontraron registros con los filtros aplicados
+                  </td>
+                </tr>
+              ) : (
+                levantamientosFiltrados.map(item => (
+                  <tr key={item.id} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6]">
+                    <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">{item.cliente}</td>
+                  <td className="px-6 py-4 text-sm">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      item.tipo === 'Levantamiento' 
+                          ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                          : 'bg-purple-50 text-purple-700 border border-purple-200'
+                    }`}>
+                      {item.tipo}
+                    </span>
+                  </td>
+                    <td className="px-6 py-4 text-sm text-[#6b7280]">{item.ejecutivo}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-[#1c2c4a]">{item.fecha}</td>
+                  <td className="px-6 py-4 text-sm">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        item.status === 'Completado' ? 'bg-green-50 text-green-700 border border-green-200' :
+                        item.status === 'Enviada' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                        item.status === 'En revisión' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
+                        item.status === 'Agendado' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
+                        'bg-gray-50 text-gray-700 border border-gray-200'
+                    }`}>
+                      {item.status}
+                    </span>
+                  </td>
+                    <td className="px-6 py-4 text-sm font-semibold text-[#00a8a8]">{item.volumenEstimado}</td>
+                    <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">
+                    ${(item.valorEstimado / 1000).toFixed(0)}k
+                  </td>
+                  <td className="px-6 py-4 text-sm">
+                    <button 
+                      onClick={() => setSelectedLevantamiento(item)}
+                        className="text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1 text-sm"
+                    >
+                        Ver <ChevronRight size={14} />
+                    </button>
+                  </td>
+                </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+          </div>
+        </div>
+        
+        {/* SIGUIENTE PASO REQUERIDO */}
+        <div className="bg-white border border-[#e5e7eb] rounded-lg p-6 shadow-sm">
+          <div className="flex items-center gap-3 mb-4">
+            <AlertCircle size={20} className="text-[#00a8a8]" />
+            <h3 className="text-lg font-semibold text-[#1c2c4a]">Siguiente Paso Requerido</h3>
+          </div>
+          <div className="space-y-2">
+            {levantamientosFiltrados.filter(l => l.siguientePaso).map(item => (
+              <div key={item.id} className="flex items-center justify-between bg-[#f3f4f6] p-4 rounded-md border border-[#e5e7eb]">
+                <div>
+                  <span className="font-semibold text-[#1c2c4a]">{item.cliente}</span>
+                  <span className="text-[#6b7280] mx-2">→</span>
+                  <span className="text-sm text-[#6b7280]">{item.siguientePaso}</span>
+                </div>
+                <span className="text-xs font-medium text-[#6b7280]">{item.ejecutivo}</span>
+              </div>
+            ))}
+        </div>
+      </div>
+    </div>
+  );
+  };
+
+  const TrazabilidadView = () => {
+    const [clienteSeleccionado, setClienteSeleccionado] = useState(clientesConReportes[0]?.id || null);
+    const [datosEditables, setDatosEditables] = useState(
+      clienteSeleccionado ? trazabilidadPorCliente[clienteSeleccionado] : datosTrazabilidad
+    );
+    const [categoriasAbiertas, setCategoriasAbiertas] = useState({
+      reciclaje: true,
+      composta: false,
+      reuso: false,
+      rellenoSanitario: false
+    });
+    const [mostrarDropdownReportes, setMostrarDropdownReportes] = useState(false);
+    const [mostrarModalInfo, setMostrarModalInfo] = useState(false);
+    const [selectedNodeSankey, setSelectedNodeSankey] = useState(null);
+    const sankeyRef = useRef(null);
+
+    // Obtener cliente actual
+    const clienteActual = clientesConReportes.find(c => c.id === clienteSeleccionado);
+
+    // Actualizar datos cuando cambia el cliente
+    // Cerrar dropdown cuando cambia el cliente
+    useEffect(() => {
+      setMostrarDropdownReportes(false);
+    }, [clienteSeleccionado]);
+
+    // Cerrar dropdown al hacer clic fuera
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (mostrarDropdownReportes && !event.target.closest('.dropdown-reportes')) {
+          setMostrarDropdownReportes(false);
+        }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [mostrarDropdownReportes]);
+
+    useEffect(() => {
+      if (clienteSeleccionado && trazabilidadPorCliente[clienteSeleccionado]) {
+        setDatosEditables(JSON.parse(JSON.stringify(trazabilidadPorCliente[clienteSeleccionado])));
+      } else {
+        setDatosEditables(JSON.parse(JSON.stringify(datosTrazabilidad)));
+      }
+    }, [clienteSeleccionado]);
+
+    // Generar datos Sankey para el cliente actual
+    const datosSankey = clienteActual && datosEditables 
+      ? generarDatosSankeyCliente(clienteActual, datosEditables)
+      : null;
+
+    // Calcular KPIs
+    const calcularTotal = (categoria) => {
+      return datosEditables[categoria].reduce((total, item) => {
+        const suma = meses.reduce((sum, mes) => sum + (item[mes] || 0), 0);
+        return total + suma;
+      }, 0);
+    };
+
+    const toneladasCirculares = calcularTotal('reciclaje') + calcularTotal('composta') + calcularTotal('reuso');
+    const rellenoSanitario = calcularTotal('rellenoSanitario');
+    const totalGenerado = toneladasCirculares + rellenoSanitario;
+    const porcentajeDesviacion = totalGenerado > 0 ? ((toneladasCirculares / totalGenerado) * 100).toFixed(1) : 0;
+
+    const toggleCategoria = (categoria) => {
+      setCategoriasAbiertas(prev => ({
+        ...prev,
+        [categoria]: !prev[categoria]
+      }));
+    };
+
+    const actualizarValor = (categoria, indexMaterial, mes, valor) => {
+      const nuevoValor = parseFloat(valor) || 0;
+      setDatosEditables(prev => {
+        const nuevaCategoria = [...prev[categoria]];
+        nuevaCategoria[indexMaterial] = {
+          ...nuevaCategoria[indexMaterial],
+          [mes]: nuevoValor
+        };
+        return {
+          ...prev,
+          [categoria]: nuevaCategoria
+        };
+      });
+    };
+
+    const calcularTotalMaterial = (material) => {
+      return meses.reduce((sum, mes) => sum + (material[mes] || 0), 0);
+    };
+
+    const guardarCambios = () => {
+      // Aquí se guardarían los cambios en el backend
+      if (clienteSeleccionado) {
+        trazabilidadPorCliente[clienteSeleccionado] = datosEditables;
+      }
+      alert('Cambios guardados exitosamente');
+    };
+
+    const descargarReporte = (certificacion, formato) => {
+      const cliente = clientesConReportes.find(c => c.id === clienteSeleccionado);
+      const nombreCliente = cliente ? cliente.name : 'General';
+      alert(`Descargando reporte ${certificacion} de ${nombreCliente} en formato ${formato.toUpperCase()}`);
+      setMostrarDropdownReportes(false);
+      // Aquí se implementaría la descarga real del reporte específico de la certificación
+    };
+
+    const categoriasConfig = [
+      { key: 'reciclaje', label: 'RECICLAJE', color: 'bg-green-50 border-green-200' },
+      { key: 'composta', label: 'COMPOSTA', color: 'bg-orange-50 border-orange-200' },
+      { key: 'reuso', label: 'REUSO', color: 'bg-blue-50 border-blue-200' },
+      { key: 'rellenoSanitario', label: 'RELLENO SANITARIO', color: 'bg-red-50 border-red-200' }
+    ];
+
+    // Impacto ambiental estimado
+    const arbolesSalvados = Math.round(toneladasCirculares * 17);
+    const co2Evitado = (toneladasCirculares * 2.5).toFixed(1);
+    const aguaAhorrada = Math.round(toneladasCirculares * 26000);
+
+    return (
+      <div className="p-8 bg-[#faf7f2] min-h-screen">
+        <div className="flex items-center justify-between">
+          <Header title="Subproductos" subtitle={`${clientesConReportes.length} clientes activos • Trazabilidad y economía circular`} />
+          <button
+            onClick={() => { setKpiPanelArea('subproductos'); setShowKpiPanel(true); }}
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#2E7D32] hover:bg-[#1B5E20] text-white rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md"
+          >
+            <Target size={16} />
+            KPIs del Equipo
+          </button>
+        </div>
+
+        {/* KPI CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-[#2E7D32]"></div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-[#6b7280] mb-1">Toneladas Circulares</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{toneladasCirculares.toFixed(1)}</div>
+                <div className="text-xs text-[#2E7D32] mt-1">Reciclaje + Composta + Reuso</div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#2E7D32]/10 flex items-center justify-center">
+                <Recycle className="text-[#2E7D32]" size={20} />
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-[#00a8a8]"></div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-[#6b7280] mb-1">Tasa de Desviación</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{porcentajeDesviacion}%</div>
+                <div className="text-xs text-[#6b7280] mt-1">Evitado de relleno sanitario</div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#00a8a8]/10 flex items-center justify-center">
+                <TrendingUp className="text-[#00a8a8]" size={20} />
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D47A1]"></div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-[#6b7280] mb-1">Clientes Activos</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{clientesConReportes.length}</div>
+                <div className="text-xs text-[#6b7280] mt-1">Con reportes de trazabilidad</div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#0D47A1]/10 flex items-center justify-center">
+                <Building2 className="text-[#0D47A1]" size={20} />
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-[#F57C00]"></div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-[#6b7280] mb-1">CO2 Evitado</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{co2Evitado} ton</div>
+                <div className="text-xs text-[#6b7280] mt-1">{arbolesSalvados.toLocaleString()} árboles equiv.</div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#F57C00]/10 flex items-center justify-center">
+                <Leaf className="text-[#F57C00]" size={20} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* BARRA SUPERIOR: CLIENTE Y ACCIONES */}
+        <div className="mt-8 bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-4 flex-1 min-w-[300px]">
+              <label className="text-sm font-medium text-[#1c2c4a] whitespace-nowrap">Cliente:</label>
+              <select
+                value={clienteSeleccionado || ''}
+                onChange={(e) => setClienteSeleccionado(parseInt(e.target.value))}
+                className="px-4 py-2 border border-[#e5e7eb] rounded-md text-sm font-medium text-[#1c2c4a] focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent flex-1 max-w-[300px]"
+              >
+                <option value="">Vista General</option>
+                {clientesConReportes.map(cliente => (
+                  <option key={cliente.id} value={cliente.id}>
+                    {cliente.logo} {cliente.name}
+                  </option>
+                ))}
+              </select>
+              {clienteActual && (
+                <div className="flex items-center gap-2 text-sm text-[#6b7280]">
+                  <span className="text-xl">{clienteActual.logo}</span>
+                  <span>{clienteActual.contacto}</span>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  setClienteSeleccionadoVista(clienteSeleccionado);
+                  setVistaCliente(true);
+                }}
+                className="bg-[#0D47A1] hover:bg-[#0D47A1] text-white px-4 py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center gap-2 transition-all"
+                title="Ver como Cliente"
+              >
+                <Eye size={16} />
+                Vista Cliente
+              </button>
+              
+              {/* BOTÓN REPORTES CON DROPDOWN */}
+              <div className="relative dropdown-reportes">
+                <button
+                  onClick={() => setMostrarDropdownReportes(!mostrarDropdownReportes)}
+                  className="bg-[#00a8a8] hover:bg-[#008080] text-white px-4 py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center gap-2 transition-all"
+                  title="Descargar Reportes por Certificación"
+                >
+                  <FileText size={16} />
+                  REPORTES
+                  <ChevronDown size={14} className={mostrarDropdownReportes ? 'transform rotate-180' : ''} />
+                </button>
+                
+                {/* DROPDOWN MENU */}
+                {mostrarDropdownReportes && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-[#e5e7eb] z-50 overflow-hidden">
+                    <div className="p-3 border-b border-[#e5e7eb] bg-[#f3f4f6]">
+                      <h3 className="text-sm font-semibold text-[#1c2c4a]">Reportes por Certificación</h3>
+                      <p className="text-xs text-[#6b7280] mt-1">Seleccione una certificación y formato</p>
+                    </div>
+                    {clienteActual && clienteActual.requisitosReporte && clienteActual.requisitosReporte.length > 0 ? (
+                      <div className="max-h-96 overflow-y-auto">
+                        {clienteActual.requisitosReporte.map((certificacion, idx) => (
+                          <div key={idx} className="border-b border-[#e5e7eb] last:border-b-0">
+                            <div className="px-4 py-3 bg-[#f3f4f6]">
+                              <div className="flex items-center gap-2">
+                                <FileText size={16} className="text-[#00a8a8]" />
+                                <span className="text-sm font-semibold text-[#1c2c4a]">{certificacion}</span>
+                              </div>
+                            </div>
+                            <div className="px-4 py-2 space-y-1">
+                              <button
+                                onClick={() => descargarReporte(certificacion, 'pdf')}
+                                className="w-full text-left px-3 py-2 text-xs hover:bg-[#f3f4f6] rounded-md flex items-center gap-2 text-[#6b7280] hover:text-[#1c2c4a] transition-colors"
+                              >
+                                <FileText size={14} className="text-red-600" />
+                                <span>PDF</span>
+                              </button>
+                              <button
+                                onClick={() => descargarReporte(certificacion, 'excel')}
+                                className="w-full text-left px-3 py-2 text-xs hover:bg-[#f3f4f6] rounded-md flex items-center gap-2 text-[#6b7280] hover:text-[#1c2c4a] transition-colors"
+                              >
+                                <Download size={14} className="text-green-600" />
+                                <span>Excel</span>
+                              </button>
+                              <button
+                                onClick={() => descargarReporte(certificacion, 'csv')}
+                                className="w-full text-left px-3 py-2 text-xs hover:bg-[#f3f4f6] rounded-md flex items-center gap-2 text-[#6b7280] hover:text-[#1c2c4a] transition-colors"
+                              >
+                                <Download size={14} className="text-blue-600" />
+                                <span>CSV</span>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-4 text-center text-sm text-[#6b7280]">
+                        No hay certificaciones configuradas para este cliente
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* RESUMEN OPERATIVO DEL CLIENTE - VISTA SIMPLIFICADA */}
+        {clienteActual && (
+          <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm">
+            <div className="p-4 flex items-center justify-between border-b border-[#e5e7eb]">
+              <div className="flex items-center gap-3">
+                <div className="text-3xl">{clienteActual.logo}</div>
+                <div>
+                  <h3 className="text-base font-semibold text-[#1c2c4a]">{clienteActual.name}</h3>
+                  <p className="text-xs text-[#6b7280]">{clienteActual.sucursales} sucursales • {clienteActual.contacto}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setMostrarModalInfo(true)}
+                className="text-xs text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1.5 px-3 py-1.5 hover:bg-[#f3f4f6] rounded-md"
+              >
+                <Eye size={14} />
+                Ver Detalles
+              </button>
+            </div>
+            
+            <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+                <div className="text-xs text-[#6b7280] mb-1">Promedio Mensual</div>
+                <div className="text-lg font-semibold text-[#1c2c4a]">{clienteActual.promedioMensual}</div>
+                <div className="text-xs text-[#6b7280]">ton/mes</div>
+              </div>
+              
+              <div className="text-center p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+                <div className="text-xs text-[#6b7280] mb-1">Tasa Valorización</div>
+                <div className="text-lg font-semibold text-[#00a8a8]">{clienteActual.tasaValorizacion}%</div>
+                <div className="text-xs text-[#6b7280]">desviación</div>
+              </div>
+              
+              <div className="text-center p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+                <div className="text-xs text-[#6b7280] mb-1">Recolección</div>
+                <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.frecuenciaRecoleccion}</div>
+              </div>
+              
+              <div className="text-center p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+                <div className="text-xs text-[#6b7280] mb-1">Operando desde</div>
+                <div className="text-sm font-semibold text-[#1c2c4a]">
+                  {Math.floor((new Date() - new Date(clienteActual.fechaInicioOperacion)) / (1000 * 60 * 60 * 24 * 30))} meses
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* KPIs - Más compactos */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <Recycle className="text-[#00a8a8]" size={18} />
+              <span className="text-xs text-[#6b7280]">Circulares</span>
+            </div>
+            <div className="text-2xl font-semibold text-[#1c2c4a]">{toneladasCirculares.toFixed(1)}</div>
+            <div className="text-xs text-[#6b7280] mt-1">ton</div>
+          </div>
+          
+          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <Trash2 className="text-red-500" size={18} />
+              <span className="text-xs text-[#6b7280]">Relleno</span>
+            </div>
+            <div className="text-2xl font-semibold text-[#1c2c4a]">{rellenoSanitario.toFixed(1)}</div>
+            <div className="text-xs text-[#6b7280] mt-1">ton</div>
+          </div>
+          
+          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <BarChart3 className="text-blue-500" size={18} />
+              <span className="text-xs text-[#6b7280]">Total</span>
+            </div>
+            <div className="text-2xl font-semibold text-[#1c2c4a]">{totalGenerado.toFixed(1)}</div>
+            <div className="text-xs text-[#6b7280] mt-1">ton</div>
+          </div>
+          
+          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <TrendingUp className="text-[#00a8a8]" size={18} />
+              <span className="text-xs text-[#6b7280]">Desviación</span>
+            </div>
+            <div className="text-2xl font-semibold text-[#1c2c4a]">{porcentajeDesviacion}%</div>
+            <div className="text-xs text-[#6b7280] mt-1">del relleno</div>
+          </div>
+        </div>
+
+        {/* DIAGRAMA SANKEY - FLUJO DE MATERIALES */}
+        {clienteActual && !datosSankey && (
+          <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm p-8 text-center">
+            <Recycle className="mx-auto text-[#6b7280] mb-4" size={48} />
+            <h3 className="text-lg font-semibold text-[#1c2c4a] mb-2">No hay datos de trazabilidad</h3>
+            <p className="text-sm text-[#6b7280]">Agrega datos en la tabla de trazabilidad para visualizar el flujo de materiales.</p>
+          </div>
+        )}
+        {clienteActual && datosSankey && (
+          <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-base font-semibold text-[#1c2c4a] mb-1">Flujo de Materiales</h3>
+                <p className="text-xs text-[#6b7280]">Trazabilidad completa de {clienteActual.name}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <select 
+                  value={selectedNodeSankey || ''} 
+                  onChange={(e) => setSelectedNodeSankey(e.target.value || null)}
+                  className="px-3 py-1.5 border border-[#e5e7eb] rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent"
+                >
+                  <option value="">Todos los nodos</option>
+                  {datosSankey.nodes.map(node => (
+                    <option key={node.id} value={node.id}>{node.id}</option>
+                  ))}
+                </select>
+                {selectedNodeSankey && (
+                  <button
+                    onClick={() => setSelectedNodeSankey(null)}
+                    className="p-1.5 hover:bg-[#f3f4f6] rounded-md"
+                    title="Limpiar filtro"
+                  >
+                    <RotateCcw size={14} className="text-[#6b7280]" />
+                  </button>
+                )}
+                <button
+                  onClick={async () => {
+                    if (!sankeyRef.current) return;
+                    try {
+                      const canvas = await html2canvas(sankeyRef.current, { scale: 2, backgroundColor: '#ffffff' });
+                      const link = document.createElement('a');
+                      link.download = `flujo-materiales-${clienteActual.name.toLowerCase().replace(/\s+/g, '-')}.png`;
+                      link.href = canvas.toDataURL();
+                      link.click();
+                    } catch (error) {
+                      console.error('Error exporting PNG:', error);
+                    }
+                  }}
+                  className="px-3 py-1.5 bg-[#00a8a8] hover:bg-[#1e4a37] text-white rounded-md text-xs font-medium flex items-center gap-1.5"
+                >
+                  <FileImage size={14} />
+                  PNG
+                </button>
+              </div>
+            </div>
+
+            <div ref={sankeyRef} className="h-[500px] bg-white rounded-lg border border-[#e5e7eb]">
+              {(() => {
+                // Filtrar datos si hay un nodo seleccionado
+                let filteredNodes = datosSankey.nodes;
+                let filteredLinks = datosSankey.links;
+                
+                if (selectedNodeSankey) {
+                  const relevantNodeIds = new Set([selectedNodeSankey]);
+                  const relevantLinks = datosSankey.links.filter(l => 
+                    l.source === selectedNodeSankey || l.target === selectedNodeSankey
+                  );
+                  
+                  relevantLinks.forEach(link => {
+                    relevantNodeIds.add(link.source);
+                    relevantNodeIds.add(link.target);
+                  });
+                  
+                  filteredNodes = datosSankey.nodes.filter(n => relevantNodeIds.has(n.id));
+                  filteredLinks = relevantLinks;
+                }
+                
+                return (
+                  <ResponsiveSankey
+                    data={{
+                      nodes: filteredNodes,
+                      links: filteredLinks
+                    }}
+                    margin={{ top: 20, right: 200, bottom: 20, left: 200 }}
+                    align="justify"
+                    colors={(node) => {
+                      const nodeData = filteredNodes.find(n => n.id === node.id);
+                      return nodeData?.nodeColor || '#64748b';
+                    }}
+                    nodeOpacity={1}
+                    nodeHoverOpacity={0.8}
+                    nodeThickness={18}
+                    nodeSpacing={10}
+                    nodeBorderWidth={0}
+                    linkOpacity={0.5}
+                    linkHoverOpacity={0.8}
+                    linkContract={0}
+                    enableLinkGradient={true}
+                    labelPosition="outside"
+                    labelOrientation="horizontal"
+                    labelPadding={20}
+                    labelTextColor="#374151"
+                    labelWrap={true}
+                    animate={true}
+                    motionConfig="gentle"
+                    nodeTooltip={({ node }) => {
+                      const nodeData = filteredNodes.find(n => n.id === node.id);
+                      const nodeIdParts = node.id.split(' (');
+                      const nombreDestino = nodeIdParts[0];
+                      const registroAmbiental = nodeData?.registroAmbiental || (nodeIdParts[1] ? nodeIdParts[1].replace(')', '') : '');
+                      return (
+                        <div className="bg-[#1c2c4a] text-white p-2 rounded-md text-xs shadow-lg border border-[#00a8a8]">
+                          <div className="font-semibold">{nombreDestino}</div>
+                          {registroAmbiental && (
+                            <div className="text-[#00a8a8] font-medium mt-1">Registro: {registroAmbiental}</div>
+                          )}
+                          {node.value && (
+                            <div className="text-xs mt-1">
+                              <div>Volumen total: {node.value.toFixed(1)} ton</div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }}
+                    linkTooltip={({ link }) => {
+                      const percentage = datosSankey.totalGenerado > 0 
+                        ? ((link.value / datosSankey.totalGenerado) * 100).toFixed(1) 
+                        : '0';
+                      return (
+                        <div className="bg-[#1c2c4a] text-white p-2 rounded-md text-xs shadow-lg border border-[#00a8a8]">
+                          <div className="font-semibold">{link.source.id} → {link.target.id}</div>
+                          <div className="mt-1">Volumen: {link.value.toFixed(1)} ton/mes</div>
+                          <div>Porcentaje: {percentage}%</div>
+                        </div>
+                      );
+                    }}
+                    onClick={(data) => {
+                      if (data.id) {
+                        setSelectedNodeSankey(selectedNodeSankey === data.id ? null : data.id);
+                      }
+                    }}
+                  />
+                );
+              })()}
+            </div>
+            
+            {selectedNodeSankey && (
+              <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <div className="flex items-center gap-2 text-xs">
+                  <Filter size={14} className="text-blue-600" />
+                  <span className="font-medium text-blue-800">
+                    Filtrando por: {selectedNodeSankey}
+                  </span>
+                  <button
+                    onClick={() => setSelectedNodeSankey(null)}
+                    className="ml-auto text-blue-600 hover:text-blue-800 text-xs font-medium"
+                  >
+                    Limpiar filtro
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Métricas del Flujo */}
+            <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb] text-center">
+                <div className="text-xs text-[#6b7280] mb-1">Total Generado</div>
+                <div className="text-lg font-semibold text-[#1c2c4a]">{datosSankey.totalGenerado.toFixed(1)}</div>
+                <div className="text-xs text-[#6b7280]">ton/mes</div>
+              </div>
+              <div className="bg-green-50 rounded-lg p-4 border border-green-200 text-center">
+                <div className="text-xs text-[#6b7280] mb-1">Composta</div>
+                <div className="text-lg font-semibold text-[#00a8a8]">{datosSankey.totalComposta.toFixed(1)}</div>
+                <div className="text-xs text-[#6b7280]">ton/mes</div>
+              </div>
+              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 text-center">
+                <div className="text-xs text-[#6b7280] mb-1">Reciclaje</div>
+                <div className="text-lg font-semibold text-[#008080]">{datosSankey.totalReciclaje.toFixed(1)}</div>
+                <div className="text-xs text-[#6b7280]">ton/mes</div>
+              </div>
+              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 text-center">
+                <div className="text-xs text-[#6b7280] mb-1">Reuso</div>
+                <div className="text-lg font-semibold text-[#008080]">{datosSankey.totalReuso.toFixed(1)}</div>
+                <div className="text-xs text-[#6b7280]">ton/mes</div>
+              </div>
+              <div className="bg-red-50 rounded-lg p-4 border border-red-200 text-center">
+                <div className="text-xs text-[#6b7280] mb-1">Relleno</div>
+                <div className="text-lg font-semibold text-[#DC2626]">{datosSankey.totalRelleno.toFixed(1)}</div>
+                <div className="text-xs text-[#6b7280]">ton/mes</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* GRÁFICAS */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-6">
+          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">
+              Distribución por Destino
+            </h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={calcularDistribucionPorDestino(datosEditables)} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis type="number" stroke="#6b7280" fontSize={12} />
+                <YAxis dataKey="mes" type="category" width={50} stroke="#6b7280" fontSize={12} />
+                <Tooltip />
+                <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
+                <Bar dataKey="Reciclaje" fill="#00a8a8" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="Composta" fill="#FF8C00" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="Reuso" fill="#008080" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="Relleno sanitario" fill="#DC2626" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
+            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">
+              Evolución % Desviación
+            </h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={calcularEvolucionDesviacion(datosEditables)}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="mes" stroke="#6b7280" fontSize={12} />
+                <YAxis domain={[0, 100]} stroke="#6b7280" fontSize={12} />
+                <Tooltip />
+                <Line type="monotone" dataKey="desviacion" stroke="#00a8a8" strokeWidth={2} dot={{ fill: '#00a8a8', r: 3 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* TABLA INTERACTIVA DE TRAZABILIDAD */}
+        <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm">
+          <div className="p-4 border-b border-[#e5e7eb] flex justify-between items-center">
+            <h3 className="text-base font-semibold text-[#1c2c4a]">
+              Datos de Trazabilidad
+            </h3>
+            <button
+              onClick={guardarCambios}
+              className="bg-[#00a8a8] hover:bg-[#1e4a37] text-white px-3 py-1.5 rounded-md font-medium text-xs shadow-sm hover:shadow-md flex items-center gap-1.5"
+            >
+              <Save size={14} />
+              Guardar
+            </button>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#1c2c4a]">Material</th>
+                  {meses.map(mes => (
+                    <th key={mes} className="px-2 py-3 text-center text-xs font-semibold text-[#1c2c4a] min-w-[60px]">
+                      {mes}
+                    </th>
+                  ))}
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-[#1c2c4a]">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {categoriasConfig.map(categoriaConfig => {
+                  const categoria = datosEditables[categoriaConfig.key];
+                  const estaAbierta = categoriasAbiertas[categoriaConfig.key];
+                  
+                  return (
+                    <React.Fragment key={categoriaConfig.key}>
+                      {/* Fila de categoría */}
+                      <tr className={`${categoriaConfig.color} border-b border-[#e5e7eb] cursor-pointer`}>
+                        <td 
+                          colSpan={13}
+                          onClick={() => toggleCategoria(categoriaConfig.key)}
+                          className="px-4 py-3"
+                        >
+                          <div className="flex items-center gap-2">
+                            {estaAbierta ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                            <span className="font-semibold text-sm text-[#1c2c4a]">{categoriaConfig.label}</span>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                      {/* Filas de materiales (si está abierta) */}
+                      {estaAbierta && categoria.map((material, index) => {
+                        const total = calcularTotalMaterial(material);
+                        return (
+                          <tr key={index} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6]">
+                            <td className="px-4 py-2 text-xs font-medium text-[#1c2c4a]">
+                              {material.material}
+                            </td>
+                            {meses.map(mes => (
+                              <td key={mes} className="px-1 py-2 text-center">
+                                <input
+                                  type="number"
+                                  value={material[mes] || ''}
+                                  onChange={(e) => actualizarValor(categoriaConfig.key, index, mes, e.target.value)}
+                                  className="w-full px-1.5 py-1 text-xs text-center border border-[#e5e7eb] rounded focus:outline-none focus:ring-1 focus:ring-[#00a8a8] focus:border-transparent"
+                                  min="0"
+                                  step="0.1"
+                                />
+                              </td>
+                            ))}
+                            <td className="px-4 py-2 text-center text-xs font-semibold text-[#1c2c4a]">
+                              {total.toFixed(1)} t
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </React.Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* MODAL DE INFORMACIÓN DETALLADA DEL CLIENTE */}
+        {mostrarModalInfo && clienteActual && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setMostrarModalInfo(false)}>
+            <div className="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#e5e7eb]" onClick={e => e.stopPropagation()}>
+              <div className="p-6 border-b border-[#e5e7eb] flex items-center justify-between bg-[#00a8a8] text-white rounded-t-lg">
+                <div className="flex items-center gap-3">
+                  <div className="text-4xl">{clienteActual.logo}</div>
+                  <div>
+                    <h2 className="text-xl font-semibold">{clienteActual.name}</h2>
+                    <p className="text-sm text-[#00b3b3]">{clienteActual.contacto} • {clienteActual.email}</p>
+                  </div>
+                </div>
+                <button onClick={() => setMostrarModalInfo(false)} className="text-white hover:text-[#00b3b3]">
+                  <X size={24} />
+                </button>
+              </div>
+              
+              <div className="p-6">
+                {/* INFORMACIÓN OPERATIVA */}
+                <div className="mb-6">
+                  <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
+                    <Calendar size={18} />
+                    Información Operativa
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Fecha de Inicio</div>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.fechaInicioOperacion}</div>
+                      <div className="text-xs text-[#6b7280] mt-1">
+                        {Math.floor((new Date() - new Date(clienteActual.fechaInicioOperacion)) / (1000 * 60 * 60 * 24 * 30))} meses operando
+                      </div>
+                    </div>
+                    
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Promedio Mensual</div>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.promedioMensual} ton/mes</div>
+                      <div className="text-xs text-[#6b7280] mt-1">Volumen histórico</div>
+                    </div>
+                    
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Frecuencia</div>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.frecuenciaRecoleccion}</div>
+                    </div>
+                    
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Tasa Valorización</div>
+                      <div className="text-sm font-semibold text-[#00a8a8]">{clienteActual.tasaValorizacion}%</div>
+                    </div>
+                    
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">Sucursales</div>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.sucursales}</div>
+                    </div>
+                    
+                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
+                      <div className="text-xs text-[#6b7280] font-medium mb-1">RME Gestionado</div>
+                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.rmeGestionado} ton/mes</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* TIPOS DE RESIDUOS */}
+                <div className="mb-6">
+                  <h3 className="text-base font-semibold text-[#1c2c4a] mb-3 flex items-center gap-2">
+                    <Package size={18} />
+                    Tipos de Residuos Gestionados
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {clienteActual.tiposResiduos.map((tipo, idx) => (
+                      <span key={idx} className="px-3 py-1.5 bg-[#f3f4f6] border border-[#e5e7eb] rounded-md text-xs font-medium text-[#1c2c4a]">
+                        {tipo}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* DESTINOS FINALES */}
+                <div>
+                  <h3 className="text-base font-semibold text-[#1c2c4a] mb-3 flex items-center gap-2">
+                    <MapPin size={18} />
+                    Destinos Finales
+                  </h3>
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="w-3 h-3 rounded-full bg-[#00a8a8] mt-0.5"></div>
+                      <div className="flex-1">
+                        <div className="text-xs font-semibold text-[#1c2c4a] mb-0.5">Reciclaje</div>
+                        <div className="text-xs text-[#6b7280]">{clienteActual.destinosFinales.reciclaje}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                      <div className="w-3 h-3 rounded-full bg-[#FF8C00] mt-0.5"></div>
+                      <div className="flex-1">
+                        <div className="text-xs font-semibold text-[#1c2c4a] mb-0.5">Composta</div>
+                        <div className="text-xs text-[#6b7280]">{clienteActual.destinosFinales.composta}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="w-3 h-3 rounded-full bg-[#008080] mt-0.5"></div>
+                      <div className="flex-1">
+                        <div className="text-xs font-semibold text-[#1c2c4a] mb-0.5">Reuso</div>
+                        <div className="text-xs text-[#6b7280]">{clienteActual.destinosFinales.reuso}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <div className="w-3 h-3 rounded-full bg-[#DC2626] mt-0.5"></div>
+                      <div className="flex-1">
+                        <div className="text-xs font-semibold text-[#1c2c4a] mb-0.5">Relleno Sanitario</div>
+                        <div className="text-xs text-[#6b7280]">{clienteActual.destinosFinales.rellenoSanitario}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* SERVICIOS CONTRATADOS */}
+                <div className="mt-6 pt-6 border-t border-[#e5e7eb]">
+                  <h3 className="text-base font-semibold text-[#1c2c4a] mb-3 flex items-center gap-2">
+                    <CheckSquare size={18} />
+                    Servicios Contratados
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {clienteActual.serviciosContratados.map((servicio, idx) => (
+                      <span key={idx} className="px-3 py-1.5 bg-[#00a8a8] text-white rounded-md text-xs font-medium">
+                        {servicio}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // VISTA: ADMINISTRACIÓN
+  const AdminView = () => (
+    <div className="p-8 bg-[#faf7f2] min-h-screen">
+      <Header title="Administración" subtitle="Configuración del sistema y gestión de usuarios" />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        {/* Usuarios del Sistema */}
+        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+          <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
+            <Users size={18} className="text-[#00a8a8]" />
+            Usuarios del Sistema
+          </h3>
+          <div className="space-y-3">
+            {salesTeamData.map(member => (
+              <div key={member.id} className="flex items-center justify-between p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-[#00a8a8] flex items-center justify-center text-white text-xs font-bold">
+                    {member.codigo}
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-[#1c2c4a]">{member.name}</div>
+                    <div className="text-xs text-[#6b7280]">{member.role} • {member.zona}</div>
+                  </div>
+                </div>
+                <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-50 text-green-700 border border-green-200">
+                  Activo
+                </span>
+              </div>
+            ))}
+          </div>
+          <button className="mt-4 w-full py-2.5 border-2 border-dashed border-[#e5e7eb] rounded-lg text-sm font-medium text-[#6b7280] hover:text-[#00a8a8] hover:border-[#00a8a8] transition-colors flex items-center justify-center gap-2">
+            <Users size={16} />
+            Agregar Usuario
+          </button>
+        </div>
+
+        {/* Configuración General */}
+        <div className="space-y-6">
+          {/* Servicios */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
+              <Settings size={18} className="text-[#00a8a8]" />
+              Servicios Innovative
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {SERVICIOS_INNOVATIVE.map((servicio, idx) => (
+                <span key={idx} className="px-3 py-1.5 bg-[#00a8a8]/10 text-[#00a8a8] rounded-full text-xs font-medium border border-[#00a8a8]/20">
+                  {servicio}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Metas KPI */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
+              <Target size={18} className="text-[#00a8a8]" />
+              Metas de KPIs
+            </h3>
+            <div className="space-y-3">
+              {Object.entries(KPI_METAS).map(([key, kpi]) => (
+                <div key={key} className="flex items-center justify-between p-3 bg-[#f3f4f6] rounded-lg">
+                  <div>
+                    <div className="text-sm font-medium text-[#1c2c4a]">{kpi.label}</div>
+                    <div className="text-xs text-[#6b7280]">{kpi.frecuencia}</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-bold text-[#00a8a8]">{kpi.meta > 0 ? kpi.meta : 'Track'}</span>
+                    {kpi.meta > 0 && <span className="text-xs text-[#6b7280]">/{kpi.frecuencia === 'mensual' ? 'mes' : 'sem'}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Info del Sistema */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
+            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
+              <AlertCircle size={18} className="text-[#00a8a8]" />
+              Sistema
+            </h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between p-2 bg-[#f3f4f6] rounded">
+                <span className="text-[#6b7280]">Versión</span>
+                <span className="font-medium text-[#1c2c4a]">2.0.0 — Hub Digital</span>
+              </div>
+              <div className="flex justify-between p-2 bg-[#f3f4f6] rounded">
+                <span className="text-[#6b7280]">Prospectos</span>
+                <span className="font-medium text-[#1c2c4a]">{topProspectos.length} registros</span>
+              </div>
+              <div className="flex justify-between p-2 bg-[#f3f4f6] rounded">
+                <span className="text-[#6b7280]">Ejecutivos</span>
+                <span className="font-medium text-[#1c2c4a]">{salesTeamData.length} activos</span>
+              </div>
+              <div className="flex justify-between p-2 bg-[#f3f4f6] rounded">
+                <span className="text-[#6b7280]">Base de Datos</span>
+                <span className="font-medium text-[#2E7D32]">Neon PostgreSQL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   // Modal Detalle Colaborador
   const TeamMemberModal = () => (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setSelectedTeamMember(null)}>
@@ -5747,8 +7341,8 @@ const InnovativeDemo = () => {
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       <style>{`* { font-family: 'Inter', sans-serif; }`}</style>
       
-      {currentView === 'welcome' ? (
-        <WelcomeScreen />
+      {currentView === 'login' ? (
+        <LoginScreen />
       ) : (
         <div className="flex h-screen overflow-hidden bg-[#f5f5f5]">
           <Sidebar />
@@ -5757,6 +7351,7 @@ const InnovativeDemo = () => {
             {currentView === 'comercial' && <PipelineComercialView />}
             {currentView === 'operacion' && <LevantamientosView />}
             {currentView === 'subproductos' && <TrazabilidadView />}
+            {currentView === 'admin' && <AdminView />}
           </div>
         </div>
       )}
