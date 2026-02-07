@@ -4175,7 +4175,7 @@ const InnovativeDemo = () => {
   const [clienteSeleccionadoVista, setClienteSeleccionadoVista] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [expandedSections, setExpandedSections] = useState({
-    comercial: true, operacion: true, subproductos: true
+    comercial: true, operacion: true, trazabilidad: true, subproductos: true
   });
   const [showKpiPanel, setShowKpiPanel] = useState(false);
   const [kpiPanelArea, setKpiPanelArea] = useState(null); // 'comercial' | 'operacion' | 'subproductos'
@@ -4738,9 +4738,14 @@ const InnovativeDemo = () => {
         { id: 'operacion', icon: ClipboardList, label: 'Levantamientos' },
       ]
     },
+    { type: 'section', key: 'trazabilidad', icon: BarChart3, label: 'Trazabilidad',
+      items: [
+        { id: 'trazabilidad', icon: Target, label: 'Pipeline General' },
+      ]
+    },
     { type: 'section', key: 'subproductos', icon: Recycle, label: 'Subproductos',
       items: [
-        { id: 'subproductos', icon: Leaf, label: 'Trazabilidad' },
+        { id: 'subproductos', icon: Leaf, label: 'Economía Circular' },
       ]
     },
     { type: 'item', id: 'admin', icon: Settings, label: 'Administración' },
@@ -6454,6 +6459,387 @@ const InnovativeDemo = () => {
   );
   };
 
+  // ============================
+  // TRAZABILIDAD GENERAL VIEW — Kanban solo lectura + indicadores de flujo
+  // ============================
+  const TrazabilidadGeneralView = () => {
+    const hoy = new Date();
+
+    // Calcular métricas por etapa
+    const metricasPorEtapa = KANBAN_STAGES.map((stage, idx) => {
+      const prospectos = kanbanProspectos.filter(p => p.status === stage.id);
+
+      // Tiempo promedio en etapa (simulado desde fecha de creación + posición en pipeline)
+      const diasPromedio = prospectos.length > 0
+        ? prospectos.reduce((sum, p) => {
+            if (!p.fecha) return sum + 0;
+            const fechaCreacion = new Date(p.fecha);
+            const dias = Math.max(1, Math.floor((hoy - fechaCreacion) / (1000 * 60 * 60 * 24)));
+            return sum + dias;
+          }, 0) / prospectos.length
+        : 0;
+
+      // Valor del pipeline en esta etapa
+      const valorEtapa = prospectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
+
+      return {
+        ...stage,
+        count: prospectos.length,
+        diasPromedio: Math.round(diasPromedio),
+        valor: valorEtapa,
+        prospectos,
+      };
+    });
+
+    // Conversión entre etapas
+    const conversiones = KANBAN_STAGES.slice(0, -1).map((stage, idx) => {
+      const actual = metricasPorEtapa[idx].count;
+      const siguiente = metricasPorEtapa[idx + 1].count;
+      // Conversión basada en cuántos hay en la siguiente etapa vs esta
+      const total = actual + siguiente;
+      const pct = total > 0 ? Math.round((siguiente / Math.max(actual, siguiente)) * 100) : 0;
+      return { from: stage.label, to: KANBAN_STAGES[idx + 1].label, pct };
+    });
+
+    // Cuellos de botella: etapas con más prospectos estancados (>30 días)
+    const cuellos = metricasPorEtapa
+      .filter(m => m.count > 0 && m.diasPromedio > 20)
+      .sort((a, b) => b.diasPromedio - a.diasPromedio);
+
+    // Prospectos estancados (>30 días sin moverse)
+    const estancados = kanbanProspectos.filter(p => {
+      if (!p.fecha) return false;
+      const dias = Math.floor((hoy - new Date(p.fecha)) / (1000 * 60 * 60 * 24));
+      return dias > 30 && !['Inicio de operación', 'Propuesta Rechazada'].includes(p.status);
+    });
+
+    // Total pipeline
+    const totalPipeline = kanbanProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
+    const totalProspectos = kanbanProspectos.length;
+
+    // Ejecutivo lookup
+    const getEjecutivoNombre = (codigo) => {
+      const m = salesTeamData.find(s => s.codigo === codigo);
+      return m ? m.name.split(' ')[0] : codigo;
+    };
+
+    return (
+      <div className="p-8 bg-[#faf7f2] min-h-screen">
+        <Header title="Trazabilidad del Pipeline" subtitle="Vista general del flujo comercial — Solo lectura" />
+
+        {/* INDICADORES CLAVE */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          {/* Total Prospectos Activos */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-[#00a8a8]"></div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-[#6b7280] mb-1">Prospectos Activos</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">{totalProspectos}</div>
+                <div className="text-xs text-[#6b7280] mt-1">En todas las etapas</div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#00a8a8]/10 flex items-center justify-center">
+                <Users className="text-[#00a8a8]" size={20} />
+              </div>
+            </div>
+          </div>
+
+          {/* Pipeline Total */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D47A1]"></div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-[#6b7280] mb-1">Pipeline Total</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">${(totalPipeline / 1000000).toFixed(1)}M</div>
+                <div className="text-xs text-[#6b7280] mt-1">Valor acumulado</div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#0D47A1]/10 flex items-center justify-center">
+                <DollarSign className="text-[#0D47A1]" size={20} />
+              </div>
+            </div>
+          </div>
+
+          {/* Tiempo Promedio del Ciclo */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-[#F57C00]"></div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-[#6b7280] mb-1">Tiempo Promedio</div>
+                <div className="text-2xl font-bold text-[#1c2c4a]">
+                  {metricasPorEtapa.length > 0 ? Math.round(metricasPorEtapa.reduce((s, m) => s + m.diasPromedio, 0) / metricasPorEtapa.filter(m => m.count > 0).length || 1) : 0} días
+                </div>
+                <div className="text-xs text-[#6b7280] mt-1">Promedio por etapa</div>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#F57C00]/10 flex items-center justify-center">
+                <Calendar className="text-[#F57C00]" size={20} />
+              </div>
+            </div>
+          </div>
+
+          {/* Estancados */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: estancados.length > 5 ? '#EF4444' : '#2E7D32' }}></div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-[#6b7280] mb-1">Estancados (&gt;30 días)</div>
+                <div className="text-2xl font-bold" style={{ color: estancados.length > 5 ? '#EF4444' : '#1c2c4a' }}>{estancados.length}</div>
+                <div className="text-xs text-[#6b7280] mt-1">Requieren atención</div>
+              </div>
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: estancados.length > 5 ? '#EF444415' : '#2E7D3215' }}>
+                <AlertCircle size={20} style={{ color: estancados.length > 5 ? '#EF4444' : '#2E7D32' }} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CONVERSIÓN ENTRE ETAPAS — Funnel horizontal */}
+        <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] card-modern p-5">
+          <h3 className="text-sm font-semibold text-[#1c2c4a] mb-4">Flujo de Conversión entre Etapas</h3>
+          <div className="flex items-center justify-between overflow-x-auto gap-1">
+            {metricasPorEtapa.map((etapa, idx) => (
+              <div key={etapa.id} className="flex items-center flex-shrink-0">
+                {/* Etapa box */}
+                <div className="flex flex-col items-center min-w-[100px]">
+                  <div className="w-full rounded-lg border-2 p-3 text-center" style={{ borderColor: etapa.color, backgroundColor: `${etapa.color}10` }}>
+                    <div className="text-lg font-bold" style={{ color: etapa.color }}>{etapa.count}</div>
+                    <div className="text-[11px] font-medium text-[#1c2c4a]">{etapa.label}</div>
+                  </div>
+                  <div className="mt-1 text-[10px] text-[#6b7280]">
+                    {etapa.diasPromedio > 0 ? `~${etapa.diasPromedio}d prom.` : '—'}
+                  </div>
+                  <div className="text-[10px] font-medium text-[#0D47A1]">
+                    {etapa.valor > 0 ? `$${(etapa.valor / 1000000).toFixed(1)}M` : '—'}
+                  </div>
+                </div>
+                {/* Arrow + conversion % */}
+                {idx < metricasPorEtapa.length - 1 && (
+                  <div className="flex flex-col items-center mx-2 flex-shrink-0">
+                    <div className="text-[10px] font-bold" style={{ color: conversiones[idx]?.pct > 50 ? '#2E7D32' : conversiones[idx]?.pct > 25 ? '#F57C00' : '#EF4444' }}>
+                      {conversiones[idx]?.pct || 0}%
+                    </div>
+                    <ArrowRight size={16} className="text-[#6b7280]/40" />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* TIEMPO POR ETAPA — Barras horizontales */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+          {/* Tiempo promedio por etapa */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5">
+            <h3 className="text-sm font-semibold text-[#1c2c4a] mb-4">Tiempo Promedio por Etapa</h3>
+            <div className="space-y-3">
+              {metricasPorEtapa.filter(m => m.count > 0).map(etapa => {
+                const maxDias = Math.max(...metricasPorEtapa.map(m => m.diasPromedio), 1);
+                const pct = (etapa.diasPromedio / maxDias) * 100;
+                const esCuello = etapa.diasPromedio > 20;
+                return (
+                  <div key={etapa.id}>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="font-medium text-[#1c2c4a] flex items-center gap-1.5">
+                        <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: etapa.color }}></div>
+                        {etapa.label}
+                        {esCuello && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-red-50 text-red-600 font-semibold">Cuello</span>}
+                      </span>
+                      <span className="font-bold" style={{ color: esCuello ? '#EF4444' : '#1c2c4a' }}>
+                        {etapa.diasPromedio} días
+                      </span>
+                    </div>
+                    <div className="w-full h-2.5 bg-[#e5e7eb] rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{ width: `${pct}%`, backgroundColor: esCuello ? '#EF4444' : etapa.color }}
+                      ></div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Cuellos de botella + alertas */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5">
+            <h3 className="text-sm font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
+              <AlertCircle size={16} className="text-[#F57C00]" />
+              Alertas de Estancamiento
+            </h3>
+            {estancados.length === 0 ? (
+              <div className="text-center py-8 text-[#6b7280]">
+                <CheckSquare size={32} className="mx-auto mb-2 text-[#2E7D32]" />
+                <p className="text-sm font-medium">Todo en movimiento</p>
+                <p className="text-xs mt-1">No hay prospectos estancados</p>
+              </div>
+            ) : (
+              <div className="space-y-2 max-h-[280px] overflow-y-auto">
+                {estancados.slice(0, 10).map(p => {
+                  const dias = Math.floor((hoy - new Date(p.fecha)) / (1000 * 60 * 60 * 24));
+                  const stage = KANBAN_STAGES.find(s => s.id === p.status);
+                  return (
+                    <div key={p.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-red-50/50 border border-red-100">
+                      <div className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-semibold text-[#1c2c4a] truncate">{p.empresa}</div>
+                        <div className="text-[10px] text-[#6b7280]">
+                          {stage?.label} • {getEjecutivoNombre(p.ejecutivo)} • {dias} días
+                        </div>
+                      </div>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-bold flex-shrink-0">
+                        {dias}d
+                      </span>
+                    </div>
+                  );
+                })}
+                {estancados.length > 10 && (
+                  <div className="text-xs text-[#6b7280] text-center pt-1">+{estancados.length - 10} más</div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* KANBAN SOLO LECTURA */}
+        <div className="mt-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-semibold text-[#1c2c4a] flex items-center gap-2">
+              <BarChart3 size={16} className="text-[#00a8a8]" />
+              Pipeline General — Todas las Áreas
+            </h3>
+            <div className="flex items-center gap-4 text-[10px] text-[#6b7280]">
+              <div className="flex items-center gap-1.5">
+                <div className="w-6 h-1 rounded bg-[#00a8a8]"></div> COMERCIAL
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-6 h-1 rounded bg-[#F57C00]"></div> OPERACIONES
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-6 h-1 rounded bg-[#7C3AED]"></div> CIERRE
+              </div>
+            </div>
+          </div>
+
+          {/* Area separator row */}
+          <div className="grid gap-2 mb-2" style={{ gridTemplateColumns: `repeat(${KANBAN_STAGES.length}, minmax(0, 1fr))` }}>
+            {KANBAN_STAGES.map((stage, idx) => {
+              const area = idx <= 1 ? { label: 'COMERCIAL', color: '#00a8a8' } : idx <= 3 ? { label: 'OPERACIONES', color: '#F57C00' } : { label: 'CIERRE', color: '#7C3AED' };
+              return (
+                <div key={stage.id} className="text-center">
+                  <div className="text-[9px] font-bold tracking-wider" style={{ color: area.color }}>{area.label}</div>
+                  <div className="h-0.5 rounded-full mt-0.5" style={{ backgroundColor: area.color }}></div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Kanban columns */}
+          <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${KANBAN_STAGES.length}, minmax(0, 1fr))` }}>
+            {KANBAN_STAGES.map(stage => {
+              const stageProspectos = kanbanProspectos.filter(p => p.status === stage.id);
+              const valorEtapa = stageProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
+              return (
+                <div key={stage.id} className="bg-[#f3f4f6]/70 rounded-lg p-2 min-h-[200px]">
+                  {/* Column header */}
+                  <div className="flex items-center justify-between mb-2 px-1">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: stage.color }}></div>
+                      <span className="text-[11px] font-semibold text-[#1c2c4a]">{stage.label}</span>
+                    </div>
+                    <span className="text-[10px] font-bold rounded-full px-1.5 py-0.5" style={{ backgroundColor: `${stage.color}15`, color: stage.color }}>
+                      {stageProspectos.length}
+                    </span>
+                  </div>
+                  {valorEtapa > 0 && (
+                    <div className="text-[10px] text-[#0D47A1] font-medium px-1 mb-2">${(valorEtapa / 1000000).toFixed(1)}M</div>
+                  )}
+
+                  {/* Cards - read only */}
+                  <div className="space-y-1.5">
+                    {stageProspectos.slice(0, 8).map(p => {
+                      const dias = p.fecha ? Math.floor((hoy - new Date(p.fecha)) / (1000 * 60 * 60 * 24)) : 0;
+                      const esEstancado = dias > 30;
+                      return (
+                        <div
+                          key={p.id}
+                          className={`bg-white rounded-md p-2 border text-left ${esEstancado ? 'border-red-200 bg-red-50/30' : 'border-[#e5e7eb]'}`}
+                        >
+                          <div className="text-[11px] font-semibold text-[#1c2c4a] truncate">{p.empresa}</div>
+                          {p.planta && <div className="text-[9px] text-[#6b7280] truncate">{p.planta}</div>}
+                          <div className="flex items-center justify-between mt-1">
+                            <span className="text-[9px] text-[#6b7280]">{getEjecutivoNombre(p.ejecutivo)}</span>
+                            {esEstancado && <span className="text-[8px] px-1 py-0.5 rounded bg-red-100 text-red-600 font-bold">{dias}d</span>}
+                          </div>
+                          {(p.propuesta?.ventaTotal || p.facturacionEstimada) ? (
+                            <div className="text-[9px] font-medium text-[#0D47A1] mt-0.5">
+                              ${((p.propuesta?.ventaTotal || p.facturacionEstimada) / 1000000).toFixed(1)}M
+                            </div>
+                          ) : null}
+                        </div>
+                      );
+                    })}
+                    {stageProspectos.length > 8 && (
+                      <div className="text-[10px] text-center text-[#6b7280] py-1">+{stageProspectos.length - 8} más</div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* DISTRIBUCIÓN POR EJECUTIVO */}
+        <div className="mt-4 bg-white rounded-lg border border-[#e5e7eb] card-modern p-5">
+          <h3 className="text-sm font-semibold text-[#1c2c4a] mb-3">Distribución por Ejecutivo</h3>
+          <div className="space-y-3">
+            {salesTeamData.map(member => {
+              const memberProspectos = kanbanProspectos.filter(p => p.ejecutivo === member.codigo);
+              const memberPipeline = memberProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
+              const porEtapa = KANBAN_STAGES.map(s => memberProspectos.filter(p => p.status === s.id).length);
+              if (memberProspectos.length === 0) return null;
+              return (
+                <div key={member.codigo} className="flex items-center gap-3">
+                  <div className="w-7 h-7 rounded-full bg-[#00a8a8] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                    {member.codigo}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="font-medium text-[#1c2c4a]">{member.name.split(' ')[0]} — {memberProspectos.length} prospectos</span>
+                      <span className="font-bold text-[#0D47A1]">${(memberPipeline / 1000000).toFixed(1)}M</span>
+                    </div>
+                    {/* Stacked bar by stage */}
+                    <div className="w-full h-3 bg-[#e5e7eb] rounded-full overflow-hidden flex">
+                      {KANBAN_STAGES.map((stage, idx) => {
+                        const pct = memberProspectos.length > 0 ? (porEtapa[idx] / memberProspectos.length * 100) : 0;
+                        if (pct === 0) return null;
+                        return (
+                          <div
+                            key={stage.id}
+                            className="h-full first:rounded-l-full last:rounded-r-full"
+                            style={{ width: `${pct}%`, backgroundColor: stage.color }}
+                            title={`${stage.label}: ${porEtapa[idx]}`}
+                          ></div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              );
+            }).filter(Boolean)}
+          </div>
+          {/* Legend */}
+          <div className="flex flex-wrap gap-3 mt-3 pt-3 border-t border-[#e5e7eb]">
+            {KANBAN_STAGES.map(s => (
+              <div key={s.id} className="flex items-center gap-1 text-[10px] text-[#6b7280]">
+                <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: s.color }}></div>
+                {s.label}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const TrazabilidadView = () => {
     const [clienteSeleccionado, setClienteSeleccionado] = useState(clientesConReportes[0]?.id || null);
     const [datosEditables, setDatosEditables] = useState(
@@ -7516,6 +7902,7 @@ const InnovativeDemo = () => {
             {currentView === 'dashboard' && <DashboardView />}
             {currentView === 'comercial' && <PipelineComercialView />}
             {currentView === 'operacion' && <LevantamientosView />}
+            {currentView === 'trazabilidad' && <TrazabilidadGeneralView />}
             {currentView === 'subproductos' && <TrazabilidadView />}
             {currentView === 'admin' && <AdminView />}
           </div>
@@ -7529,6 +7916,7 @@ const InnovativeDemo = () => {
         const areaConfig = {
           comercial: { label: 'Comercial', color: '#00a8a8', icon: TrendingUp },
           operacion: { label: 'Operación', color: '#F57C00', icon: Truck },
+          trazabilidad: { label: 'Trazabilidad', color: '#7C3AED', icon: BarChart3 },
           subproductos: { label: 'Subproductos', color: '#2E7D32', icon: Recycle },
         };
         const config = areaConfig[kpiPanelArea];
