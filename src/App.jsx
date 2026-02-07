@@ -7,7 +7,7 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import html2canvas from 'html2canvas';
-import { Home, TrendingUp, Package, Users, FileText, Settings, ChevronRight, Download, Search, Filter, Bell, LogOut, Menu, X, DollarSign, Target, PhoneCall, Award, Calendar, MapPin, Truck, Leaf, Briefcase, ClipboardList, CheckSquare, AlertCircle, Send, Eye, Recycle, Trash2, BarChart3, TrendingDown, ChevronDown, ChevronUp, Save, FileImage, RotateCcw, Building2, GripVertical, Lock, Unlock, ArrowRight } from 'lucide-react';
+import { Home, TrendingUp, Package, Users, FileText, Settings, ChevronRight, Download, Search, Filter, Bell, LogOut, Menu, X, DollarSign, Target, PhoneCall, Award, Calendar, MapPin, Truck, Leaf, Briefcase, ClipboardList, CheckSquare, AlertCircle, Send, Eye, Recycle, Trash2, BarChart3, TrendingDown, ChevronDown, ChevronUp, Save, FileImage, RotateCcw, Building2, GripVertical, Lock, Unlock, ArrowRight, Plus } from 'lucide-react';
 
 // SERVICIOS INNOVATIVE
 const SERVICIOS_INNOVATIVE = [
@@ -4148,6 +4148,13 @@ const InnovativeDemo = () => {
   const [mostrarPropuesta, setMostrarPropuesta] = useState(false);
   const [mostrarDetallesProspecto, setMostrarDetallesProspecto] = useState(false);
   const [mostrarLeads, setMostrarLeads] = useState(false);
+  const [showNuevoLead, setShowNuevoLead] = useState(false);
+  const [nuevoLeadForm, setNuevoLeadForm] = useState({
+    empresa: '', planta: '', ciudad: '', industria: '',
+    contactoNombre: '', contactoPuesto: '', contactoCorreo: '', contactoTelefono: '',
+    servicios: [], comentarios: '',
+    tiposResiduos: '', volumenEstimado: '', facturacionEstimada: ''
+  });
   const [mostrarLevantamientos, setMostrarLevantamientos] = useState(false);
   const [selectedLevantamientoDetalle, setSelectedLevantamientoDetalle] = useState(null);
   const [mostrarNuevoLevantamiento, setMostrarNuevoLevantamiento] = useState(false);
@@ -4501,6 +4508,74 @@ const InnovativeDemo = () => {
     setCurrentView('dashboard');
   };
 
+  // Mapear email logueado a código de ejecutivo
+  const currentUserCodigo = (() => {
+    const emailToCode = { 'vero@innovative.com.mx': 'VA', 'daniel@econova.com.mx': 'VA' };
+    return emailToCode[loginEmail.toLowerCase()] || 'VA';
+  })();
+
+  // Campos requeridos para enviar a operaciones
+  const calcularCamposCompletos = (p) => {
+    const campos = [
+      { label: 'Empresa', ok: !!p.empresa },
+      { label: 'Industria', ok: !!p.industria },
+      { label: 'Contacto', ok: !!p.contacto?.nombre },
+      { label: 'Puesto', ok: !!p.contacto?.puesto },
+      { label: 'Correo', ok: !!p.contacto?.correo },
+      { label: 'Servicios', ok: !!(p.servicios?.length > 0) },
+      { label: 'Ciudad', ok: !!p.ciudad },
+      { label: 'Tipos de residuos', ok: !!p.tiposResiduos },
+      { label: 'Volumen estimado', ok: !!p.volumenEstimado },
+    ];
+    return campos;
+  };
+
+  // Crear nuevo lead
+  const handleCrearLead = () => {
+    if (!nuevoLeadForm.empresa.trim() || !nuevoLeadForm.contactoNombre.trim() || !nuevoLeadForm.ciudad.trim()) {
+      return;
+    }
+    const nuevoProspecto = {
+      id: Math.max(...kanbanProspectos.map(p => p.id), 0) + 1,
+      empresa: nuevoLeadForm.empresa.trim(),
+      planta: nuevoLeadForm.planta.trim() || null,
+      ciudad: nuevoLeadForm.ciudad.trim(),
+      industria: nuevoLeadForm.industria.trim() || null,
+      ejecutivo: currentUserCodigo,
+      contacto: {
+        nombre: nuevoLeadForm.contactoNombre.trim(),
+        puesto: nuevoLeadForm.contactoPuesto.trim() || '',
+        correo: nuevoLeadForm.contactoCorreo.trim() || '',
+        telefono: nuevoLeadForm.contactoTelefono.trim() || '',
+      },
+      servicios: nuevoLeadForm.servicios,
+      status: 'Lead nuevo',
+      semana: null,
+      fecha: new Date().toISOString().split('T')[0],
+      propuesta: { status: null, ventaTotal: null, utilidad: null, carton: null, playo: null },
+      motivoRechazo: null,
+      comentarios: nuevoLeadForm.comentarios.trim(),
+      volumenEstimado: nuevoLeadForm.volumenEstimado ? parseFloat(nuevoLeadForm.volumenEstimado) : null,
+      facturacionEstimada: nuevoLeadForm.facturacionEstimada ? parseFloat(nuevoLeadForm.facturacionEstimada) : null,
+      tiposResiduos: nuevoLeadForm.tiposResiduos.trim() || null,
+    };
+    setKanbanProspectos(prev => [...prev, nuevoProspecto]);
+    setShowNuevoLead(false);
+    setNuevoLeadForm({
+      empresa: '', planta: '', ciudad: '', industria: '',
+      contactoNombre: '', contactoPuesto: '', contactoCorreo: '', contactoTelefono: '',
+      servicios: [], comentarios: '', tiposResiduos: '', volumenEstimado: '', facturacionEstimada: ''
+    });
+  };
+
+  // Enviar prospecto a operaciones
+  const enviarAOperaciones = (prospecto) => {
+    setKanbanProspectos(prev =>
+      prev.map(p => p.id === prospecto.id ? { ...p, status: 'Levantamiento' } : p)
+    );
+    setMostrarDetallesProspecto(false);
+  };
+
   // Login Screen - rendered inline to avoid focus loss on re-render
   const loginScreenJSX = (
     <div className="min-h-screen flex">
@@ -4681,11 +4756,10 @@ const InnovativeDemo = () => {
     <div className={`bg-white h-screen transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-20'} flex flex-col border-r border-[#e5e7eb] relative overflow-hidden`}>
       {/* Logo */}
       <div className="px-5 py-4 flex items-center justify-between">
-        {sidebarOpen && (
-          <div>
-            <h2 className="text-[#1c2c4a] text-lg font-bold tracking-tight">INNOVATIVE</h2>
-            <p className="text-[11px] text-[#6b7280] mt-0.5 font-medium">Hub Digital</p>
-          </div>
+        {sidebarOpen ? (
+          <img src="/IGMexico-V-Color-Logo.png" alt="Innovative Group" className="h-10 object-contain" />
+        ) : (
+          <div className="w-8 h-8 rounded-lg bg-[#00a8a8] flex items-center justify-center text-white text-xs font-bold">IG</div>
         )}
         <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-[#6b7280] hover:text-[#1c2c4a] transition-colors p-1.5 rounded-md hover:bg-[#f3f4f6]">
           {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
@@ -5251,13 +5325,26 @@ const InnovativeDemo = () => {
             <span>{ejecutivo?.name?.split(' ')[0] || prospecto.ejecutivo}</span>
             {prospecto.ciudad && <span className="flex items-center gap-1"><MapPin size={10} />{prospecto.ciudad.split(',')[0]}</span>}
           </div>
-          {/* Stage gate indicator */}
-          {esProspectoCalificado(prospecto) && (
-            <div className="mt-2 flex items-center gap-1 text-xs text-[#2E7D32]">
-              <CheckSquare size={10} />
-              <span>Calificado</span>
-            </div>
-          )}
+          {/* Checklist progress bar */}
+          {(() => {
+            const campos = calcularCamposCompletos(prospecto);
+            const completos = campos.filter(c => c.ok).length;
+            const total = campos.length;
+            const pct = (completos / total) * 100;
+            return (
+              <div className="mt-2">
+                <div className="flex items-center justify-between mb-0.5">
+                  <span className={`text-[10px] font-medium ${completos === total ? 'text-[#2E7D32]' : 'text-[#6b7280]'}`}>
+                    {completos === total ? 'Listo para Ops' : `${completos}/${total} campos`}
+                  </span>
+                  {completos === total && <CheckSquare size={10} className="text-[#2E7D32]" />}
+                </div>
+                <div className="w-full h-1 bg-[#e5e7eb] rounded-full overflow-hidden">
+                  <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: completos === total ? '#2E7D32' : pct >= 60 ? '#F57C00' : '#ef4444' }}></div>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       );
     };
@@ -5291,13 +5378,22 @@ const InnovativeDemo = () => {
     <div className="p-8 bg-[#faf7f2] min-h-screen">
       <div className="flex items-center justify-between">
         <Header title="Comercial" subtitle={`${kanbanProspectos.length} oportunidades en pipeline • Equipo de ${salesTeamData.length} ejecutivos`} />
-        <button
-          onClick={() => { setKpiPanelArea('comercial'); setShowKpiPanel(true); }}
-          className="flex items-center gap-2 px-4 py-2.5 bg-[#00a8a8] hover:bg-[#008080] text-white rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md"
-        >
-          <Target size={16} />
-          KPIs del Equipo
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowNuevoLead(true)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#1c2c4a] hover:bg-[#1c2c4a]/90 text-white rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md"
+          >
+            <Plus size={16} />
+            Nuevo Lead
+          </button>
+          <button
+            onClick={() => { setKpiPanelArea('comercial'); setShowKpiPanel(true); }}
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#00a8a8] hover:bg-[#008080] text-white rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md"
+          >
+            <Target size={16} />
+            KPIs del Equipo
+          </button>
+        </div>
       </div>
 
       {/* KPI CARDS - Métricas de Vero */}
@@ -5452,6 +5548,24 @@ const InnovativeDemo = () => {
       {/* KANBAN VIEW */}
       {pipelineViewMode === 'kanban' && (
         <div className="mt-6">
+          {/* Area labels row */}
+          <div className="grid grid-cols-6 gap-3 mb-1">
+            <div className="col-span-2 flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#00a8a8]"></div>
+              <span className="text-[10px] uppercase tracking-wider font-semibold text-[#00a8a8]">Comercial</span>
+              <div className="flex-1 h-px bg-[#00a8a8]/20 ml-1"></div>
+            </div>
+            <div className="col-span-2 flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#F57C00]"></div>
+              <span className="text-[10px] uppercase tracking-wider font-semibold text-[#F57C00]">Operaciones</span>
+              <div className="flex-1 h-px bg-[#F57C00]/20 ml-1"></div>
+            </div>
+            <div className="col-span-2 flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]"></div>
+              <span className="text-[10px] uppercase tracking-wider font-semibold text-[#2E7D32]">Cierre</span>
+              <div className="flex-1 h-px bg-[#2E7D32]/20 ml-1"></div>
+            </div>
+          </div>
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -7970,6 +8084,179 @@ const InnovativeDemo = () => {
       })()}
       
       {/* MODAL DE DETALLES DEL PROSPECTO */}
+      {/* MODAL: NUEVO LEAD */}
+      {showNuevoLead && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowNuevoLead(false)}>
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-xl" onClick={e => e.stopPropagation()}>
+            <div className="p-6 border-b border-[#e5e7eb] flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-[#1c2c4a]">Nuevo Lead</h3>
+                <p className="text-sm text-[#6b7280] mt-1">Ingresa la información inicial del lead</p>
+              </div>
+              <button onClick={() => setShowNuevoLead(false)} className="text-[#6b7280] hover:text-[#1c2c4a]">
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* SECCIÓN 1: EMPRESA */}
+              <div>
+                <h4 className="text-sm font-semibold text-[#1c2c4a] mb-3 flex items-center gap-2">
+                  <Building2 size={16} className="text-[#00a8a8]" />
+                  Empresa
+                </h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="col-span-2">
+                    <label className="text-xs font-medium text-[#6b7280] mb-1 block">Empresa *</label>
+                    <input type="text" value={nuevoLeadForm.empresa} onChange={e => setNuevoLeadForm(prev => ({...prev, empresa: e.target.value}))}
+                      className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]/50 focus:border-[#00a8a8]"
+                      placeholder="Nombre de la empresa" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-[#6b7280] mb-1 block">Ciudad *</label>
+                    <input type="text" value={nuevoLeadForm.ciudad} onChange={e => setNuevoLeadForm(prev => ({...prev, ciudad: e.target.value}))}
+                      className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]/50 focus:border-[#00a8a8]"
+                      placeholder="Ciudad / Estado" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-[#6b7280] mb-1 block">Planta</label>
+                    <input type="text" value={nuevoLeadForm.planta} onChange={e => setNuevoLeadForm(prev => ({...prev, planta: e.target.value}))}
+                      className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]/50 focus:border-[#00a8a8]"
+                      placeholder="Nombre de planta (opcional)" />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="text-xs font-medium text-[#6b7280] mb-1 block">Industria</label>
+                    <input type="text" value={nuevoLeadForm.industria} onChange={e => setNuevoLeadForm(prev => ({...prev, industria: e.target.value}))}
+                      className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]/50 focus:border-[#00a8a8]"
+                      placeholder="Ej: Automotriz, Retail, Alimenticia..." />
+                  </div>
+                </div>
+              </div>
+
+              {/* SECCIÓN 2: CONTACTO */}
+              <div>
+                <h4 className="text-sm font-semibold text-[#1c2c4a] mb-3 flex items-center gap-2">
+                  <Users size={16} className="text-[#0D47A1]" />
+                  Contacto
+                </h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-medium text-[#6b7280] mb-1 block">Nombre *</label>
+                    <input type="text" value={nuevoLeadForm.contactoNombre} onChange={e => setNuevoLeadForm(prev => ({...prev, contactoNombre: e.target.value}))}
+                      className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]/50 focus:border-[#00a8a8]"
+                      placeholder="Nombre completo" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-[#6b7280] mb-1 block">Puesto</label>
+                    <input type="text" value={nuevoLeadForm.contactoPuesto} onChange={e => setNuevoLeadForm(prev => ({...prev, contactoPuesto: e.target.value}))}
+                      className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]/50 focus:border-[#00a8a8]"
+                      placeholder="Puesto / Cargo" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-[#6b7280] mb-1 block">Correo</label>
+                    <input type="email" value={nuevoLeadForm.contactoCorreo} onChange={e => setNuevoLeadForm(prev => ({...prev, contactoCorreo: e.target.value}))}
+                      className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]/50 focus:border-[#00a8a8]"
+                      placeholder="correo@empresa.com" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-[#6b7280] mb-1 block">Teléfono</label>
+                    <input type="tel" value={nuevoLeadForm.contactoTelefono} onChange={e => setNuevoLeadForm(prev => ({...prev, contactoTelefono: e.target.value}))}
+                      className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]/50 focus:border-[#00a8a8]"
+                      placeholder="55 1234 5678" />
+                  </div>
+                </div>
+              </div>
+
+              {/* SECCIÓN 3: SERVICIOS */}
+              <div>
+                <h4 className="text-sm font-semibold text-[#1c2c4a] mb-3 flex items-center gap-2">
+                  <Package size={16} className="text-[#2E7D32]" />
+                  Servicios de Interés
+                </h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {SERVICIOS_INNOVATIVE.map(servicio => (
+                    <label key={servicio.id} className="flex items-center gap-2 p-2 rounded-lg hover:bg-[#f3f4f6] cursor-pointer transition-colors">
+                      <input type="checkbox" checked={nuevoLeadForm.servicios.includes(servicio.id)}
+                        onChange={e => {
+                          setNuevoLeadForm(prev => ({
+                            ...prev,
+                            servicios: e.target.checked
+                              ? [...prev.servicios, servicio.id]
+                              : prev.servicios.filter(s => s !== servicio.id)
+                          }));
+                        }}
+                        className="w-4 h-4 text-[#00a8a8] border-[#e5e7eb] rounded focus:ring-[#00a8a8]" />
+                      <div>
+                        <div className="text-sm font-medium text-[#1c2c4a]">{servicio.nombre}</div>
+                        <div className="text-[10px] text-[#6b7280]">{servicio.descripcion}</div>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* SECCIÓN 4: INFO PARA OPERACIONES */}
+              <div>
+                <h4 className="text-sm font-semibold text-[#1c2c4a] mb-3 flex items-center gap-2">
+                  <Truck size={16} className="text-[#F57C00]" />
+                  Información para Operaciones
+                </h4>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-[#6b7280] mb-1 block">Tipos de residuos</label>
+                    <textarea value={nuevoLeadForm.tiposResiduos} onChange={e => setNuevoLeadForm(prev => ({...prev, tiposResiduos: e.target.value}))}
+                      className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]/50 focus:border-[#00a8a8] resize-none"
+                      rows={2} placeholder="Ej: Cartón, playo, orgánicos, lodos, RP..." />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-medium text-[#6b7280] mb-1 block">Volumen estimado (ton/mes)</label>
+                      <input type="number" value={nuevoLeadForm.volumenEstimado} onChange={e => setNuevoLeadForm(prev => ({...prev, volumenEstimado: e.target.value}))}
+                        className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]/50 focus:border-[#00a8a8]"
+                        placeholder="Toneladas por mes" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-[#6b7280] mb-1 block">Facturación estimada (MXN)</label>
+                      <input type="number" value={nuevoLeadForm.facturacionEstimada} onChange={e => setNuevoLeadForm(prev => ({...prev, facturacionEstimada: e.target.value}))}
+                        className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]/50 focus:border-[#00a8a8]"
+                        placeholder="Facturación mensual estimada" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* SECCIÓN 5: COMENTARIOS */}
+              <div>
+                <label className="text-xs font-medium text-[#6b7280] mb-1 block">Comentarios generales</label>
+                <textarea value={nuevoLeadForm.comentarios} onChange={e => setNuevoLeadForm(prev => ({...prev, comentarios: e.target.value}))}
+                  className="w-full px-3 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]/50 focus:border-[#00a8a8] resize-none"
+                  rows={2} placeholder="Notas iniciales, contexto, cómo se consiguió el lead..." />
+              </div>
+            </div>
+
+            {/* FOOTER */}
+            <div className="p-6 border-t border-[#e5e7eb] flex items-center justify-between">
+              <p className="text-xs text-[#6b7280]">* Campos obligatorios para crear el lead</p>
+              <div className="flex gap-3">
+                <button onClick={() => setShowNuevoLead(false)}
+                  className="px-4 py-2 text-sm font-medium text-[#6b7280] hover:text-[#1c2c4a] transition-colors">
+                  Cancelar
+                </button>
+                <button onClick={handleCrearLead}
+                  disabled={!nuevoLeadForm.empresa.trim() || !nuevoLeadForm.contactoNombre.trim() || !nuevoLeadForm.ciudad.trim()}
+                  className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all ${
+                    nuevoLeadForm.empresa.trim() && nuevoLeadForm.contactoNombre.trim() && nuevoLeadForm.ciudad.trim()
+                      ? 'bg-[#1c2c4a] hover:bg-[#1c2c4a]/90 text-white shadow-sm'
+                      : 'bg-[#e5e7eb] text-[#6b7280] cursor-not-allowed'
+                  }`}>
+                  Crear Lead
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {mostrarDetallesProspecto && selectedProspecto && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setMostrarDetallesProspecto(false)}>
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#e5e7eb]" onClick={e => e.stopPropagation()}>
@@ -8050,6 +8337,47 @@ const InnovativeDemo = () => {
                 </div>
               </div>
               
+              {/* CHECKLIST PARA OPERACIONES */}
+              {(selectedProspecto.status === 'Lead nuevo' || selectedProspecto.status === 'Reunión agendada') && (() => {
+                const campos = calcularCamposCompletos(selectedProspecto);
+                const completos = campos.filter(c => c.ok).length;
+                const total = campos.length;
+                const listoParaOps = completos === total;
+                return (
+                  <div className="border-t border-[#e5e7eb] pt-4 mb-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-sm font-semibold text-[#1c2c4a]">Checklist para Operaciones</h3>
+                      <span className={`text-xs font-semibold px-2 py-1 rounded-full ${listoParaOps ? 'bg-[#2E7D32]/10 text-[#2E7D32]' : 'bg-[#F57C00]/10 text-[#F57C00]'}`}>
+                        {completos}/{total} campos
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 mb-4">
+                      {campos.map((campo, i) => (
+                        <div key={i} className={`flex items-center gap-2 text-xs px-2 py-1.5 rounded-md ${campo.ok ? 'bg-[#2E7D32]/5 text-[#2E7D32]' : 'bg-red-50 text-red-500'}`}>
+                          {campo.ok ? <CheckSquare size={12} /> : <AlertCircle size={12} />}
+                          <span className="font-medium">{campo.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="w-full h-2 bg-[#e5e7eb] rounded-full overflow-hidden mb-4">
+                      <div className="h-full rounded-full transition-all" style={{ width: `${(completos/total)*100}%`, backgroundColor: listoParaOps ? '#2E7D32' : '#F57C00' }}></div>
+                    </div>
+                    {listoParaOps ? (
+                      <button onClick={() => enviarAOperaciones(selectedProspecto)}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#2E7D32] hover:bg-[#2E7D32]/90 text-white rounded-lg text-sm font-semibold transition-all shadow-sm">
+                        <Send size={16} />
+                        Enviar a Operaciones
+                      </button>
+                    ) : (
+                      <button disabled className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#e5e7eb] text-[#6b7280] rounded-lg text-sm font-medium cursor-not-allowed">
+                        <Lock size={16} />
+                        Faltan {total - completos} campos para enviar a Operaciones
+                      </button>
+                    )}
+                  </div>
+                );
+              })()}
+
               {/* BOTONES DE ACCIÓN */}
               <div className="flex gap-3 pt-4 border-t border-[#e5e7eb]">
                 {(selectedProspecto.status === 'Levantamiento' || selectedProspecto.status === 'Propuesta enviada' || selectedProspecto.status === 'Inicio de operación') && (
