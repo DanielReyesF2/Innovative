@@ -4501,7 +4501,8 @@ const InnovativeDemo = () => {
     setCurrentView('dashboard');
   };
 
-  const LoginScreen = () => (
+  // Login Screen - rendered inline to avoid focus loss on re-render
+  const loginScreenJSX = (
     <div className="min-h-screen flex">
       {/* Left Panel - Branding */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#1B5E20] via-[#2E7D32] to-[#388E3C] relative overflow-hidden">
@@ -7355,7 +7356,7 @@ const InnovativeDemo = () => {
       <style>{`* { font-family: 'Inter', sans-serif; }`}</style>
       
       {currentView === 'login' ? (
-        <LoginScreen />
+        loginScreenJSX
       ) : (
         <div className="flex h-screen overflow-hidden bg-[#f5f5f5]">
           <Sidebar />
