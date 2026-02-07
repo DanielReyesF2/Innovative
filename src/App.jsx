@@ -4150,6 +4150,11 @@ const InnovativeDemo = () => {
   const [vistaCliente, setVistaCliente] = useState(false);
   const [clienteSeleccionadoVista, setClienteSeleccionadoVista] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [expandedSections, setExpandedSections] = useState({
+    comercial: true, operacion: true, subproductos: true
+  });
+  const [showKpiPanel, setShowKpiPanel] = useState(false);
+  const [kpiPanelArea, setKpiPanelArea] = useState(null); // 'comercial' | 'operacion' | 'subproductos'
   const [notifications] = useState(7);
   const [leadsConAsignacion, setLeadsConAsignacion] = useState(leadsData.map(lead => ({ ...lead, asignadoA: lead.asignadoA || null })));
   const [mostrarTodosLeads, setMostrarTodosLeads] = useState(false);
@@ -4528,40 +4533,46 @@ const InnovativeDemo = () => {
     </div>
   );
 
-  // Sidebar - Estilo Notion/kpis-orsega
-  const menuSections = [
-    {
-      label: 'PRINCIPAL',
+  // Sidebar - Navegación modular por área
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  const sidebarNavItems = [
+    { type: 'item', id: 'dashboard', icon: Home, label: 'Dashboard' },
+    { type: 'section', key: 'comercial', icon: TrendingUp, label: 'Comercial',
       items: [
-        { id: 'dashboard', icon: Home, label: 'Dashboard' },
-        { id: 'pipeline', icon: TrendingUp, label: 'Ventas' },
-        { id: 'levantamientos', icon: ClipboardList, label: 'Levantamientos' },
+        { id: 'comercial', icon: Briefcase, label: 'Pipeline & Prospectos' },
       ]
     },
-    {
-      label: 'EJECUTIVO',
+    { type: 'section', key: 'operacion', icon: Truck, label: 'Operación',
       items: [
-        { id: 'team', icon: Users, label: 'Centro de Control' },
+        { id: 'operacion', icon: ClipboardList, label: 'Levantamientos' },
       ]
     },
-    {
-      label: 'SISTEMA',
+    { type: 'section', key: 'subproductos', icon: Recycle, label: 'Subproductos',
       items: [
-        { id: 'documentos', icon: FileText, label: 'Documentos' },
-        { id: 'trazabilidad', icon: Recycle, label: 'Trazabilidad' },
-        { id: 'admin', icon: Settings, label: 'Administración' },
+        { id: 'subproductos', icon: Leaf, label: 'Trazabilidad' },
       ]
-    }
+    },
+    { type: 'item', id: 'admin', icon: Settings, label: 'Administración' },
   ];
 
-  const Sidebar = () => (
+  const Sidebar = () => {
+    // Helper: check if any sub-item in a section is active
+    const isSectionActive = (sectionKey) => {
+      const section = sidebarNavItems.find(n => n.key === sectionKey);
+      return section?.items?.some(i => currentView === i.id);
+    };
+
+    return (
     <div className={`bg-white h-screen transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-20'} flex flex-col border-r border-[#e5e7eb] relative overflow-hidden`}>
       {/* Logo */}
       <div className="px-5 py-4 flex items-center justify-between">
         {sidebarOpen && (
           <div>
             <h2 className="text-[#1c2c4a] text-lg font-bold tracking-tight">INNOVATIVE</h2>
-            <p className="text-[11px] text-[#6b7280] mt-0.5 font-medium">Gestión Comercial</p>
+            <p className="text-[11px] text-[#6b7280] mt-0.5 font-medium">Hub Digital</p>
           </div>
         )}
         <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-[#6b7280] hover:text-[#1c2c4a] transition-colors p-1.5 rounded-md hover:bg-[#f3f4f6]">
@@ -4582,38 +4593,94 @@ const InnovativeDemo = () => {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 overflow-y-auto">
-        {menuSections.map((section, sIdx) => (
-          <div key={sIdx}>
-            {sidebarOpen && (
-              <div className="text-[11px] uppercase tracking-wider font-semibold text-[#6b7280]/60 px-3 py-2 mt-3 first:mt-1">
-                {section.label}
-              </div>
-            )}
-            {!sidebarOpen && sIdx > 0 && (
-              <div className="mx-3 my-2 border-t border-[#e5e7eb]" />
-            )}
-            {section.items.map(item => (
+        {sidebarNavItems.map((navItem, idx) => {
+          // --- Single item (Dashboard, Admin) ---
+          if (navItem.type === 'item') {
+            return (
               <button
-                key={item.id}
+                key={navItem.id}
                 onClick={() => {
-                  if (item.id !== 'admin') {
-                    setCurrentView(item.id);
+                  if (navItem.id !== 'admin') {
+                    setCurrentView(navItem.id);
                     setSelectedClient(null);
                     setSelectedTeamMember(null);
                   }
                 }}
                 className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-3' : 'justify-center'} px-3 py-2 rounded-md mb-0.5 transition-all text-sm ${
-                  currentView === item.id
+                  currentView === navItem.id
                     ? 'bg-[#00a8a8]/10 text-[#00a8a8] font-semibold'
+                    : navItem.id === 'admin' ? 'text-[#6b7280]/50 cursor-not-allowed' : 'text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#1c2c4a] font-medium'
+                }`}
+              >
+                <navItem.icon size={18} className="flex-shrink-0" />
+                {sidebarOpen && <span className="flex-1 text-left">{navItem.label}</span>}
+                {sidebarOpen && navItem.id === 'admin' && <span className="text-[10px] bg-[#f3f4f6] text-[#6b7280] px-1.5 py-0.5 rounded-full">Pronto</span>}
+              </button>
+            );
+          }
+
+          // --- Collapsible section (Comercial, Operación, Subproductos) ---
+          const isExpanded = expandedSections[navItem.key];
+          const isActive = isSectionActive(navItem.key);
+
+          return (
+            <div key={navItem.key} className={`${idx > 0 ? 'mt-1' : ''}`}>
+              {/* Section header - clickable to expand/collapse */}
+              <button
+                onClick={() => {
+                  if (sidebarOpen) {
+                    toggleSection(navItem.key);
+                  } else {
+                    // collapsed sidebar: click goes to main view of section
+                    const mainItem = navItem.items[0];
+                    if (mainItem) {
+                      setCurrentView(mainItem.id);
+                      setSelectedClient(null);
+                      setSelectedTeamMember(null);
+                    }
+                  }
+                }}
+                className={`w-full flex items-center ${sidebarOpen ? 'justify-start gap-3' : 'justify-center'} px-3 py-2 rounded-md mb-0.5 transition-all text-sm ${
+                  isActive
+                    ? 'bg-[#00a8a8]/5 text-[#00a8a8] font-semibold'
                     : 'text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#1c2c4a] font-medium'
                 }`}
               >
-                <item.icon size={18} className="flex-shrink-0" />
-                {sidebarOpen && <span className="flex-1 text-left">{item.label}</span>}
+                <navItem.icon size={18} className="flex-shrink-0" />
+                {sidebarOpen && (
+                  <>
+                    <span className="flex-1 text-left">{navItem.label}</span>
+                    <ChevronDown size={14} className={`transition-transform duration-200 ${isExpanded ? '' : '-rotate-90'} ${isActive ? 'text-[#00a8a8]' : 'text-[#6b7280]/50'}`} />
+                  </>
+                )}
               </button>
-            ))}
-          </div>
-        ))}
+
+              {/* Sub-items */}
+              {sidebarOpen && isExpanded && (
+                <div className="ml-4 border-l-2 border-[#e5e7eb] pl-2">
+                  {navItem.items.map(subItem => (
+                    <button
+                      key={subItem.id}
+                      onClick={() => {
+                        setCurrentView(subItem.id);
+                        setSelectedClient(null);
+                        setSelectedTeamMember(null);
+                      }}
+                      className={`w-full flex items-center gap-2.5 px-3 py-1.5 rounded-md mb-0.5 transition-all text-[13px] ${
+                        currentView === subItem.id
+                          ? 'bg-[#00a8a8]/10 text-[#00a8a8] font-semibold'
+                          : 'text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#1c2c4a] font-medium'
+                      }`}
+                    >
+                      <subItem.icon size={15} className="flex-shrink-0" />
+                      <span className="flex-1 text-left">{subItem.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </nav>
 
       {/* Logout */}
@@ -4624,7 +4691,8 @@ const InnovativeDemo = () => {
         </button>
       </div>
     </div>
-  );
+    );
+  };
 
   // Header - Sticky con blur estilo kpis-orsega
   const Header = ({ title, subtitle }) => (
@@ -4656,7 +4724,7 @@ const InnovativeDemo = () => {
                   setMostrarDetallesProspecto(true);
                 } else if (alerta.tipo === 'levantamiento_sin_reporte') {
                   setSelectedLevantamientoDetalle(levantamientosDetallados.find(l => l.cliente === alerta.levantamiento.cliente));
-                  setCurrentView('levantamientos');
+                  setCurrentView('operacion');
                 }
                 setMostrarNotificaciones(false);
               }}
@@ -4778,7 +4846,7 @@ const InnovativeDemo = () => {
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-[#1c2c4a]">Pipeline por Stage</h3>
             <button
-              onClick={() => setCurrentView('pipeline')}
+              onClick={() => setCurrentView('comercial')}
               className="text-xs text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1"
             >
               Ver Pipeline completo <ChevronRight size={14} />
@@ -4824,7 +4892,7 @@ const InnovativeDemo = () => {
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-semibold text-[#1c2c4a]">Presupuesto 2026</h3>
             <button
-              onClick={() => setCurrentView('team')}
+              onClick={() => setCurrentView('comercial')}
               className="text-xs text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1"
             >
               Ver equipo <ChevronRight size={14} />
@@ -4956,7 +5024,7 @@ const InnovativeDemo = () => {
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-semibold text-[#1c2c4a]">Equipo Comercial</h3>
           <button
-            onClick={() => setCurrentView('team')}
+            onClick={() => setCurrentView('comercial')}
             className="text-xs text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1"
           >
             Ver Centro de Control <ChevronRight size={14} />
@@ -4989,8 +5057,15 @@ const InnovativeDemo = () => {
     );
   };
 
-  // VISTA: PIPELINE COMERCIAL - Con Kanban, Funnel y Tabla
+  // VISTA: COMERCIAL - Pipeline + Prospectos + KPIs del Equipo
   const PipelineComercialView = () => {
+    const weightedPipeline = calcularWeightedPipeline(kanbanProspectos);
+    const winRate = calcularWinRate(kanbanProspectos);
+    const velocity = calcularPipelineVelocity(kanbanProspectos);
+    const oportunidadesActivas = kanbanProspectos.filter(p => !['Propuesta Rechazada', 'Inicio de operación'].includes(p.status)).length;
+    const presupuestoTotal = salesTeamData.reduce((s, m) => s + (m.presupuestoAnual2026 || 0), 0);
+    const ventasReales = salesTeamData.reduce((s, m) => s + (m.ventasReales || 0), 0);
+
     // Droppable Column component
     const DroppableColumn = ({ stageId, children }) => {
       const { isOver, setNodeRef } = useDroppable({ id: stageId });
@@ -5090,7 +5165,102 @@ const InnovativeDemo = () => {
 
     return (
     <div className="p-8 bg-[#faf7f2] min-h-screen">
-      <Header title="Pipeline Comercial" subtitle={`${kanbanProspectos.length} oportunidades • Pipeline ponderado: $${(calcularWeightedPipeline(kanbanProspectos) / 1000000).toFixed(1)}M`} />
+      <div className="flex items-center justify-between">
+        <Header title="Comercial" subtitle={`${kanbanProspectos.length} oportunidades en pipeline • Equipo de ${salesTeamData.length} ejecutivos`} />
+        <button
+          onClick={() => { setKpiPanelArea('comercial'); setShowKpiPanel(true); }}
+          className="flex items-center gap-2 px-4 py-2.5 bg-[#00a8a8] hover:bg-[#008080] text-white rounded-lg text-sm font-semibold transition-all shadow-sm hover:shadow-md"
+        >
+          <Target size={16} />
+          KPIs del Equipo
+        </button>
+      </div>
+
+      {/* KPI CARDS */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+        {/* Card 1: Pipeline Ponderado */}
+        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-[#00a8a8]"></div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm text-[#6b7280] mb-1">Pipeline Ponderado</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">${(weightedPipeline / 1000000).toFixed(1)}M</div>
+              <div className="text-xs text-[#6b7280] mt-1">Valor ajustado por probabilidad</div>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-[#00a8a8]/10 flex items-center justify-center">
+              <DollarSign className="text-[#00a8a8]" size={20} />
+            </div>
+          </div>
+        </div>
+        {/* Card 2: Oportunidades Activas */}
+        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D47A1]"></div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm text-[#6b7280] mb-1">Oportunidades Activas</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{oportunidadesActivas}</div>
+              <div className="text-xs text-[#6b7280] mt-1">{kanbanProspectos.filter(p => p.status === 'Propuesta Rechazada').length} rechazadas</div>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-[#0D47A1]/10 flex items-center justify-center">
+              <Briefcase className="text-[#0D47A1]" size={20} />
+            </div>
+          </div>
+        </div>
+        {/* Card 3: Win Rate */}
+        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-[#2E7D32]"></div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm text-[#6b7280] mb-1">Win Rate</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{winRate.toFixed(0)}%</div>
+              <div className="text-xs text-[#6b7280] mt-1">Propuestas aceptadas vs total</div>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-[#2E7D32]/10 flex items-center justify-center">
+              <Award className="text-[#2E7D32]" size={20} />
+            </div>
+          </div>
+        </div>
+        {/* Card 4: Presupuesto vs Real */}
+        <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-[#F57C00]"></div>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm text-[#6b7280] mb-1">Presupuesto 2026</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{presupuestoTotal > 0 ? `${((ventasReales / presupuestoTotal) * 100).toFixed(0)}%` : '—'}</div>
+              <div className="text-xs text-[#6b7280] mt-1">${(ventasReales / 1000000).toFixed(1)}M / ${(presupuestoTotal / 1000000).toFixed(1)}M</div>
+            </div>
+            <div className="w-10 h-10 rounded-lg bg-[#F57C00]/10 flex items-center justify-center">
+              <Target className="text-[#F57C00]" size={20} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Presupuesto por Ejecutivo (compact row) */}
+      <div className="mt-4 bg-white rounded-lg border border-[#e5e7eb] card-modern p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-semibold text-[#1c2c4a]">Presupuesto por Ejecutivo</h3>
+        </div>
+        <div className="flex gap-3 overflow-x-auto">
+          {salesTeamData.filter(m => m.presupuestoAnual2026 > 0 && m.codigo !== 'VA').map(member => {
+            const pct = member.presupuestoAnual2026 > 0 ? ((member.ventasReales / member.presupuestoAnual2026) * 100) : 0;
+            return (
+              <div key={member.codigo} className="flex-shrink-0 flex items-center gap-2 bg-[#f3f4f6] rounded-lg px-3 py-2">
+                <div className="w-7 h-7 rounded-full bg-[#00a8a8] flex items-center justify-center text-white text-xs font-bold">{member.codigo}</div>
+                <div>
+                  <div className="text-xs font-medium text-[#1c2c4a]">{member.name.split(' ')[0]}</div>
+                  <div className="flex items-center gap-1">
+                    <div className="w-16 h-1.5 bg-[#e5e7eb] rounded-full overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: pct >= 80 ? '#2E7D32' : pct >= 50 ? '#F57C00' : '#ef4444' }}></div>
+                    </div>
+                    <span className="text-[10px] font-medium text-[#6b7280]">{pct.toFixed(0)}%</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
 
       {/* VIEW TOGGLE */}
       <div className="mt-6 flex items-center justify-between">
@@ -5453,1747 +5623,8 @@ const InnovativeDemo = () => {
     );
   };
 
-  // VISTA: CENTRO DE CONTROL DE KPIS
-  const TeamControlView = () => (
-    <div className="p-8 bg-[#faf7f2] min-h-screen">
-      <Header title="Centro de Control de KPIs" subtitle="Métricas de desempeño por colaborador" />
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-        {salesTeamData.map(member => {
-          const getEficienciaColor = (eficiencia) => {
-            if (eficiencia >= 75) return 'bg-[#00a8a8]';
-            if (eficiencia >= 65) return 'bg-[#008080]';
-            return 'bg-[#00b3b3]';
-          };
-          
-          return (
-            <div 
-              key={member.id} 
-              className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm hover:shadow-lg transition-all cursor-pointer overflow-hidden group"
-              onClick={() => setSelectedTeamMember(member)}
-            >
-              {/* HEADER CON GRADIENTE SUTIL */}
-              <div className={`${getEficienciaColor(member.eficienciaGlobal)} p-5 text-white`}>
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold mb-1">{member.name}</h3>
-                      <p className="text-xs text-white/90">{member.role}</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-3xl font-bold">{member.eficienciaGlobal}%</div>
-                      <div className="text-xs text-white/80">Eficiencia</div>
-                    </div>
-                  </div>
-                  
-                  {/* BARRA DE EFICIENCIA VISUAL */}
-                  <div className="w-full bg-white/20 rounded-full h-2 mt-3">
-                    <div 
-                      className="bg-white h-2 rounded-full transition-all"
-                      style={{ width: `${member.eficienciaGlobal}%` }}
-                    />
-                  </div>
-              </div>
-              
-              <div className="p-5">
-                {/* PIPELINE VISUAL - EMBUDO MINI */}
-                <div className="mb-5">
-                  <div className="text-xs text-[#6b7280] font-medium mb-3 flex items-center gap-2">
-                    <TrendingUp size={14} />
-                    Pipeline
-                  </div>
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-[#6b7280]">Leads</span>
-                      <span className="font-semibold text-[#1c2c4a]">{member.leads}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-[#6b7280]">Levant.</span>
-                      <span className="font-semibold text-[#1c2c4a]">{member.levantamientos}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-[#6b7280]">Propuestas</span>
-                      <span className="font-semibold text-[#1c2c4a]">{member.propuestasEnviadas}</span>
-                    </div>
-                    <div className="flex items-center justify-between pt-2 border-t border-[#e5e7eb] text-sm">
-                      <span className="font-medium text-[#1c2c4a]">Cierres</span>
-                      <span className="font-bold text-[#0D47A1] text-base">{member.cierres}</span>
-                    </div>
-                  </div>
-                  <div className="mt-3 pt-3 border-t border-[#e5e7eb] text-center">
-                    <span className="text-xs text-[#6b7280]">Conversión </span>
-                    <span className="text-xs font-bold text-[#0D47A1]">{member.tasaConversion}%</span>
-                  </div>
-                </div>
-                
-                {/* PRESUPUESTO VISUAL */}
-                <div className="mb-4">
-                  <div className="text-xs text-[#6b7280] font-medium mb-2 flex items-center gap-2">
-                    <DollarSign size={12} />
-                    Presupuesto
-                  </div>
-                  <div className="flex items-end justify-between mb-2">
-                    <div>
-                      <div className="text-xs text-[#6b7280]">Real</div>
-                      <div className="text-lg font-bold text-[#1c2c4a]">${(member.ventasReales / 1000).toFixed(0)}k</div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-xs text-[#6b7280]">Meta</div>
-                      <div className="text-base font-semibold text-[#6b7280]">${(member.presupuestoMensual / 1000).toFixed(0)}k</div>
-                    </div>
-                  </div>
-                  <div className="relative w-full bg-[#e5e7eb] rounded-full h-3 overflow-hidden">
-                    <div 
-                      className={`h-full rounded-full transition-all ${
-                        member.cumplimientoPresupuesto >= 100 
-                          ? 'bg-[#0D47A1]' 
-                          : 'bg-orange-600'
-                      }`}
-                      style={{ width: `${Math.min(member.cumplimientoPresupuesto, 100)}%` }}
-                    >
-                      <div className="h-full flex items-center justify-end pr-2">
-                        <span className="text-xs font-bold text-white">{member.cumplimientoPresupuesto}%</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* INDICADOR DE ESTADO */}
-                <div className="pt-4 border-t border-[#e5e7eb]">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-[#6b7280]">Estado</span>
-                    <span className={`text-xs font-semibold px-2 py-1 rounded ${
-                      member.cumplimientoPresupuesto >= 100 
-                        ? 'bg-green-50 text-green-700 border border-green-200' 
-                        : member.cumplimientoPresupuesto >= 90
-                        ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                        : 'bg-orange-50 text-orange-700 border border-orange-200'
-                    }`}>
-                      {member.cumplimientoPresupuesto >= 100 ? '✓ En Meta' : 
-                       member.cumplimientoPresupuesto >= 90 ? '⚠ Cerca' : '⚠ Por debajo'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
 
-  // VISTA: LEVANTAMIENTOS Y PROPUESTAS
-  const LevantamientosView = () => {
-    // Estados para filtros
-    const [mostrarFiltros, setMostrarFiltros] = useState(false);
-    const [filtroTipo, setFiltroTipo] = useState('Todos');
-    const [filtroStatus, setFiltroStatus] = useState('Todos');
-    const [filtroEjecutivo, setFiltroEjecutivo] = useState('Todos');
-    const [filtroCliente, setFiltroCliente] = useState('');
-    const [filtroReporte, setFiltroReporte] = useState('Todos');
 
-    // Funciones de filtrado
-    const getFechaSemana = () => {
-      const hoy = new Date('2025-11-11');
-      const inicioSemana = new Date(hoy);
-      inicioSemana.setDate(hoy.getDate() - hoy.getDay());
-      return inicioSemana.toISOString().split('T')[0];
-    };
-
-    const getFechaMes = () => {
-      const hoy = new Date('2025-11-11');
-      return `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-01`;
-    };
-
-    const esEstaSemana = (fecha) => {
-      const fechaItem = new Date(fecha);
-      const inicioSemana = new Date(getFechaSemana());
-      const hoy = new Date('2025-11-11');
-      return fechaItem >= inicioSemana && fechaItem <= hoy;
-    };
-
-    const esEsteMes = (fecha) => {
-      const fechaItem = new Date(fecha);
-      const inicioMes = new Date(getFechaMes());
-      const hoy = new Date('2025-11-11');
-      return fechaItem >= inicioMes && fechaItem <= hoy;
-    };
-
-    // Función para aplicar filtros
-    const aplicarFiltros = (items) => {
-      return items.filter(item => {
-        // Filtro por tipo
-        if (filtroTipo !== 'Todos' && item.tipo !== filtroTipo) return false;
-        
-        // Filtro por status
-        if (filtroStatus !== 'Todos' && item.status !== filtroStatus) return false;
-        
-        // Filtro por ejecutivo
-        if (filtroEjecutivo !== 'Todos' && item.ejecutivo !== filtroEjecutivo) return false;
-        
-        // Filtro por cliente (búsqueda)
-        if (filtroCliente && !item.cliente.toLowerCase().includes(filtroCliente.toLowerCase())) return false;
-        
-        // Filtro por reporte
-        if (filtroReporte === 'Con Reporte' && !item.tieneReporte) return false;
-        if (filtroReporte === 'Sin Reporte' && item.tieneReporte) return false;
-        
-        return true;
-      });
-    };
-
-    // Obtener ejecutivos únicos
-    const ejecutivosUnicos = [...new Set(levantamientosActivos.map(l => l.ejecutivo))].sort();
-    
-    // Obtener estados únicos
-    const estadosUnicos = [...new Set(levantamientosActivos.map(l => l.status))].sort();
-
-    const levantamientosEstaSemana = aplicarFiltros(levantamientosActivos.filter(l => 
-      esEstaSemana(l.fecha) && l.tipo === 'Levantamiento'
-    ));
-    
-    const levantamientosEsteMes = aplicarFiltros(levantamientosActivos.filter(l => 
-      esEsteMes(l.fecha) && l.tipo === 'Levantamiento'
-    ));
-
-    const completadosSinReporte = aplicarFiltros(levantamientosActivos.filter(l => 
-      l.status === 'Completado' && !l.tieneReporte && l.tipo === 'Levantamiento'
-    ));
-
-    const levantamientosFiltrados = aplicarFiltros(levantamientosActivos);
-
-    const totalLevantamientos = aplicarFiltros(levantamientosActivos.filter(l => l.tipo === 'Levantamiento')).length;
-    const totalPropuestas = aplicarFiltros(levantamientosActivos.filter(l => l.tipo === 'Propuesta')).length;
-    const totalValor = aplicarFiltros(levantamientosActivos).reduce((sum, l) => sum + l.valorEstimado, 0);
-
-    // Función para limpiar filtros
-    const limpiarFiltros = () => {
-      setFiltroTipo('Todos');
-      setFiltroStatus('Todos');
-      setFiltroEjecutivo('Todos');
-      setFiltroCliente('');
-      setFiltroReporte('Todos');
-    };
-
-    // Contar filtros activos
-    const filtrosActivos = [
-      filtroTipo !== 'Todos',
-      filtroStatus !== 'Todos',
-      filtroEjecutivo !== 'Todos',
-      filtroCliente !== '',
-      filtroReporte !== 'Todos'
-    ].filter(Boolean).length;
-
-    const renderTable = (items, showReporte = false) => (
-      <div className="bg-white rounded-lg card-modern overflow-hidden border border-[#e5e7eb]">
-        <table className="w-full">
-          <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
-            <tr>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Cliente</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Ejecutivo</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Fecha</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Status</th>
-              {showReporte && (
-                <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Reporte</th>
-              )}
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Volumen Est.</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Valor Est.</th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.length === 0 ? (
-              <tr>
-                <td colSpan={showReporte ? 8 : 7} className="px-6 py-8 text-center text-[#6b7280]">
-                  No hay registros en esta categoría
-                </td>
-              </tr>
-            ) : (
-              items.map(item => (
-                <tr key={item.id} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6]">
-                  <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">{item.cliente}</td>
-                  <td className="px-6 py-4 text-sm text-[#6b7280]">{item.ejecutivo}</td>
-                  <td className="px-6 py-4 text-sm font-medium text-[#1c2c4a]">{item.fecha}</td>
-                  <td className="px-6 py-4 text-sm">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      item.status === 'Completado' ? 'bg-green-50 text-green-700 border border-green-200' :
-                      item.status === 'Enviada' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                      item.status === 'En revisión' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
-                      item.status === 'Agendado' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
-                      'bg-gray-50 text-gray-700 border border-gray-200'
-                    }`}>
-                      {item.status}
-                    </span>
-                  </td>
-                  {showReporte && (
-                    <td className="px-6 py-4 text-sm">
-                      {item.tieneReporte ? (
-                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">
-                          ✓ Generado
-                        </span>
-                      ) : (
-                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-orange-50 text-orange-700 border border-orange-200">
-                          Pendiente
-                        </span>
-                      )}
-                    </td>
-                  )}
-                  <td className="px-6 py-4 text-sm font-semibold text-[#00a8a8]">{item.volumenEstimado}</td>
-                  <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">
-                    ${(item.valorEstimado / 1000).toFixed(0)}k
-                  </td>
-                  <td className="px-6 py-4 text-sm">
-                    <button 
-                      onClick={() => setSelectedLevantamiento(item)}
-                      className="text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1 text-sm"
-                    >
-                      Ver <ChevronRight size={14} />
-            </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-    );
-
-    return (
-      <div className="p-8 bg-[#faf7f2] min-h-screen">
-        <Header title="Levantamientos y Propuestas" subtitle="Generación y seguimiento de oportunidades comerciales" />
-        
-        {/* MÉTRICAS RESUMEN */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
-          <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
-            <div className="flex justify-between items-start mb-4">
-              <div className="text-sm text-[#6b7280] font-medium">Total Levantamientos</div>
-              <ClipboardList className="text-[#00a8a8]" size={20} />
-            </div>
-            <div className="text-3xl font-semibold text-[#1c2c4a] mb-2">{totalLevantamientos}</div>
-            <div className="text-sm text-[#6b7280] font-medium">Activos</div>
-          </div>
-          
-          <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
-            <div className="flex justify-between items-start mb-4">
-              <div className="text-sm text-[#6b7280] font-medium">Total Propuestas</div>
-              <FileText className="text-[#00a8a8]" size={20} />
-            </div>
-            <div className="text-3xl font-semibold text-[#1c2c4a] mb-2">{totalPropuestas}</div>
-            <div className="text-sm text-[#6b7280] font-medium">En seguimiento</div>
-          </div>
-          
-          <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
-            <div className="flex justify-between items-start mb-4">
-              <div className="text-sm text-[#6b7280] font-medium">Valor Total Estimado</div>
-              <DollarSign className="text-[#00a8a8]" size={20} />
-            </div>
-            <div className="text-3xl font-semibold text-[#1c2c4a] mb-2">
-              ${(totalValor / 1000000).toFixed(1)}M
-            </div>
-            <div className="text-sm text-[#6b7280] font-medium">Oportunidades</div>
-          </div>
-          
-          <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
-            <div className="flex justify-between items-start mb-4">
-              <div className="text-sm text-[#6b7280] font-medium">Sin Reporte</div>
-              <AlertCircle className="text-orange-500" size={20} />
-            </div>
-            <div className="text-3xl font-semibold text-[#1c2c4a] mb-2">{completadosSinReporte.length}</div>
-            <div className="text-sm text-orange-600 font-medium">Requieren atención</div>
-          </div>
-        </div>
-
-        {/* ACCIONES */}
-        <div className="flex justify-between items-center mt-8 mb-6">
-          <div className="flex gap-3">
-            <button 
-              onClick={() => setMostrarFiltros(!mostrarFiltros)}
-              className={`flex items-center gap-2 px-4 py-2 border border-[#e5e7eb] rounded-md hover:bg-white font-medium text-sm transition-all ${
-                mostrarFiltros || filtrosActivos > 0
-                  ? 'bg-[#00a8a8] text-white border-[#00a8a8] hover:bg-[#008080]'
-                  : 'text-[#6b7280] hover:text-[#00a8a8]'
-              }`}
-            >
-              <Filter size={16} />
-              Filtrar
-              {filtrosActivos > 0 && (
-                <span className="bg-white text-[#00a8a8] text-xs font-bold px-2 py-0.5 rounded-full">
-                  {filtrosActivos}
-                </span>
-              )}
-            </button>
-          </div>
-          <button 
-            onClick={() => setMostrarNuevoLevantamiento(true)}
-            className="bg-[#00a8a8] hover:bg-[#1e4a37] text-white px-6 py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center gap-2 transition-all"
-          >
-            <ClipboardList size={18} />
-            Nuevo Levantamiento
-          </button>
-        </div>
-        
-        {/* PANEL DE FILTROS */}
-        {mostrarFiltros && (
-          <div className="mb-6 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Filter className="text-[#00a8a8]" size={20} />
-                <h3 className="text-lg font-semibold text-[#1c2c4a]">Filtros de Búsqueda</h3>
-                {filtrosActivos > 0 && (
-                  <span className="text-xs bg-[#00a8a8] text-white px-2 py-1 rounded-md font-medium">
-                    {filtrosActivos} activo{filtrosActivos !== 1 ? 's' : ''}
-                  </span>
-                )}
-              </div>
-              <button
-                onClick={limpiarFiltros}
-                className="text-sm text-[#6b7280] hover:text-[#00a8a8] font-medium flex items-center gap-1"
-              >
-                <RotateCcw size={14} />
-                Limpiar filtros
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              {/* Filtro por Tipo */}
-              <div>
-                <label className="block text-xs font-medium text-[#6b7280] mb-2">Tipo</label>
-                <select
-                  value={filtroTipo}
-                  onChange={(e) => setFiltroTipo(e.target.value)}
-                  className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
-                >
-                  <option value="Todos">Todos</option>
-                  <option value="Levantamiento">Levantamiento</option>
-                  <option value="Propuesta">Propuesta</option>
-                </select>
-              </div>
-
-              {/* Filtro por Status */}
-              <div>
-                <label className="block text-xs font-medium text-[#6b7280] mb-2">Estado</label>
-                <select
-                  value={filtroStatus}
-                  onChange={(e) => setFiltroStatus(e.target.value)}
-                  className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
-                >
-                  <option value="Todos">Todos</option>
-                  {estadosUnicos.map(estado => (
-                    <option key={estado} value={estado}>{estado}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Filtro por Ejecutivo */}
-              <div>
-                <label className="block text-xs font-medium text-[#6b7280] mb-2">Ejecutivo</label>
-                <select
-                  value={filtroEjecutivo}
-                  onChange={(e) => setFiltroEjecutivo(e.target.value)}
-                  className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
-                >
-                  <option value="Todos">Todos</option>
-                  {ejecutivosUnicos.map(ejecutivo => (
-                    <option key={ejecutivo} value={ejecutivo}>{ejecutivo}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Filtro por Cliente (búsqueda) */}
-              <div>
-                <label className="block text-xs font-medium text-[#6b7280] mb-2">Cliente</label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6b7280]" size={16} />
-                  <input
-                    type="text"
-                    value={filtroCliente}
-                    onChange={(e) => setFiltroCliente(e.target.value)}
-                    placeholder="Buscar cliente..."
-                    className="w-full pl-10 pr-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
-                  />
-                </div>
-              </div>
-
-              {/* Filtro por Reporte */}
-              <div>
-                <label className="block text-xs font-medium text-[#6b7280] mb-2">Reporte</label>
-                <select
-                  value={filtroReporte}
-                  onChange={(e) => setFiltroReporte(e.target.value)}
-                  className="w-full px-3 py-2 border border-[#e5e7eb] rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent bg-white"
-                >
-                  <option value="Todos">Todos</option>
-                  <option value="Con Reporte">Con Reporte</option>
-                  <option value="Sin Reporte">Sin Reporte</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        {/* LEVANTAMIENTOS ESTA SEMANA */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <Calendar className="text-[#00a8a8]" size={24} />
-              <h2 className="text-xl font-semibold text-[#1c2c4a]">Levantamientos Esta Semana</h2>
-              <span className="px-3 py-1 bg-[#00a8a8] text-white text-xs font-medium rounded-md">
-                {levantamientosEstaSemana.length}
-              </span>
-            </div>
-          </div>
-          {renderTable(levantamientosEstaSemana)}
-        </div>
-
-        {/* LEVANTAMIENTOS ESTE MES */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <Calendar className="text-[#00a8a8]" size={24} />
-              <h2 className="text-xl font-semibold text-[#1c2c4a]">Levantamientos Este Mes</h2>
-              <span className="px-3 py-1 bg-[#008080] text-white text-xs font-medium rounded-md">
-                {levantamientosEsteMes.length}
-              </span>
-            </div>
-          </div>
-          {renderTable(levantamientosEsteMes)}
-        </div>
-
-        {/* COMPLETADOS SIN REPORTE */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <AlertCircle className="text-orange-500" size={24} />
-              <h2 className="text-xl font-semibold text-[#1c2c4a]">Completados Sin Reporte</h2>
-              <span className="px-3 py-1 bg-orange-500 text-white text-xs font-medium rounded-md">
-                {completadosSinReporte.length}
-              </span>
-            </div>
-          </div>
-          {renderTable(completadosSinReporte, true)}
-        </div>
-
-        {/* TODOS LOS LEVANTAMIENTOS Y PROPUESTAS */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <Eye className="text-[#00a8a8]" size={24} />
-              <h2 className="text-xl font-semibold text-[#1c2c4a]">Vista Total - Todos los Registros</h2>
-              <span className="px-3 py-1 bg-[#f3f4f6] text-[#6b7280] text-xs font-medium rounded-md border border-[#e5e7eb]">
-                {levantamientosFiltrados.length} registro{levantamientosFiltrados.length !== 1 ? 's' : ''}
-              </span>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg card-modern overflow-hidden border border-[#e5e7eb]">
-          <table className="w-full">
-              <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Cliente</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Tipo</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Ejecutivo</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Fecha</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Volumen Est.</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Valor Est.</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#1c2c4a]">Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {levantamientosFiltrados.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="px-6 py-8 text-center text-[#6b7280]">
-                    No se encontraron registros con los filtros aplicados
-                  </td>
-                </tr>
-              ) : (
-                levantamientosFiltrados.map(item => (
-                  <tr key={item.id} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6]">
-                    <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">{item.cliente}</td>
-                  <td className="px-6 py-4 text-sm">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      item.tipo === 'Levantamiento' 
-                          ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                          : 'bg-purple-50 text-purple-700 border border-purple-200'
-                    }`}>
-                      {item.tipo}
-                    </span>
-                  </td>
-                    <td className="px-6 py-4 text-sm text-[#6b7280]">{item.ejecutivo}</td>
-                    <td className="px-6 py-4 text-sm font-medium text-[#1c2c4a]">{item.fecha}</td>
-                  <td className="px-6 py-4 text-sm">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        item.status === 'Completado' ? 'bg-green-50 text-green-700 border border-green-200' :
-                        item.status === 'Enviada' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                        item.status === 'En revisión' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
-                        item.status === 'Agendado' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
-                        'bg-gray-50 text-gray-700 border border-gray-200'
-                    }`}>
-                      {item.status}
-                    </span>
-                  </td>
-                    <td className="px-6 py-4 text-sm font-semibold text-[#00a8a8]">{item.volumenEstimado}</td>
-                    <td className="px-6 py-4 text-sm font-semibold text-[#1c2c4a]">
-                    ${(item.valorEstimado / 1000).toFixed(0)}k
-                  </td>
-                  <td className="px-6 py-4 text-sm">
-                    <button 
-                      onClick={() => setSelectedLevantamiento(item)}
-                        className="text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1 text-sm"
-                    >
-                        Ver <ChevronRight size={14} />
-                    </button>
-                  </td>
-                </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-          </div>
-        </div>
-        
-        {/* SIGUIENTE PASO REQUERIDO */}
-        <div className="bg-white border border-[#e5e7eb] rounded-lg p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <AlertCircle size={20} className="text-[#00a8a8]" />
-            <h3 className="text-lg font-semibold text-[#1c2c4a]">Siguiente Paso Requerido</h3>
-          </div>
-          <div className="space-y-2">
-            {levantamientosFiltrados.filter(l => l.siguientePaso).map(item => (
-              <div key={item.id} className="flex items-center justify-between bg-[#f3f4f6] p-4 rounded-md border border-[#e5e7eb]">
-                <div>
-                  <span className="font-semibold text-[#1c2c4a]">{item.cliente}</span>
-                  <span className="text-[#6b7280] mx-2">→</span>
-                  <span className="text-sm text-[#6b7280]">{item.siguientePaso}</span>
-                </div>
-                <span className="text-xs font-medium text-[#6b7280]">{item.ejecutivo}</span>
-              </div>
-            ))}
-        </div>
-      </div>
-    </div>
-  );
-  };
-
-  // VISTA: REPOSITORIO DE DOCUMENTOS
-  const DocumentosView = () => {
-    const getColorStatus = (status) => {
-      if (status === 'Vigente') return 'bg-green-100 text-green-700 border-green-200';
-      if (status === 'Por Vencer') return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-      return 'bg-red-100 text-red-700 border-red-200';
-    };
-
-    const getIconStatus = (status) => {
-      if (status === 'Vigente') return <CheckSquare size={16} className="text-green-600" />;
-      if (status === 'Por Vencer') return <AlertCircle size={16} className="text-yellow-600" />;
-      return <AlertCircle size={16} className="text-red-600" />;
-    };
-
-    const documentosFiltrados = documentos.filter(doc => {
-      if (filtroDocumentos.tipo && doc.tipo !== filtroDocumentos.tipo) return false;
-      if (filtroDocumentos.categoria && doc.categoria !== filtroDocumentos.categoria) return false;
-      if (filtroDocumentos.status && doc.status !== filtroDocumentos.status) return false;
-      return true;
-    });
-
-    return (
-      <div className="p-8 bg-[#faf7f2] min-h-screen">
-        <Header title="Repositorio de Documentos" subtitle="Gestión centralizada de permisos, licencias y certificaciones" />
-
-        {/* KPIs DE DOCUMENTOS */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
-          <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-sm font-semibold text-[#6b7280]">Total Documentos</div>
-              <FileText className="text-[#00a8a8]" size={24} />
-            </div>
-            <div className="text-3xl font-bold text-[#1c2c4a]">{documentos.length}</div>
-          </div>
-
-          <div className="bg-green-50 rounded-lg p-6 border border-green-200 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-sm font-semibold text-green-700">Vigentes</div>
-              <CheckSquare className="text-green-600" size={24} />
-            </div>
-            <div className="text-3xl font-bold text-green-700">
-              {documentos.filter(d => d.status === 'Vigente').length}
-            </div>
-          </div>
-
-          <div className="bg-yellow-50 rounded-lg p-6 border border-yellow-200 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-sm font-semibold text-yellow-700">Por Vencer</div>
-              <AlertCircle className="text-yellow-600" size={24} />
-            </div>
-            <div className="text-3xl font-bold text-yellow-700">
-              {documentos.filter(d => d.status === 'Por Vencer').length}
-            </div>
-          </div>
-
-          <div className="bg-red-50 rounded-lg p-6 border border-red-200 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-sm font-semibold text-red-700">Vencidos</div>
-              <AlertCircle className="text-red-600" size={24} />
-            </div>
-            <div className="text-3xl font-bold text-red-700">
-              {documentos.filter(d => d.status === 'Vencido').length}
-            </div>
-          </div>
-        </div>
-
-        {/* FILTROS Y ACCIONES */}
-        <div className="mt-8 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4 flex-wrap">
-              <select
-                value={filtroDocumentos.tipo}
-                onChange={(e) => setFiltroDocumentos({ ...filtroDocumentos, tipo: e.target.value })}
-                className="px-4 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]"
-              >
-                <option value="">Todos los tipos</option>
-                {TIPOS_DOCUMENTO.map(tipo => (
-                  <option key={tipo} value={tipo}>{tipo}</option>
-                ))}
-              </select>
-
-              <select
-                value={filtroDocumentos.categoria}
-                onChange={(e) => setFiltroDocumentos({ ...filtroDocumentos, categoria: e.target.value })}
-                className="px-4 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]"
-              >
-                <option value="">Todas las categorías</option>
-                {CATEGORIAS_DOCUMENTO.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-
-              <select
-                value={filtroDocumentos.status}
-                onChange={(e) => setFiltroDocumentos({ ...filtroDocumentos, status: e.target.value })}
-                className="px-4 py-2 border border-[#e5e7eb] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00a8a8]"
-              >
-                <option value="">Todos los estados</option>
-                <option value="Vigente">Vigente</option>
-                <option value="Por Vencer">Por Vencer</option>
-                <option value="Vencido">Vencido</option>
-              </select>
-
-              {(filtroDocumentos.tipo || filtroDocumentos.categoria || filtroDocumentos.status) && (
-                <button
-                  onClick={() => setFiltroDocumentos({ tipo: '', categoria: '', status: '' })}
-                  className="text-sm text-[#6b7280] hover:text-[#00a8a8] flex items-center gap-1"
-                >
-                  <RotateCcw size={14} />
-                  Limpiar filtros
-                </button>
-              )}
-            </div>
-
-            <button
-              onClick={() => setMostrarNuevoDocumento(true)}
-              className="bg-[#00a8a8] hover:bg-[#008080] text-white px-6 py-2 rounded-lg font-medium text-sm flex items-center gap-2"
-            >
-              <FileText size={18} />
-              Nuevo Documento
-            </button>
-          </div>
-        </div>
-
-        {/* GRID DE DOCUMENTOS */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {documentosFiltrados.map(doc => {
-            const hoy = new Date();
-            const vencimiento = new Date(doc.fechaVencimiento);
-            const diasRestantes = Math.floor((vencimiento - hoy) / (1000 * 60 * 60 * 24));
-
-            return (
-              <div key={doc.id} className="bg-white rounded-lg border border-[#e5e7eb] shadow-sm hover:shadow-md transition-all">
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <h3 className="text-base font-bold text-[#1c2c4a] mb-2">{doc.nombre}</h3>
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs bg-[#f3f4f6] text-[#6b7280] px-2 py-1 rounded border border-[#e5e7eb]">
-                          {doc.tipo}
-                        </span>
-                        <span className="text-xs bg-[#f3f4f6] text-[#6b7280] px-2 py-1 rounded border border-[#e5e7eb]">
-                          {doc.categoria}
-                        </span>
-                      </div>
-                    </div>
-                    <div className={`px-3 py-1 rounded-full border text-xs font-semibold ${getColorStatus(doc.status)}`}>
-                      {doc.status}
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 text-sm">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[#6b7280]">Emisión:</span>
-                      <span className="font-medium text-[#1c2c4a]">
-                        {new Date(doc.fechaEmision).toLocaleDateString('es-MX')}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[#6b7280]">Vencimiento:</span>
-                      <span className="font-medium text-[#1c2c4a]">
-                        {new Date(doc.fechaVencimiento).toLocaleDateString('es-MX')}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[#6b7280]">Días restantes:</span>
-                      <span className={`font-bold ${
-                        diasRestantes < 0 ? 'text-red-600' :
-                        diasRestantes <= 30 ? 'text-yellow-600' :
-                        'text-green-600'
-                      }`}>
-                        {diasRestantes < 0 ? `Vencido hace ${Math.abs(diasRestantes)} días` : `${diasRestantes} días`}
-                      </span>
-                    </div>
-                  </div>
-
-                  {doc.notas && (
-                    <div className="mt-4 p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
-                      <div className="text-xs text-[#6b7280] font-medium mb-1">Notas:</div>
-                      <div className="text-xs text-[#1c2c4a]">{doc.notas}</div>
-                    </div>
-                  )}
-
-                  <div className="mt-4 flex items-center gap-2">
-                    <button className="flex-1 bg-[#f3f4f6] hover:bg-[#e5e7eb] text-[#1c2c4a] px-4 py-2 rounded-lg font-medium text-sm flex items-center justify-center gap-2">
-                      <Eye size={16} />
-                      Ver
-                    </button>
-                    <button className="flex-1 bg-[#00a8a8] hover:bg-[#008080] text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center justify-center gap-2">
-                      <Download size={16} />
-                      Descargar
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {documentosFiltrados.length === 0 && (
-          <div className="mt-8 bg-white rounded-lg border border-[#e5e7eb] shadow-sm p-12 text-center">
-            <FileText size={48} className="mx-auto mb-4 text-[#6b7280] opacity-50" />
-            <p className="text-[#6b7280]">No se encontraron documentos con los filtros seleccionados</p>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  // VISTA: REPORTES AUTOMÁTICOS A CLIENTES
-  const ReportesAutomaticosView = () => (
-    <div className="p-8 bg-[#faf7f2] min-h-screen">
-      <Header title="Reportes de Trazabilidad entregados" subtitle="Envío automático y conciliación de RME y servicios" />
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-        <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <CheckSquare className="text-[#00a8a8]" size={24} />
-            <div>
-              <div className="text-2xl font-semibold text-[#1c2c4a]">28</div>
-              <div className="text-sm font-medium text-[#6b7280]">Reportes Enviados</div>
-            </div>
-          </div>
-          <div className="text-xs text-[#6b7280] font-medium">Noviembre 2025</div>
-        </div>
-        
-        <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <AlertCircle className="text-[#00a8a8]" size={24} />
-            <div>
-              <div className="text-2xl font-semibold text-[#1c2c4a]">3</div>
-              <div className="text-sm font-medium text-[#6b7280]">Pendientes</div>
-            </div>
-          </div>
-          <div className="text-xs text-[#6b7280] font-medium">Programados: 1 Dic</div>
-        </div>
-        
-        <div className="bg-white rounded-lg p-6 border border-[#e5e7eb] shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <Eye className="text-[#00a8a8]" size={24} />
-            <div>
-              <div className="text-2xl font-semibold text-[#1c2c4a]">87%</div>
-              <div className="text-sm font-medium text-[#6b7280]">Tasa Apertura</div>
-            </div>
-          </div>
-          <div className="text-xs text-[#6b7280] font-medium">Promedio mensual</div>
-        </div>
-      </div>
-      
-      <div className="mt-8">
-        <div className="flex items-center gap-3 mb-6">
-          <Send className="text-[#00a8a8]" size={24} />
-          <h2 className="text-xl font-semibold text-[#1c2c4a]">Clientes con Reportes de Trazabilidad entregados</h2>
-        </div>
-        
-        <div className="space-y-4">
-          {clientesConReportes.map(client => (
-            <div 
-              key={client.id}
-              className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all border border-[#e5e7eb] cursor-pointer"
-              onClick={() => setSelectedClient(client)}
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="text-4xl">{client.logo}</div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-[#1c2c4a]">{client.name}</h3>
-                      <p className="text-sm text-[#6b7280] font-medium">{client.sucursales} sucursales • {client.contacto}</p>
-                    </div>
-                    <div className="ml-auto">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        client.statusReporte === 'Enviado' 
-                          ? 'bg-green-50 text-green-700 border border-green-200' 
-                          : 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                      }`}>
-                        {client.statusReporte}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
-                      <div className="text-xs text-[#6b7280] font-medium mb-1">RME Gestionado</div>
-                      <div className="text-xl font-semibold text-[#1c2c4a]">{client.rmeGestionado} t</div>
-                    </div>
-                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
-                      <div className="text-xs text-[#6b7280] font-medium mb-1">Valorización</div>
-                      <div className="text-xl font-semibold text-[#1c2c4a]">{client.valoracionLograda}%</div>
-                    </div>
-                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
-                      <div className="text-xs text-[#6b7280] font-medium mb-1">Ingresos Mes</div>
-                      <div className="text-xl font-semibold text-[#1c2c4a]">
-                        ${(client.ingresosMes / 1000).toFixed(0)}k
-                      </div>
-                    </div>
-                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
-                      <div className="text-xs text-[#6b7280] font-medium mb-1">Próximo Reporte</div>
-                      <div className="text-base font-semibold text-[#1c2c4a]">{client.proximoReporte}</div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
-                    <div className="text-xs text-[#6b7280] font-medium mb-2">Servicios Contratados:</div>
-                    <div className="flex flex-wrap gap-2">
-                      {client.serviciosContratados.map((servicio, idx) => (
-                        <span key={idx} className="px-3 py-1 bg-white border border-[#e5e7eb] rounded-md text-xs font-medium text-[#1c2c4a]">
-                          {servicio}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-3 mt-4">
-                    <button className="flex-1 bg-[#00a8a8] hover:bg-[#1e4a37] text-white py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center justify-center gap-2">
-                      <Eye size={16} />
-                      Ver Reporte
-                    </button>
-                    <button className="flex-1 bg-[#008080] hover:bg-[#40916C] text-white py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center justify-center gap-2">
-                      <Send size={16} />
-                      Enviar Ahora
-                    </button>
-                    <button className="flex-1 border border-[#00a8a8] text-[#00a8a8] py-2 rounded-md font-medium text-sm hover:bg-[#f3f4f6] flex items-center justify-center gap-2">
-                      <Download size={16} />
-                      Descargar PDF
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      
-      <div className="mt-8 bg-white border border-[#e5e7eb] rounded-lg p-8 shadow-sm">
-        <h3 className="text-xl font-semibold text-[#1c2c4a] mb-6 flex items-center gap-3">
-          <CheckSquare size={24} />
-          Conciliación Automática de Servicios y RME
-        </h3>
-        <p className="text-[#6b7280] mb-6 text-sm leading-relaxed">
-          Cada reporte mensual incluye automáticamente la conciliación de Residuos de Manejo Especial (RME) gestionados 
-          vs servicios contratados, facilitando la validación y facturación mensual.
-        </p>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="bg-[#f3f4f6] rounded-lg p-6 text-center border border-[#e5e7eb]">
-            <div className="text-3xl mb-2">📋</div>
-            <div className="text-xl font-semibold text-[#1c2c4a]">100%</div>
-            <div className="text-xs text-[#6b7280] font-medium mt-1">Automatizado</div>
-          </div>
-          <div className="bg-[#f3f4f6] rounded-lg p-6 text-center border border-[#e5e7eb]">
-            <div className="text-3xl mb-2">⏱️</div>
-            <div className="text-xl font-semibold text-[#1c2c4a]">15 min</div>
-            <div className="text-xs text-[#6b7280] font-medium mt-1">Tiempo ahorrado</div>
-          </div>
-          <div className="bg-[#f3f4f6] rounded-lg p-6 text-center border border-[#e5e7eb]">
-            <div className="text-3xl mb-2">✅</div>
-            <div className="text-xl font-semibold text-[#1c2c4a]">0</div>
-            <div className="text-xs text-[#6b7280] font-medium mt-1">Errores manuales</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  // VISTA: TRAZABILIDAD
-  const TrazabilidadView = () => {
-    const [clienteSeleccionado, setClienteSeleccionado] = useState(clientesConReportes[0]?.id || null);
-    const [datosEditables, setDatosEditables] = useState(
-      clienteSeleccionado ? trazabilidadPorCliente[clienteSeleccionado] : datosTrazabilidad
-    );
-    const [categoriasAbiertas, setCategoriasAbiertas] = useState({
-      reciclaje: true,
-      composta: false,
-      reuso: false,
-      rellenoSanitario: false
-    });
-    const [mostrarDropdownReportes, setMostrarDropdownReportes] = useState(false);
-    const [mostrarModalInfo, setMostrarModalInfo] = useState(false);
-    const [selectedNodeSankey, setSelectedNodeSankey] = useState(null);
-    const sankeyRef = useRef(null);
-
-    // Obtener cliente actual
-    const clienteActual = clientesConReportes.find(c => c.id === clienteSeleccionado);
-
-    // Actualizar datos cuando cambia el cliente
-    // Cerrar dropdown cuando cambia el cliente
-    useEffect(() => {
-      setMostrarDropdownReportes(false);
-    }, [clienteSeleccionado]);
-
-    // Cerrar dropdown al hacer clic fuera
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (mostrarDropdownReportes && !event.target.closest('.dropdown-reportes')) {
-          setMostrarDropdownReportes(false);
-        }
-      };
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, [mostrarDropdownReportes]);
-
-    useEffect(() => {
-      if (clienteSeleccionado && trazabilidadPorCliente[clienteSeleccionado]) {
-        setDatosEditables(JSON.parse(JSON.stringify(trazabilidadPorCliente[clienteSeleccionado])));
-      } else {
-        setDatosEditables(JSON.parse(JSON.stringify(datosTrazabilidad)));
-      }
-    }, [clienteSeleccionado]);
-
-    // Generar datos Sankey para el cliente actual
-    const datosSankey = clienteActual && datosEditables 
-      ? generarDatosSankeyCliente(clienteActual, datosEditables)
-      : null;
-
-    // Calcular KPIs
-    const calcularTotal = (categoria) => {
-      return datosEditables[categoria].reduce((total, item) => {
-        const suma = meses.reduce((sum, mes) => sum + (item[mes] || 0), 0);
-        return total + suma;
-      }, 0);
-    };
-
-    const toneladasCirculares = calcularTotal('reciclaje') + calcularTotal('composta') + calcularTotal('reuso');
-    const rellenoSanitario = calcularTotal('rellenoSanitario');
-    const totalGenerado = toneladasCirculares + rellenoSanitario;
-    const porcentajeDesviacion = totalGenerado > 0 ? ((toneladasCirculares / totalGenerado) * 100).toFixed(1) : 0;
-
-    const toggleCategoria = (categoria) => {
-      setCategoriasAbiertas(prev => ({
-        ...prev,
-        [categoria]: !prev[categoria]
-      }));
-    };
-
-    const actualizarValor = (categoria, indexMaterial, mes, valor) => {
-      const nuevoValor = parseFloat(valor) || 0;
-      setDatosEditables(prev => {
-        const nuevaCategoria = [...prev[categoria]];
-        nuevaCategoria[indexMaterial] = {
-          ...nuevaCategoria[indexMaterial],
-          [mes]: nuevoValor
-        };
-        return {
-          ...prev,
-          [categoria]: nuevaCategoria
-        };
-      });
-    };
-
-    const calcularTotalMaterial = (material) => {
-      return meses.reduce((sum, mes) => sum + (material[mes] || 0), 0);
-    };
-
-    const guardarCambios = () => {
-      // Aquí se guardarían los cambios en el backend
-      if (clienteSeleccionado) {
-        trazabilidadPorCliente[clienteSeleccionado] = datosEditables;
-      }
-      alert('Cambios guardados exitosamente');
-    };
-
-    const descargarReporte = (certificacion, formato) => {
-      const cliente = clientesConReportes.find(c => c.id === clienteSeleccionado);
-      const nombreCliente = cliente ? cliente.name : 'General';
-      alert(`Descargando reporte ${certificacion} de ${nombreCliente} en formato ${formato.toUpperCase()}`);
-      setMostrarDropdownReportes(false);
-      // Aquí se implementaría la descarga real del reporte específico de la certificación
-    };
-
-    const categoriasConfig = [
-      { key: 'reciclaje', label: 'RECICLAJE', color: 'bg-green-50 border-green-200' },
-      { key: 'composta', label: 'COMPOSTA', color: 'bg-orange-50 border-orange-200' },
-      { key: 'reuso', label: 'REUSO', color: 'bg-blue-50 border-blue-200' },
-      { key: 'rellenoSanitario', label: 'RELLENO SANITARIO', color: 'bg-red-50 border-red-200' }
-    ];
-
-    return (
-      <div className="p-8 bg-[#faf7f2] min-h-screen">
-        <Header title="Trazabilidad de Residuos" subtitle="Seguimiento y gestión de residuos por destino final" />
-        
-        {/* BARRA SUPERIOR: CLIENTE Y ACCIONES */}
-        <div className="mt-8 bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4 flex-1 min-w-[300px]">
-              <label className="text-sm font-medium text-[#1c2c4a] whitespace-nowrap">Cliente:</label>
-              <select
-                value={clienteSeleccionado || ''}
-                onChange={(e) => setClienteSeleccionado(parseInt(e.target.value))}
-                className="px-4 py-2 border border-[#e5e7eb] rounded-md text-sm font-medium text-[#1c2c4a] focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent flex-1 max-w-[300px]"
-              >
-                <option value="">Vista General</option>
-                {clientesConReportes.map(cliente => (
-                  <option key={cliente.id} value={cliente.id}>
-                    {cliente.logo} {cliente.name}
-                  </option>
-                ))}
-              </select>
-              {clienteActual && (
-                <div className="flex items-center gap-2 text-sm text-[#6b7280]">
-                  <span className="text-xl">{clienteActual.logo}</span>
-                  <span>{clienteActual.contacto}</span>
-                </div>
-              )}
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => {
-                  setClienteSeleccionadoVista(clienteSeleccionado);
-                  setVistaCliente(true);
-                }}
-                className="bg-[#0D47A1] hover:bg-[#0D47A1] text-white px-4 py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center gap-2 transition-all"
-                title="Ver como Cliente"
-              >
-                <Eye size={16} />
-                Vista Cliente
-              </button>
-              
-              {/* BOTÓN REPORTES CON DROPDOWN */}
-              <div className="relative dropdown-reportes">
-                <button
-                  onClick={() => setMostrarDropdownReportes(!mostrarDropdownReportes)}
-                  className="bg-[#00a8a8] hover:bg-[#008080] text-white px-4 py-2 rounded-md font-medium text-sm shadow-sm hover:shadow-md flex items-center gap-2 transition-all"
-                  title="Descargar Reportes por Certificación"
-                >
-                  <FileText size={16} />
-                  REPORTES
-                  <ChevronDown size={14} className={mostrarDropdownReportes ? 'transform rotate-180' : ''} />
-                </button>
-                
-                {/* DROPDOWN MENU */}
-                {mostrarDropdownReportes && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-[#e5e7eb] z-50 overflow-hidden">
-                    <div className="p-3 border-b border-[#e5e7eb] bg-[#f3f4f6]">
-                      <h3 className="text-sm font-semibold text-[#1c2c4a]">Reportes por Certificación</h3>
-                      <p className="text-xs text-[#6b7280] mt-1">Seleccione una certificación y formato</p>
-                    </div>
-                    {clienteActual && clienteActual.requisitosReporte && clienteActual.requisitosReporte.length > 0 ? (
-                      <div className="max-h-96 overflow-y-auto">
-                        {clienteActual.requisitosReporte.map((certificacion, idx) => (
-                          <div key={idx} className="border-b border-[#e5e7eb] last:border-b-0">
-                            <div className="px-4 py-3 bg-[#f3f4f6]">
-                              <div className="flex items-center gap-2">
-                                <FileText size={16} className="text-[#00a8a8]" />
-                                <span className="text-sm font-semibold text-[#1c2c4a]">{certificacion}</span>
-                              </div>
-                            </div>
-                            <div className="px-4 py-2 space-y-1">
-                              <button
-                                onClick={() => descargarReporte(certificacion, 'pdf')}
-                                className="w-full text-left px-3 py-2 text-xs hover:bg-[#f3f4f6] rounded-md flex items-center gap-2 text-[#6b7280] hover:text-[#1c2c4a] transition-colors"
-                              >
-                                <FileText size={14} className="text-red-600" />
-                                <span>PDF</span>
-                              </button>
-                              <button
-                                onClick={() => descargarReporte(certificacion, 'excel')}
-                                className="w-full text-left px-3 py-2 text-xs hover:bg-[#f3f4f6] rounded-md flex items-center gap-2 text-[#6b7280] hover:text-[#1c2c4a] transition-colors"
-                              >
-                                <Download size={14} className="text-green-600" />
-                                <span>Excel</span>
-                              </button>
-                              <button
-                                onClick={() => descargarReporte(certificacion, 'csv')}
-                                className="w-full text-left px-3 py-2 text-xs hover:bg-[#f3f4f6] rounded-md flex items-center gap-2 text-[#6b7280] hover:text-[#1c2c4a] transition-colors"
-                              >
-                                <Download size={14} className="text-blue-600" />
-                                <span>CSV</span>
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="p-4 text-center text-sm text-[#6b7280]">
-                        No hay certificaciones configuradas para este cliente
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* RESUMEN OPERATIVO DEL CLIENTE - VISTA SIMPLIFICADA */}
-        {clienteActual && (
-          <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm">
-            <div className="p-4 flex items-center justify-between border-b border-[#e5e7eb]">
-              <div className="flex items-center gap-3">
-                <div className="text-3xl">{clienteActual.logo}</div>
-                <div>
-                  <h3 className="text-base font-semibold text-[#1c2c4a]">{clienteActual.name}</h3>
-                  <p className="text-xs text-[#6b7280]">{clienteActual.sucursales} sucursales • {clienteActual.contacto}</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setMostrarModalInfo(true)}
-                className="text-xs text-[#00a8a8] hover:text-[#008080] font-medium flex items-center gap-1.5 px-3 py-1.5 hover:bg-[#f3f4f6] rounded-md"
-              >
-                <Eye size={14} />
-                Ver Detalles
-              </button>
-            </div>
-            
-            <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
-                <div className="text-xs text-[#6b7280] mb-1">Promedio Mensual</div>
-                <div className="text-lg font-semibold text-[#1c2c4a]">{clienteActual.promedioMensual}</div>
-                <div className="text-xs text-[#6b7280]">ton/mes</div>
-              </div>
-              
-              <div className="text-center p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
-                <div className="text-xs text-[#6b7280] mb-1">Tasa Valorización</div>
-                <div className="text-lg font-semibold text-[#00a8a8]">{clienteActual.tasaValorizacion}%</div>
-                <div className="text-xs text-[#6b7280]">desviación</div>
-              </div>
-              
-              <div className="text-center p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
-                <div className="text-xs text-[#6b7280] mb-1">Recolección</div>
-                <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.frecuenciaRecoleccion}</div>
-              </div>
-              
-              <div className="text-center p-3 bg-[#f3f4f6] rounded-lg border border-[#e5e7eb]">
-                <div className="text-xs text-[#6b7280] mb-1">Operando desde</div>
-                <div className="text-sm font-semibold text-[#1c2c4a]">
-                  {Math.floor((new Date() - new Date(clienteActual.fechaInicioOperacion)) / (1000 * 60 * 60 * 24 * 30))} meses
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        {/* KPIs - Más compactos */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <Recycle className="text-[#00a8a8]" size={18} />
-              <span className="text-xs text-[#6b7280]">Circulares</span>
-            </div>
-            <div className="text-2xl font-semibold text-[#1c2c4a]">{toneladasCirculares.toFixed(1)}</div>
-            <div className="text-xs text-[#6b7280] mt-1">ton</div>
-          </div>
-          
-          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <Trash2 className="text-red-500" size={18} />
-              <span className="text-xs text-[#6b7280]">Relleno</span>
-            </div>
-            <div className="text-2xl font-semibold text-[#1c2c4a]">{rellenoSanitario.toFixed(1)}</div>
-            <div className="text-xs text-[#6b7280] mt-1">ton</div>
-          </div>
-          
-          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <BarChart3 className="text-blue-500" size={18} />
-              <span className="text-xs text-[#6b7280]">Total</span>
-            </div>
-            <div className="text-2xl font-semibold text-[#1c2c4a]">{totalGenerado.toFixed(1)}</div>
-            <div className="text-xs text-[#6b7280] mt-1">ton</div>
-          </div>
-          
-          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <TrendingUp className="text-[#00a8a8]" size={18} />
-              <span className="text-xs text-[#6b7280]">Desviación</span>
-            </div>
-            <div className="text-2xl font-semibold text-[#1c2c4a]">{porcentajeDesviacion}%</div>
-            <div className="text-xs text-[#6b7280] mt-1">del relleno</div>
-          </div>
-        </div>
-
-        {/* DIAGRAMA SANKEY - FLUJO DE MATERIALES */}
-        {clienteActual && !datosSankey && (
-          <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm p-8 text-center">
-            <Recycle className="mx-auto text-[#6b7280] mb-4" size={48} />
-            <h3 className="text-lg font-semibold text-[#1c2c4a] mb-2">No hay datos de trazabilidad</h3>
-            <p className="text-sm text-[#6b7280]">Agrega datos en la tabla de trazabilidad para visualizar el flujo de materiales.</p>
-          </div>
-        )}
-        {clienteActual && datosSankey && (
-          <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] card-modern p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-base font-semibold text-[#1c2c4a] mb-1">Flujo de Materiales</h3>
-                <p className="text-xs text-[#6b7280]">Trazabilidad completa de {clienteActual.name}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <select 
-                  value={selectedNodeSankey || ''} 
-                  onChange={(e) => setSelectedNodeSankey(e.target.value || null)}
-                  className="px-3 py-1.5 border border-[#e5e7eb] rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-[#00a8a8] focus:border-transparent"
-                >
-                  <option value="">Todos los nodos</option>
-                  {datosSankey.nodes.map(node => (
-                    <option key={node.id} value={node.id}>{node.id}</option>
-                  ))}
-                </select>
-                {selectedNodeSankey && (
-                  <button
-                    onClick={() => setSelectedNodeSankey(null)}
-                    className="p-1.5 hover:bg-[#f3f4f6] rounded-md"
-                    title="Limpiar filtro"
-                  >
-                    <RotateCcw size={14} className="text-[#6b7280]" />
-                  </button>
-                )}
-                <button
-                  onClick={async () => {
-                    if (!sankeyRef.current) return;
-                    try {
-                      const canvas = await html2canvas(sankeyRef.current, { scale: 2, backgroundColor: '#ffffff' });
-                      const link = document.createElement('a');
-                      link.download = `flujo-materiales-${clienteActual.name.toLowerCase().replace(/\s+/g, '-')}.png`;
-                      link.href = canvas.toDataURL();
-                      link.click();
-                    } catch (error) {
-                      console.error('Error exporting PNG:', error);
-                    }
-                  }}
-                  className="px-3 py-1.5 bg-[#00a8a8] hover:bg-[#1e4a37] text-white rounded-md text-xs font-medium flex items-center gap-1.5"
-                >
-                  <FileImage size={14} />
-                  PNG
-                </button>
-              </div>
-            </div>
-
-            <div ref={sankeyRef} className="h-[500px] bg-white rounded-lg border border-[#e5e7eb]">
-              {(() => {
-                // Filtrar datos si hay un nodo seleccionado
-                let filteredNodes = datosSankey.nodes;
-                let filteredLinks = datosSankey.links;
-                
-                if (selectedNodeSankey) {
-                  const relevantNodeIds = new Set([selectedNodeSankey]);
-                  const relevantLinks = datosSankey.links.filter(l => 
-                    l.source === selectedNodeSankey || l.target === selectedNodeSankey
-                  );
-                  
-                  relevantLinks.forEach(link => {
-                    relevantNodeIds.add(link.source);
-                    relevantNodeIds.add(link.target);
-                  });
-                  
-                  filteredNodes = datosSankey.nodes.filter(n => relevantNodeIds.has(n.id));
-                  filteredLinks = relevantLinks;
-                }
-                
-                return (
-                  <ResponsiveSankey
-                    data={{
-                      nodes: filteredNodes,
-                      links: filteredLinks
-                    }}
-                    margin={{ top: 20, right: 200, bottom: 20, left: 200 }}
-                    align="justify"
-                    colors={(node) => {
-                      const nodeData = filteredNodes.find(n => n.id === node.id);
-                      return nodeData?.nodeColor || '#64748b';
-                    }}
-                    nodeOpacity={1}
-                    nodeHoverOpacity={0.8}
-                    nodeThickness={18}
-                    nodeSpacing={10}
-                    nodeBorderWidth={0}
-                    linkOpacity={0.5}
-                    linkHoverOpacity={0.8}
-                    linkContract={0}
-                    enableLinkGradient={true}
-                    labelPosition="outside"
-                    labelOrientation="horizontal"
-                    labelPadding={20}
-                    labelTextColor="#374151"
-                    labelWrap={true}
-                    animate={true}
-                    motionConfig="gentle"
-                    nodeTooltip={({ node }) => {
-                      const nodeData = filteredNodes.find(n => n.id === node.id);
-                      const nodeIdParts = node.id.split(' (');
-                      const nombreDestino = nodeIdParts[0];
-                      const registroAmbiental = nodeData?.registroAmbiental || (nodeIdParts[1] ? nodeIdParts[1].replace(')', '') : '');
-                      return (
-                        <div className="bg-[#1c2c4a] text-white p-2 rounded-md text-xs shadow-lg border border-[#00a8a8]">
-                          <div className="font-semibold">{nombreDestino}</div>
-                          {registroAmbiental && (
-                            <div className="text-[#00a8a8] font-medium mt-1">Registro: {registroAmbiental}</div>
-                          )}
-                          {node.value && (
-                            <div className="text-xs mt-1">
-                              <div>Volumen total: {node.value.toFixed(1)} ton</div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    }}
-                    linkTooltip={({ link }) => {
-                      const percentage = datosSankey.totalGenerado > 0 
-                        ? ((link.value / datosSankey.totalGenerado) * 100).toFixed(1) 
-                        : '0';
-                      return (
-                        <div className="bg-[#1c2c4a] text-white p-2 rounded-md text-xs shadow-lg border border-[#00a8a8]">
-                          <div className="font-semibold">{link.source.id} → {link.target.id}</div>
-                          <div className="mt-1">Volumen: {link.value.toFixed(1)} ton/mes</div>
-                          <div>Porcentaje: {percentage}%</div>
-                        </div>
-                      );
-                    }}
-                    onClick={(data) => {
-                      if (data.id) {
-                        setSelectedNodeSankey(selectedNodeSankey === data.id ? null : data.id);
-                      }
-                    }}
-                  />
-                );
-              })()}
-            </div>
-            
-            {selectedNodeSankey && (
-              <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
-                <div className="flex items-center gap-2 text-xs">
-                  <Filter size={14} className="text-blue-600" />
-                  <span className="font-medium text-blue-800">
-                    Filtrando por: {selectedNodeSankey}
-                  </span>
-                  <button
-                    onClick={() => setSelectedNodeSankey(null)}
-                    className="ml-auto text-blue-600 hover:text-blue-800 text-xs font-medium"
-                  >
-                    Limpiar filtro
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Métricas del Flujo */}
-            <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-4">
-              <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb] text-center">
-                <div className="text-xs text-[#6b7280] mb-1">Total Generado</div>
-                <div className="text-lg font-semibold text-[#1c2c4a]">{datosSankey.totalGenerado.toFixed(1)}</div>
-                <div className="text-xs text-[#6b7280]">ton/mes</div>
-              </div>
-              <div className="bg-green-50 rounded-lg p-4 border border-green-200 text-center">
-                <div className="text-xs text-[#6b7280] mb-1">Composta</div>
-                <div className="text-lg font-semibold text-[#00a8a8]">{datosSankey.totalComposta.toFixed(1)}</div>
-                <div className="text-xs text-[#6b7280]">ton/mes</div>
-              </div>
-              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 text-center">
-                <div className="text-xs text-[#6b7280] mb-1">Reciclaje</div>
-                <div className="text-lg font-semibold text-[#008080]">{datosSankey.totalReciclaje.toFixed(1)}</div>
-                <div className="text-xs text-[#6b7280]">ton/mes</div>
-              </div>
-              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 text-center">
-                <div className="text-xs text-[#6b7280] mb-1">Reuso</div>
-                <div className="text-lg font-semibold text-[#008080]">{datosSankey.totalReuso.toFixed(1)}</div>
-                <div className="text-xs text-[#6b7280]">ton/mes</div>
-              </div>
-              <div className="bg-red-50 rounded-lg p-4 border border-red-200 text-center">
-                <div className="text-xs text-[#6b7280] mb-1">Relleno</div>
-                <div className="text-lg font-semibold text-[#DC2626]">{datosSankey.totalRelleno.toFixed(1)}</div>
-                <div className="text-xs text-[#6b7280]">ton/mes</div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* GRÁFICAS */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-6">
-          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
-            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">
-              Distribución por Destino
-            </h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={calcularDistribucionPorDestino(datosEditables)} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis type="number" stroke="#6b7280" fontSize={12} />
-                <YAxis dataKey="mes" type="category" width={50} stroke="#6b7280" fontSize={12} />
-                <Tooltip />
-                <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                <Bar dataKey="Reciclaje" fill="#00a8a8" radius={[0, 4, 4, 0]} />
-                <Bar dataKey="Composta" fill="#FF8C00" radius={[0, 4, 4, 0]} />
-                <Bar dataKey="Reuso" fill="#008080" radius={[0, 4, 4, 0]} />
-                <Bar dataKey="Relleno sanitario" fill="#DC2626" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="bg-white rounded-lg p-5 border border-[#e5e7eb] shadow-sm">
-            <h3 className="text-base font-semibold text-[#1c2c4a] mb-4">
-              Evolución % Desviación
-            </h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={calcularEvolucionDesviacion(datosEditables)}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis dataKey="mes" stroke="#6b7280" fontSize={12} />
-                <YAxis domain={[0, 100]} stroke="#6b7280" fontSize={12} />
-                <Tooltip />
-                <Line type="monotone" dataKey="desviacion" stroke="#00a8a8" strokeWidth={2} dot={{ fill: '#00a8a8', r: 3 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* TABLA INTERACTIVA DE TRAZABILIDAD */}
-        <div className="mt-6 bg-white rounded-lg border border-[#e5e7eb] shadow-sm">
-          <div className="p-4 border-b border-[#e5e7eb] flex justify-between items-center">
-            <h3 className="text-base font-semibold text-[#1c2c4a]">
-              Datos de Trazabilidad
-            </h3>
-            <button
-              onClick={guardarCambios}
-              className="bg-[#00a8a8] hover:bg-[#1e4a37] text-white px-3 py-1.5 rounded-md font-medium text-xs shadow-sm hover:shadow-md flex items-center gap-1.5"
-            >
-              <Save size={14} />
-              Guardar
-            </button>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-[#f3f4f6] border-b border-[#e5e7eb]">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#1c2c4a]">Material</th>
-                  {meses.map(mes => (
-                    <th key={mes} className="px-2 py-3 text-center text-xs font-semibold text-[#1c2c4a] min-w-[60px]">
-                      {mes}
-                    </th>
-                  ))}
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-[#1c2c4a]">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {categoriasConfig.map(categoriaConfig => {
-                  const categoria = datosEditables[categoriaConfig.key];
-                  const estaAbierta = categoriasAbiertas[categoriaConfig.key];
-                  
-                  return (
-                    <React.Fragment key={categoriaConfig.key}>
-                      {/* Fila de categoría */}
-                      <tr className={`${categoriaConfig.color} border-b border-[#e5e7eb] cursor-pointer`}>
-                        <td 
-                          colSpan={13}
-                          onClick={() => toggleCategoria(categoriaConfig.key)}
-                          className="px-4 py-3"
-                        >
-                          <div className="flex items-center gap-2">
-                            {estaAbierta ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                            <span className="font-semibold text-sm text-[#1c2c4a]">{categoriaConfig.label}</span>
-                          </div>
-                        </td>
-                      </tr>
-                      
-                      {/* Filas de materiales (si está abierta) */}
-                      {estaAbierta && categoria.map((material, index) => {
-                        const total = calcularTotalMaterial(material);
-                        return (
-                          <tr key={index} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6]">
-                            <td className="px-4 py-2 text-xs font-medium text-[#1c2c4a]">
-                              {material.material}
-                            </td>
-                            {meses.map(mes => (
-                              <td key={mes} className="px-1 py-2 text-center">
-                                <input
-                                  type="number"
-                                  value={material[mes] || ''}
-                                  onChange={(e) => actualizarValor(categoriaConfig.key, index, mes, e.target.value)}
-                                  className="w-full px-1.5 py-1 text-xs text-center border border-[#e5e7eb] rounded focus:outline-none focus:ring-1 focus:ring-[#00a8a8] focus:border-transparent"
-                                  min="0"
-                                  step="0.1"
-                                />
-                              </td>
-                            ))}
-                            <td className="px-4 py-2 text-center text-xs font-semibold text-[#1c2c4a]">
-                              {total.toFixed(1)} t
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </React.Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* MODAL DE INFORMACIÓN DETALLADA DEL CLIENTE */}
-        {mostrarModalInfo && clienteActual && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setMostrarModalInfo(false)}>
-            <div className="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-lg border border-[#e5e7eb]" onClick={e => e.stopPropagation()}>
-              <div className="p-6 border-b border-[#e5e7eb] flex items-center justify-between bg-[#00a8a8] text-white rounded-t-lg">
-                <div className="flex items-center gap-3">
-                  <div className="text-4xl">{clienteActual.logo}</div>
-                  <div>
-                    <h2 className="text-xl font-semibold">{clienteActual.name}</h2>
-                    <p className="text-sm text-[#00b3b3]">{clienteActual.contacto} • {clienteActual.email}</p>
-                  </div>
-                </div>
-                <button onClick={() => setMostrarModalInfo(false)} className="text-white hover:text-[#00b3b3]">
-                  <X size={24} />
-                </button>
-              </div>
-              
-              <div className="p-6">
-                {/* INFORMACIÓN OPERATIVA */}
-                <div className="mb-6">
-                  <h3 className="text-base font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
-                    <Calendar size={18} />
-                    Información Operativa
-                  </h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
-                      <div className="text-xs text-[#6b7280] font-medium mb-1">Fecha de Inicio</div>
-                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.fechaInicioOperacion}</div>
-                      <div className="text-xs text-[#6b7280] mt-1">
-                        {Math.floor((new Date() - new Date(clienteActual.fechaInicioOperacion)) / (1000 * 60 * 60 * 24 * 30))} meses operando
-                      </div>
-                    </div>
-                    
-                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
-                      <div className="text-xs text-[#6b7280] font-medium mb-1">Promedio Mensual</div>
-                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.promedioMensual} ton/mes</div>
-                      <div className="text-xs text-[#6b7280] mt-1">Volumen histórico</div>
-                    </div>
-                    
-                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
-                      <div className="text-xs text-[#6b7280] font-medium mb-1">Frecuencia</div>
-                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.frecuenciaRecoleccion}</div>
-                    </div>
-                    
-                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
-                      <div className="text-xs text-[#6b7280] font-medium mb-1">Tasa Valorización</div>
-                      <div className="text-sm font-semibold text-[#00a8a8]">{clienteActual.tasaValorizacion}%</div>
-                    </div>
-                    
-                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
-                      <div className="text-xs text-[#6b7280] font-medium mb-1">Sucursales</div>
-                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.sucursales}</div>
-                    </div>
-                    
-                    <div className="bg-[#f3f4f6] rounded-lg p-4 border border-[#e5e7eb]">
-                      <div className="text-xs text-[#6b7280] font-medium mb-1">RME Gestionado</div>
-                      <div className="text-sm font-semibold text-[#1c2c4a]">{clienteActual.rmeGestionado} ton/mes</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* TIPOS DE RESIDUOS */}
-                <div className="mb-6">
-                  <h3 className="text-base font-semibold text-[#1c2c4a] mb-3 flex items-center gap-2">
-                    <Package size={18} />
-                    Tipos de Residuos Gestionados
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {clienteActual.tiposResiduos.map((tipo, idx) => (
-                      <span key={idx} className="px-3 py-1.5 bg-[#f3f4f6] border border-[#e5e7eb] rounded-md text-xs font-medium text-[#1c2c4a]">
-                        {tipo}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* DESTINOS FINALES */}
-                <div>
-                  <h3 className="text-base font-semibold text-[#1c2c4a] mb-3 flex items-center gap-2">
-                    <MapPin size={18} />
-                    Destinos Finales
-                  </h3>
-                  <div className="space-y-2">
-                    <div className="flex items-start gap-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                      <div className="w-3 h-3 rounded-full bg-[#00a8a8] mt-0.5"></div>
-                      <div className="flex-1">
-                        <div className="text-xs font-semibold text-[#1c2c4a] mb-0.5">Reciclaje</div>
-                        <div className="text-xs text-[#6b7280]">{clienteActual.destinosFinales.reciclaje}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                      <div className="w-3 h-3 rounded-full bg-[#FF8C00] mt-0.5"></div>
-                      <div className="flex-1">
-                        <div className="text-xs font-semibold text-[#1c2c4a] mb-0.5">Composta</div>
-                        <div className="text-xs text-[#6b7280]">{clienteActual.destinosFinales.composta}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                      <div className="w-3 h-3 rounded-full bg-[#008080] mt-0.5"></div>
-                      <div className="flex-1">
-                        <div className="text-xs font-semibold text-[#1c2c4a] mb-0.5">Reuso</div>
-                        <div className="text-xs text-[#6b7280]">{clienteActual.destinosFinales.reuso}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                      <div className="w-3 h-3 rounded-full bg-[#DC2626] mt-0.5"></div>
-                      <div className="flex-1">
-                        <div className="text-xs font-semibold text-[#1c2c4a] mb-0.5">Relleno Sanitario</div>
-                        <div className="text-xs text-[#6b7280]">{clienteActual.destinosFinales.rellenoSanitario}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* SERVICIOS CONTRATADOS */}
-                <div className="mt-6 pt-6 border-t border-[#e5e7eb]">
-                  <h3 className="text-base font-semibold text-[#1c2c4a] mb-3 flex items-center gap-2">
-                    <CheckSquare size={18} />
-                    Servicios Contratados
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {clienteActual.serviciosContratados.map((servicio, idx) => (
-                      <span key={idx} className="px-3 py-1.5 bg-[#00a8a8] text-white rounded-md text-xs font-medium">
-                        {servicio}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
 
   // Modal Detalle Colaborador
   const TeamMemberModal = () => (
@@ -7323,18 +5754,247 @@ const InnovativeDemo = () => {
           <Sidebar />
           <div className="flex-1 overflow-y-auto">
             {currentView === 'dashboard' && <DashboardView />}
-            {currentView === 'pipeline' && <PipelineComercialView />}
-            {currentView === 'levantamientos' && <LevantamientosView />}
-            {currentView === 'documentos' && <DocumentosView />}
-            {currentView === 'team' && <TeamControlView />}
-            {currentView === 'reportes' && <ReportesAutomaticosView />}
-            {currentView === 'trazabilidad' && <TrazabilidadView />}
+            {currentView === 'comercial' && <PipelineComercialView />}
+            {currentView === 'operacion' && <LevantamientosView />}
+            {currentView === 'subproductos' && <TrazabilidadView />}
           </div>
         </div>
       )}
       
       {selectedTeamMember && <TeamMemberModal />}
-      
+
+      {/* KPI PANEL - Modal compartido para juntas semanales */}
+      {showKpiPanel && kpiPanelArea && (() => {
+        const areaConfig = {
+          comercial: { label: 'Comercial', color: '#00a8a8', icon: TrendingUp },
+          operacion: { label: 'Operación', color: '#F57C00', icon: Truck },
+          subproductos: { label: 'Subproductos', color: '#2E7D32', icon: Recycle },
+        };
+        const config = areaConfig[kpiPanelArea];
+        const kpiKeys = Object.keys(KPI_METAS);
+
+        return (
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setShowKpiPanel(false)}>
+            <div className="bg-white rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
+              {/* Header */}
+              <div className="sticky top-0 bg-white border-b border-[#e5e7eb] px-6 py-4 rounded-t-xl z-10">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${config.color}15` }}>
+                      <config.icon size={20} style={{ color: config.color }} />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold text-[#1c2c4a]">KPIs del Equipo — {config.label}</h2>
+                      <p className="text-sm text-[#6b7280]">Panel de seguimiento para juntas semanales</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-xs text-[#6b7280] bg-[#f3f4f6] px-3 py-1.5 rounded-full font-medium">
+                      {salesTeamData.length} ejecutivos
+                    </div>
+                    <button
+                      onClick={() => setShowKpiPanel(false)}
+                      className="w-8 h-8 rounded-full hover:bg-[#f3f4f6] flex items-center justify-center text-[#6b7280] hover:text-[#1c2c4a] transition-colors"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Resumen Rápido */}
+              <div className="px-6 py-4 bg-[#faf7f2] border-b border-[#e5e7eb]">
+                <div className="grid grid-cols-5 gap-3">
+                  {kpiKeys.map(kpiKey => {
+                    const kpi = KPI_METAS[kpiKey];
+                    const totalReal = salesTeamData.reduce((sum, m) => {
+                      const ultimaSemana = m.kpisSemanales?.[m.kpisSemanales.length - 1];
+                      return sum + (ultimaSemana?.[kpiKey] || 0);
+                    }, 0);
+                    const totalMeta = kpi.meta > 0 ? kpi.meta * salesTeamData.length : 0;
+                    return (
+                      <div key={kpiKey} className="bg-white rounded-lg border border-[#e5e7eb] p-3 text-center">
+                        <div className="text-xs text-[#6b7280] mb-1">{kpi.label}</div>
+                        <div className="text-lg font-bold text-[#1c2c4a]">{totalReal}</div>
+                        {totalMeta > 0 && (
+                          <div className={`text-xs font-medium mt-0.5 ${totalReal >= totalMeta ? 'text-[#2E7D32]' : totalReal >= totalMeta * 0.7 ? 'text-[#F57C00]' : 'text-red-500'}`}>
+                            meta: {totalMeta} ({totalMeta > 0 ? ((totalReal / totalMeta) * 100).toFixed(0) : 0}%)
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Tabla de KPIs por Ejecutivo */}
+              <div className="px-6 py-4">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b-2 border-[#e5e7eb]">
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-[#6b7280] uppercase tracking-wider">Ejecutivo</th>
+                        {kpiKeys.map(kpiKey => (
+                          <th key={kpiKey} className="px-3 py-3 text-center text-xs font-semibold text-[#6b7280] uppercase tracking-wider">
+                            {KPI_METAS[kpiKey].label}
+                            {KPI_METAS[kpiKey].meta > 0 && (
+                              <div className="text-[10px] font-normal text-[#6b7280]/70 mt-0.5">Meta: {KPI_METAS[kpiKey].meta}/{KPI_METAS[kpiKey].frecuencia === 'mensual' ? 'mes' : 'sem'}</div>
+                            )}
+                          </th>
+                        ))}
+                        <th className="px-3 py-3 text-center text-xs font-semibold text-[#6b7280] uppercase tracking-wider">Tendencia</th>
+                        <th className="px-3 py-3 text-center text-xs font-semibold text-[#6b7280] uppercase tracking-wider">Score</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {salesTeamData.map(member => {
+                        const ultimaSemana = member.kpisSemanales?.[member.kpisSemanales.length - 1];
+                        const penultimaSemana = member.kpisSemanales?.[member.kpisSemanales.length - 2];
+
+                        // Calcular score global (promedio de cumplimiento vs metas con meta > 0)
+                        let totalCumplimiento = 0;
+                        let metasConMeta = 0;
+                        kpiKeys.forEach(k => {
+                          if (KPI_METAS[k].meta > 0) {
+                            const real = ultimaSemana?.[k] || 0;
+                            totalCumplimiento += (real / KPI_METAS[k].meta) * 100;
+                            metasConMeta++;
+                          }
+                        });
+                        const score = metasConMeta > 0 ? totalCumplimiento / metasConMeta : 0;
+
+                        return (
+                          <tr key={member.id} className="border-b border-[#e5e7eb] hover:bg-[#f3f4f6]/50 transition-colors">
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: config.color }}>
+                                  {member.codigo}
+                                </div>
+                                <div>
+                                  <div className="text-sm font-semibold text-[#1c2c4a]">{member.name.split(' ').slice(0, 2).join(' ')}</div>
+                                  <div className="text-xs text-[#6b7280]">{member.zona}</div>
+                                </div>
+                              </div>
+                            </td>
+                            {kpiKeys.map(kpiKey => {
+                              const real = ultimaSemana?.[kpiKey] || 0;
+                              const prevReal = penultimaSemana?.[kpiKey] || 0;
+                              const meta = KPI_METAS[kpiKey].meta;
+                              const pct = meta > 0 ? (real / meta) * 100 : 0;
+                              const diff = real - prevReal;
+
+                              return (
+                                <td key={kpiKey} className="px-3 py-3 text-center">
+                                  <div className="flex flex-col items-center gap-0.5">
+                                    <span className={`text-sm font-bold ${
+                                      meta === 0 ? 'text-[#1c2c4a]' :
+                                      pct >= 100 ? 'text-[#2E7D32]' :
+                                      pct >= 70 ? 'text-[#F57C00]' :
+                                      'text-red-500'
+                                    }`}>
+                                      {real}{meta > 0 ? `/${meta}` : ''}
+                                    </span>
+                                    {meta > 0 && (
+                                      <div className="w-12 h-1.5 bg-[#e5e7eb] rounded-full overflow-hidden">
+                                        <div
+                                          className="h-full rounded-full transition-all"
+                                          style={{
+                                            width: `${Math.min(pct, 100)}%`,
+                                            backgroundColor: pct >= 100 ? '#2E7D32' : pct >= 70 ? '#F57C00' : '#ef4444'
+                                          }}
+                                        />
+                                      </div>
+                                    )}
+                                    {diff !== 0 && penultimaSemana && (
+                                      <span className={`text-[10px] font-medium ${diff > 0 ? 'text-[#2E7D32]' : 'text-red-500'}`}>
+                                        {diff > 0 ? '+' : ''}{diff}
+                                      </span>
+                                    )}
+                                  </div>
+                                </td>
+                              );
+                            })}
+                            {/* Sparkline (mini trend) */}
+                            <td className="px-3 py-3">
+                              <div className="flex items-end gap-[2px] justify-center h-6">
+                                {(member.kpisSemanales || []).slice(-6).map((sem, idx) => {
+                                  const val = sem.leadsNuevos + sem.reunionesAgendadas;
+                                  const maxVal = Math.max(...(member.kpisSemanales || []).slice(-6).map(s => s.leadsNuevos + s.reunionesAgendadas), 1);
+                                  const height = Math.max((val / maxVal) * 24, 3);
+                                  return (
+                                    <div
+                                      key={idx}
+                                      className="rounded-sm transition-all"
+                                      style={{
+                                        width: 4,
+                                        height: `${height}px`,
+                                        backgroundColor: idx === (member.kpisSemanales || []).slice(-6).length - 1 ? config.color : '#e5e7eb'
+                                      }}
+                                    />
+                                  );
+                                })}
+                                {(!member.kpisSemanales || member.kpisSemanales.length === 0) && (
+                                  <span className="text-[10px] text-[#6b7280]">Sin datos</span>
+                                )}
+                              </div>
+                            </td>
+                            {/* Score */}
+                            <td className="px-3 py-3 text-center">
+                              <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${
+                                score >= 100 ? 'bg-[#2E7D32]/10 text-[#2E7D32]' :
+                                score >= 70 ? 'bg-[#F57C00]/10 text-[#F57C00]' :
+                                score > 0 ? 'bg-red-50 text-red-600' :
+                                'bg-[#f3f4f6] text-[#6b7280]'
+                              }`}>
+                                {score > 0 ? `${score.toFixed(0)}%` : '—'}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Footer - Resumen Junta */}
+              <div className="px-6 py-4 bg-[#f3f4f6] border-t border-[#e5e7eb] rounded-b-xl">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    {(() => {
+                      const conDatos = salesTeamData.filter(m => m.kpisSemanales && m.kpisSemanales.length > 0);
+                      const enMeta = conDatos.filter(m => {
+                        const ultima = m.kpisSemanales[m.kpisSemanales.length - 1];
+                        return ultima && ultima.leadsNuevos >= KPI_METAS.leadsNuevos.meta;
+                      }).length;
+                      return (
+                        <>
+                          <span className="text-sm text-[#1c2c4a] font-medium">
+                            <span className="font-bold" style={{ color: config.color }}>{enMeta}</span> de {conDatos.length} ejecutivos en meta esta semana
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-20 h-2 bg-[#e5e7eb] rounded-full overflow-hidden">
+                              <div className="h-full rounded-full" style={{ width: `${conDatos.length > 0 ? (enMeta / conDatos.length) * 100 : 0}%`, backgroundColor: config.color }}></div>
+                            </div>
+                            <span className="text-xs font-medium text-[#6b7280]">{conDatos.length > 0 ? ((enMeta / conDatos.length) * 100).toFixed(0) : 0}%</span>
+                          </div>
+                        </>
+                      );
+                    })()}
+                  </div>
+                  <button
+                    onClick={() => setShowKpiPanel(false)}
+                    className="px-4 py-2 bg-white border border-[#e5e7eb] rounded-lg text-sm font-medium text-[#6b7280] hover:text-[#1c2c4a] hover:bg-[#f3f4f6] transition-colors"
+                  >
+                    Cerrar Panel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* MODAL DE LEVANTAMIENTO */}
       {mostrarLevantamiento && selectedLevantamiento && (() => {
         const levantamientoDetalle = levantamientosDetallados.find(d => d.id === selectedLevantamiento.id) || selectedLevantamiento;
