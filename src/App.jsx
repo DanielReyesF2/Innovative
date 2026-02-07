@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { BarChart, Bar, LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart, ReferenceLine, RadialBarChart, RadialBar } from 'recharts';
 import { ResponsiveSankey } from '@nivo/sankey';
 import { ResponsiveFunnel } from '@nivo/funnel';
 import { ResponsiveBar } from '@nivo/bar';
@@ -5482,14 +5482,14 @@ const InnovativeDemo = () => {
         </div>
       </div>
 
-      {/* Distribución de Pipeline por Ejecutivo */}
+      {/* Distribución de Pipeline por Ejecutivo — Barras apiladas por etapa */}
       <div className="mt-4 bg-white rounded-lg border border-[#e5e7eb] card-modern p-4">
-        <h3 className="text-sm font-semibold text-[#1c2c4a] mb-3">Distribución de Pipeline por Ejecutivo</h3>
+        <h3 className="text-sm font-semibold text-[#1c2c4a] mb-3">Pipeline por Ejecutivo</h3>
         <div className="space-y-3">
           {salesTeamData.map(member => {
             const memberProspectos = kanbanProspectos.filter(p => p.ejecutivo === member.codigo);
             const memberPipeline = memberProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
-            const pctProspectos = kanbanProspectos.length > 0 ? (memberProspectos.length / kanbanProspectos.length * 100) : 0;
+            const porEtapa = KANBAN_STAGES.map(s => memberProspectos.filter(p => p.status === s.id).length);
             if (memberProspectos.length === 0) return null;
             return (
               <div key={member.codigo} className="flex items-center gap-3">
@@ -5499,16 +5499,34 @@ const InnovativeDemo = () => {
                     <span className="font-medium text-[#1c2c4a]">{member.name.split(' ')[0]} — {memberProspectos.length} prospectos</span>
                     <span className="font-bold text-[#0D47A1]">${(memberPipeline / 1000000).toFixed(1)}M</span>
                   </div>
-                  <div className="w-full h-2 bg-[#e5e7eb] rounded-full overflow-hidden">
-                    <div className="h-full bg-[#00a8a8] rounded-full transition-all" style={{ width: `${pctProspectos}%` }}></div>
+                  <div className="w-full h-3 bg-[#e5e7eb] rounded-full overflow-hidden flex">
+                    {KANBAN_STAGES.map((stage, idx) => {
+                      const pct = memberProspectos.length > 0 ? (porEtapa[idx] / memberProspectos.length * 100) : 0;
+                      if (pct === 0) return null;
+                      return (
+                        <div
+                          key={stage.id}
+                          className="h-full first:rounded-l-full last:rounded-r-full transition-all duration-500"
+                          style={{ width: `${pct}%`, backgroundColor: stage.color }}
+                          title={`${stage.label}: ${porEtapa[idx]}`}
+                        ></div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
             );
           }).filter(Boolean)}
-          <div className="flex justify-between text-xs text-[#6b7280] pt-2 border-t border-[#e5e7eb]">
-            <span>Total: {kanbanProspectos.length} prospectos</span>
-            <span className="font-bold text-[#1c2c4a]">${(kanbanProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(1)}M pipeline total</span>
+          <div className="flex justify-between items-center text-xs text-[#6b7280] pt-2 border-t border-[#e5e7eb]">
+            <span>Total: {kanbanProspectos.length} prospectos • ${(kanbanProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0) / 1000000).toFixed(1)}M</span>
+            <div className="flex gap-2">
+              {KANBAN_STAGES.map(s => (
+                <div key={s.id} className="flex items-center gap-1 text-[9px]">
+                  <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: s.color }}></div>
+                  {s.label}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -6625,74 +6643,128 @@ const InnovativeDemo = () => {
           </div>
         </div>
 
-        {/* TIEMPO POR ETAPA — Barras horizontales */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
-          {/* Tiempo promedio por etapa */}
-          <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5">
-            <h3 className="text-sm font-semibold text-[#1c2c4a] mb-4">Tiempo Promedio por Etapa</h3>
-            <div className="space-y-3">
-              {metricasPorEtapa.filter(m => m.count > 0).map(etapa => {
-                const maxDias = Math.max(...metricasPorEtapa.map(m => m.diasPromedio), 1);
-                const pct = (etapa.diasPromedio / maxDias) * 100;
-                const esCuello = etapa.diasPromedio > 20;
-                return (
-                  <div key={etapa.id}>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="font-medium text-[#1c2c4a] flex items-center gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: etapa.color }}></div>
-                        {etapa.label}
-                        {esCuello && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-red-50 text-red-600 font-semibold">Cuello</span>}
-                      </span>
-                      <span className="font-bold" style={{ color: esCuello ? '#EF4444' : '#1c2c4a' }}>
-                        {etapa.diasPromedio} días
-                      </span>
-                    </div>
-                    <div className="w-full h-2.5 bg-[#e5e7eb] rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all"
-                        style={{ width: `${pct}%`, backgroundColor: esCuello ? '#EF4444' : etapa.color }}
-                      ></div>
-                    </div>
-                  </div>
-                );
-              })}
+        {/* ANÁLISIS DE FLUJO — ComposedChart + Alertas con severidad */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
+
+          {/* ComposedChart: Prospectos + Días promedio por etapa */}
+          <div className="lg:col-span-2 bg-white rounded-lg border border-[#e5e7eb] card-modern p-5">
+            <h3 className="text-sm font-semibold text-[#1c2c4a] mb-1">Velocidad del Pipeline</h3>
+            <p className="text-[11px] text-[#6b7280] mb-4">Prospectos por etapa vs tiempo promedio de permanencia</p>
+            <ResponsiveContainer width="100%" height={300}>
+              <ComposedChart data={metricasPorEtapa.filter(m => m.count > 0)} margin={{ top: 10, right: 40, bottom: 10, left: 0 }}>
+                <defs>
+                  {metricasPorEtapa.filter(m => m.count > 0).map((etapa, i) => (
+                    <linearGradient key={etapa.id} id={`barGrad-${i}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={etapa.color} stopOpacity={0.9} />
+                      <stop offset="100%" stopColor={etapa.color} stopOpacity={0.4} />
+                    </linearGradient>
+                  ))}
+                  <linearGradient id="dangerZone" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#EF4444" stopOpacity={0.12} />
+                    <stop offset="100%" stopColor="#EF4444" stopOpacity={0.02} />
+                  </linearGradient>
+                  <filter id="lineGlow">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+                    <feFlood floodColor="#EF4444" floodOpacity="0.4" result="color" />
+                    <feComposite in="color" in2="blur" operator="in" result="shadow" />
+                    <feMerge>
+                      <feMergeNode in="shadow" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#6b7280' }} tickLine={false} axisLine={{ stroke: '#e5e7eb' }} />
+                <YAxis yAxisId="left" tick={{ fontSize: 11, fill: '#6b7280' }} tickLine={false} axisLine={false} />
+                <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11, fill: '#EF4444' }} tickLine={false} axisLine={false}
+                  label={{ value: 'Días', angle: 90, position: 'insideRight', style: { fontSize: 10, fill: '#EF4444' } }} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#1c2c4a', border: '1px solid #00a8a8', borderRadius: '10px', color: '#fff', fontSize: '12px', boxShadow: '0 10px 40px rgba(0,0,0,0.3)' }}
+                  formatter={(value, name) => [name === 'diasPromedio' ? `${value} días` : `${value} prospectos`, name === 'diasPromedio' ? 'Tiempo promedio' : 'Prospectos']}
+                  labelStyle={{ color: '#00a8a8', fontWeight: 600 }}
+                />
+                <ReferenceLine yAxisId="right" y={20} stroke="#F59E0B" strokeDasharray="6 3" strokeWidth={2}
+                  label={{ value: 'Umbral 20d', position: 'right', style: { fontSize: 9, fill: '#F59E0B', fontWeight: 600 } }} />
+                <Bar yAxisId="left" dataKey="count" radius={[6, 6, 0, 0]} barSize={36}>
+                  {metricasPorEtapa.filter(m => m.count > 0).map((etapa, i) => (
+                    <Cell key={etapa.id} fill={etapa.diasPromedio > 20 ? '#EF4444' : etapa.color} opacity={etapa.diasPromedio > 20 ? 1 : 0.85} />
+                  ))}
+                </Bar>
+                <Line yAxisId="right" type="monotone" dataKey="diasPromedio" stroke="#EF4444" strokeWidth={3}
+                  dot={{ r: 5, fill: '#EF4444', stroke: '#fff', strokeWidth: 2 }} filter="url(#lineGlow)" />
+              </ComposedChart>
+            </ResponsiveContainer>
+            <div className="flex items-center gap-4 mt-2 text-[10px] text-[#6b7280]">
+              <span className="flex items-center gap-1"><div className="w-3 h-3 rounded bg-[#00a8a8]"></div> Prospectos por etapa</span>
+              <span className="flex items-center gap-1"><div className="w-3 h-0.5 bg-[#EF4444]"></div> Días promedio</span>
+              <span className="flex items-center gap-1"><div className="w-3 h-0.5 bg-[#F59E0B]" style={{ borderTop: '2px dashed #F59E0B' }}></div> Umbral de alerta</span>
             </div>
           </div>
 
-          {/* Cuellos de botella + alertas */}
+          {/* Alertas de Estancamiento — Cards con severidad visual */}
           <div className="bg-white rounded-lg border border-[#e5e7eb] card-modern p-5">
-            <h3 className="text-sm font-semibold text-[#1c2c4a] mb-4 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-[#1c2c4a] mb-1 flex items-center gap-2">
               <AlertCircle size={16} className="text-[#F57C00]" />
-              Alertas de Estancamiento
+              Alertas
             </h3>
+            <p className="text-[11px] text-[#6b7280] mb-3">{estancados.length} prospectos requieren atención</p>
             {estancados.length === 0 ? (
-              <div className="text-center py-8 text-[#6b7280]">
-                <CheckSquare size={32} className="mx-auto mb-2 text-[#2E7D32]" />
-                <p className="text-sm font-medium">Todo en movimiento</p>
-                <p className="text-xs mt-1">No hay prospectos estancados</p>
+              <div className="text-center py-10 text-[#6b7280]">
+                <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-[#2E7D32]/10 flex items-center justify-center">
+                  <CheckSquare size={28} className="text-[#2E7D32]" />
+                </div>
+                <p className="text-sm font-semibold text-[#1c2c4a]">Todo fluye</p>
+                <p className="text-xs mt-1">Sin prospectos estancados</p>
               </div>
             ) : (
-              <div className="space-y-2 max-h-[280px] overflow-y-auto">
-                {estancados.slice(0, 10).map(p => {
+              <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+                {estancados.sort((a, b) => {
+                  const dA = Math.floor((hoy - new Date(a.fecha)) / (1000 * 60 * 60 * 24));
+                  const dB = Math.floor((hoy - new Date(b.fecha)) / (1000 * 60 * 60 * 24));
+                  return dB - dA;
+                }).slice(0, 12).map(p => {
                   const dias = Math.floor((hoy - new Date(p.fecha)) / (1000 * 60 * 60 * 24));
                   const stage = KANBAN_STAGES.find(s => s.id === p.status);
+                  const umbral = 30;
+                  const severidad = Math.min(dias / umbral, 2.5);
+                  const getSeverityColor = (s) => s >= 2 ? '#DC2626' : s >= 1.5 ? '#EF4444' : s >= 1 ? '#F59E0B' : '#10B981';
+                  const color = getSeverityColor(severidad);
                   return (
-                    <div key={p.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-red-50/50 border border-red-100">
-                      <div className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-xs font-semibold text-[#1c2c4a] truncate">{p.empresa}</div>
-                        <div className="text-[10px] text-[#6b7280]">
-                          {stage?.label} • {getEjecutivoNombre(p.ejecutivo)} • {dias} días
+                    <div key={p.id} className="relative rounded-lg p-3 border transition-all duration-300"
+                      style={{ borderColor: `${color}40`, backgroundColor: `${color}08` }}>
+                      <div className="flex items-center gap-3">
+                        {/* Severity circle */}
+                        <div className="relative flex-shrink-0">
+                          <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-[10px] font-bold shadow-md"
+                            style={{ backgroundColor: color }}>
+                            {dias}d
+                          </div>
+                          {severidad >= 2 && (
+                            <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-red-500 border border-white animate-ping"></div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[11px] font-semibold text-[#1c2c4a] truncate">{p.empresa}</div>
+                          <div className="text-[10px] text-[#6b7280] flex items-center gap-1">
+                            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: stage?.color }}></div>
+                            {stage?.label} • {getEjecutivoNombre(p.ejecutivo)}
+                          </div>
+                        </div>
+                        {/* Mini progress toward threshold */}
+                        <div className="w-12 flex-shrink-0">
+                          <div className="h-1.5 bg-[#e5e7eb] rounded-full overflow-hidden">
+                            <div className="h-full rounded-full transition-all" style={{
+                              width: `${Math.min(severidad * 40, 100)}%`,
+                              background: `linear-gradient(90deg, #10B981, ${color})`,
+                            }}></div>
+                          </div>
                         </div>
                       </div>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-bold flex-shrink-0">
-                        {dias}d
-                      </span>
                     </div>
                   );
                 })}
-                {estancados.length > 10 && (
-                  <div className="text-xs text-[#6b7280] text-center pt-1">+{estancados.length - 10} más</div>
+                {estancados.length > 12 && (
+                  <div className="text-[10px] text-[#6b7280] text-center pt-1 font-medium">+{estancados.length - 12} más</div>
                 )}
               </div>
             )}
@@ -6787,55 +6859,6 @@ const InnovativeDemo = () => {
           </div>
         </div>
 
-        {/* DISTRIBUCIÓN POR EJECUTIVO */}
-        <div className="mt-4 bg-white rounded-lg border border-[#e5e7eb] card-modern p-5">
-          <h3 className="text-sm font-semibold text-[#1c2c4a] mb-3">Distribución por Ejecutivo</h3>
-          <div className="space-y-3">
-            {salesTeamData.map(member => {
-              const memberProspectos = kanbanProspectos.filter(p => p.ejecutivo === member.codigo);
-              const memberPipeline = memberProspectos.reduce((s, p) => s + (p.propuesta?.ventaTotal || p.facturacionEstimada || 0), 0);
-              const porEtapa = KANBAN_STAGES.map(s => memberProspectos.filter(p => p.status === s.id).length);
-              if (memberProspectos.length === 0) return null;
-              return (
-                <div key={member.codigo} className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-[#00a8a8] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                    {member.codigo}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="font-medium text-[#1c2c4a]">{member.name.split(' ')[0]} — {memberProspectos.length} prospectos</span>
-                      <span className="font-bold text-[#0D47A1]">${(memberPipeline / 1000000).toFixed(1)}M</span>
-                    </div>
-                    {/* Stacked bar by stage */}
-                    <div className="w-full h-3 bg-[#e5e7eb] rounded-full overflow-hidden flex">
-                      {KANBAN_STAGES.map((stage, idx) => {
-                        const pct = memberProspectos.length > 0 ? (porEtapa[idx] / memberProspectos.length * 100) : 0;
-                        if (pct === 0) return null;
-                        return (
-                          <div
-                            key={stage.id}
-                            className="h-full first:rounded-l-full last:rounded-r-full"
-                            style={{ width: `${pct}%`, backgroundColor: stage.color }}
-                            title={`${stage.label}: ${porEtapa[idx]}`}
-                          ></div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              );
-            }).filter(Boolean)}
-          </div>
-          {/* Legend */}
-          <div className="flex flex-wrap gap-3 mt-3 pt-3 border-t border-[#e5e7eb]">
-            {KANBAN_STAGES.map(s => (
-              <div key={s.id} className="flex items-center gap-1 text-[10px] text-[#6b7280]">
-                <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: s.color }}></div>
-                {s.label}
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     );
   };
