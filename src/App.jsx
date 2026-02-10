@@ -7,7 +7,7 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import html2canvas from 'html2canvas';
-import { Home, TrendingUp, Package, Users, FileText, Settings, ChevronRight, Download, Search, Filter, Bell, LogOut, Menu, X, DollarSign, Target, PhoneCall, Award, Calendar, MapPin, Truck, Leaf, Briefcase, ClipboardList, CheckSquare, AlertCircle, Send, Eye, Recycle, Trash2, BarChart3, TrendingDown, ChevronDown, ChevronUp, Save, FileImage, RotateCcw, Building2, GripVertical, Lock, Unlock, ArrowRight, Plus } from 'lucide-react';
+import { Home, TrendingUp, Package, Users, FileText, Settings, ChevronRight, Download, Search, Filter, Bell, LogOut, Menu, X, DollarSign, Target, PhoneCall, Award, Calendar, MapPin, Truck, Leaf, Briefcase, ClipboardList, CheckSquare, AlertCircle, Send, Eye, Recycle, Trash2, BarChart3, TrendingDown, ChevronDown, ChevronUp, Save, FileImage, RotateCcw, Building2, GripVertical, Lock, Unlock, ArrowRight, Plus, XCircle } from 'lucide-react';
 
 // SERVICIOS INNOVATIVE
 const SERVICIOS_INNOVATIVE = [
@@ -3113,8 +3113,8 @@ const salesTeamData = [
     reuniones: 4,
     cierres: 2,
     tasaConversion: 125,
-    presupuestoAnual2026: 164457320,
-    presupuestoMensual: 13705000,
+    presupuestoAnual2026: 130130812,
+    presupuestoMensual: 10844234,
     ventasReales: 4200000,
     cumplimientoPresupuesto: 31,
     tiempoRespuesta: '1.5 hrs',
@@ -3928,14 +3928,27 @@ const clientesConReportes = [
   }
 ];
 
-// EVOLUCIÓN PRESUPUESTO VS REAL
+// EVOLUCIÓN PRESUPUESTO VS REAL — DATOS REALES 2026
 const presupuestoEvolution = [
-  { mes: 'May', presupuesto: 2800000, real: 2650000 },
-  { mes: 'Jun', presupuesto: 2900000, real: 3100000 },
-  { mes: 'Jul', presupuesto: 3000000, real: 3250000 },
-  { mes: 'Ago', presupuesto: 3100000, real: 2950000 },
-  { mes: 'Sep', presupuesto: 3200000, real: 3450000 },
-  { mes: 'Oct', presupuesto: 3300000, real: 3540000 }
+  { mes: 'Ene', presupuesto: 2774200, real: 0 },
+  { mes: 'Feb', presupuesto: 2769810, real: 0 },
+  { mes: 'Mar', presupuesto: 4009709, real: 0 },
+  { mes: 'Abr', presupuesto: 11011618, real: 0 },
+  { mes: 'May', presupuesto: 12452161, real: 0 },
+  { mes: 'Jun', presupuesto: 14121018, real: 0 },
+  { mes: 'Jul', presupuesto: 14216418, real: 0 },
+  { mes: 'Ago', presupuesto: 15603961, real: 0 },
+  { mes: 'Sep', presupuesto: 14951318, real: 0 },
+  { mes: 'Oct', presupuesto: 14352318, real: 0 },
+  { mes: 'Nov', presupuesto: 13006777, real: 0 },
+  { mes: 'Dic', presupuesto: 10861507, real: 0 }
+];
+
+// HISTORIAL ANUAL DE VENTAS
+const historicoVentas = [
+  { año: '2024', valor: 44711877, tipo: 'Real' },
+  { año: '2025', valor: 17602066, tipo: 'Real' },
+  { año: '2026', valor: 130130812, tipo: 'Presupuesto' }
 ];
 
 const COLORS_INNOVATIVE = {
@@ -4730,7 +4743,7 @@ const InnovativeDemo = () => {
     { type: 'category', label: 'PRINCIPAL' },
     { type: 'item', id: 'dashboard', icon: Home, label: 'Dashboard' },
     { type: 'category', label: 'COMERCIAL' },
-    { type: 'section', key: 'comercial', icon: TrendingUp, label: 'Ventas',
+    { type: 'section', key: 'comercial', icon: TrendingUp, label: 'Nuevas Cuentas',
       items: [
         { id: 'comercial', icon: Briefcase, label: 'Pipeline & Prospectos' },
       ]
@@ -4951,7 +4964,7 @@ const InnovativeDemo = () => {
 
 
       {/* ROW 1: KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
         {/* Pipeline Ponderado */}
         <div className="rounded-xl border border-[#00a8a8]/10 card-modern p-5" style={{ backgroundColor: 'rgba(0,168,168,0.04)' }}>
           <div className="flex items-center justify-between">
@@ -5000,6 +5013,19 @@ const InnovativeDemo = () => {
             </div>
             <div className="w-10 h-10 rounded-xl bg-[#F57C00]/10 flex items-center justify-center">
               <TrendingUp className="text-[#F57C00]" size={20} />
+            </div>
+          </div>
+        </div>
+
+        {/* Rechazadas */}
+        <div className="rounded-xl border border-red-500/10 card-modern p-5" style={{ backgroundColor: 'rgba(239,68,68,0.04)' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[13px] font-medium text-[#6b7280] mb-1">Rechazadas</div>
+              <div className="text-2xl font-bold text-[#1c2c4a]">{rechazadas.length}</div>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center">
+              <XCircle className="text-red-500" size={20} />
             </div>
           </div>
         </div>
@@ -5064,12 +5090,13 @@ const InnovativeDemo = () => {
               Ver equipo <ChevronRight size={14} />
             </button>
           </div>
-          <div className="text-center mb-4">
+          <div className="text-center mb-3">
             <div className="text-3xl font-bold text-[#1c2c4a]">${(presupuestoTotal / 1000000).toFixed(0)}M</div>
             <div className="text-xs text-[#6b7280] mt-1">Presupuesto anual equipo</div>
           </div>
-          <div className="space-y-3">
-            {salesTeamData.filter(m => m.presupuestoAnual2026 > 0).sort((a, b) => b.presupuestoAnual2026 - a.presupuestoAnual2026).slice(0, 5).map(member => {
+          {/* Distribución por ejecutivo */}
+          <div className="space-y-2 mb-4">
+            {salesTeamData.filter(m => m.presupuestoAnual2026 > 0 && m.codigo !== 'VA').sort((a, b) => b.presupuestoAnual2026 - a.presupuestoAnual2026).map(member => {
               const pct = presupuestoTotal > 0 ? (member.presupuestoAnual2026 / presupuestoTotal * 100) : 0;
               return (
                 <div key={member.id} className="flex items-center gap-2">
@@ -5084,18 +5111,67 @@ const InnovativeDemo = () => {
               );
             })}
           </div>
-          {/* Chart mini */}
-          <div className="mt-4 pt-4 border-t border-[#e5e7eb]">
-            <ResponsiveContainer width="100%" height={120}>
-              <LineChart data={presupuestoEvolution}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                <XAxis dataKey="mes" tick={{ fontSize: 10, fill: '#6b7280' }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ fontSize: 11, borderRadius: 8 }} />
-                <Line type="monotone" dataKey="presupuesto" stroke="#e5e7eb" strokeWidth={1.5} dot={false} strokeDasharray="4 4" />
-                <Line type="monotone" dataKey="real" stroke="#00a8a8" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
+          {/* Historial anual */}
+          <div className="pt-3 border-t border-[#e5e7eb]">
+            <div className="text-xs font-medium text-[#6b7280] mb-2">Historial Anual</div>
+            <div className="space-y-2">
+              {historicoVentas.map(h => {
+                const maxVal = Math.max(...historicoVentas.map(v => v.valor));
+                const pct = (h.valor / maxVal) * 100;
+                return (
+                  <div key={h.año} className="flex items-center gap-2">
+                    <div className="w-10 text-xs font-semibold text-[#1c2c4a]">{h.año}</div>
+                    <div className="flex-1">
+                      <div className="w-full bg-[#f3f4f6] rounded-full h-3 overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all"
+                          style={{
+                            width: `${pct}%`,
+                            backgroundColor: h.tipo === 'Presupuesto' ? '#00a8a8' : '#0D47A1'
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="text-xs font-semibold text-[#1c2c4a] w-14 text-right">${(h.valor / 1000000).toFixed(0)}M</div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex items-center gap-3 mt-2 text-[10px] text-[#6b7280]">
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#0D47A1] inline-block"></span> Real</span>
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#00a8a8] inline-block"></span> Presupuesto</span>
+            </div>
           </div>
+        </div>
+      </div>
+
+      {/* ROW 2.5: Presupuesto Mensual 2026 — Gráfica de Barras */}
+      <div className="mt-6 bg-white rounded-xl border border-[#e5e7eb] card-modern p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base font-semibold text-[#1c2c4a]">Presupuesto Mensual 2026 vs Real</h3>
+          <div className="flex items-center gap-4 text-xs text-[#6b7280]">
+            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-[#e5e7eb] inline-block"></span> Presupuesto</span>
+            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-[#00a8a8] inline-block"></span> Real</span>
+          </div>
+        </div>
+        <ResponsiveContainer width="100%" height={220}>
+          <BarChart data={presupuestoEvolution} barGap={2}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
+            <XAxis dataKey="mes" tick={{ fontSize: 11, fill: '#6b7280' }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 10, fill: '#6b7280' }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v / 1000000).toFixed(0)}M`} />
+            <Tooltip
+              contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e5e7eb' }}
+              formatter={(value) => [`$${(value / 1000000).toFixed(1)}M`, '']}
+              labelStyle={{ fontWeight: 600, color: '#1c2c4a' }}
+            />
+            <Bar dataKey="presupuesto" name="Presupuesto" fill="#e5e7eb" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="real" name="Real" fill="#00a8a8" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+        <div className="mt-3 pt-3 border-t border-[#e5e7eb] flex items-center justify-between text-xs text-[#6b7280]">
+          <span>Total presupuesto: <span className="font-semibold text-[#1c2c4a]">$130.1M</span></span>
+          <span>Acumulado real: <span className="font-semibold text-[#00a8a8]">$0M</span></span>
+          <span>% Avance: <span className="font-semibold text-[#F57C00]">0%</span></span>
         </div>
       </div>
 
